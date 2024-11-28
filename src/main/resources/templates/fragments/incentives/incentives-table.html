@@ -1,0 +1,22 @@
+<table class="table mt-3" id="tableBody" th:fragment="incentives-table(incentives)">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Loja</th>
+                <th>Total</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr th:each="incentive : ${incentives}">
+                <td th:text="${incentive.referenceDate}"></td>
+                <td th:text="${incentive.customer.cnpj}"></td>
+                <td th:text="${incentive.incentiveValue}"></td>
+                <td>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" th:data-bs-target="'#editIncentiveModal' + ${incentive.id}">Editar</button>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#detailsIncentiveModal' + ${incentive.id}">Detalhes</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>

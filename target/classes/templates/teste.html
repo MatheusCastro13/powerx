@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Modal com Thymeleaf</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        Abrir Modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document"> <!-- Classe "modal-xl" para modal extra grande -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Formulário</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Dados de Entrada</h5>
+                            <form id="inputForm">
+                                <div class="form-group">
+                                    <label for="dataInput">Data</label>
+                                    <input type="date" class="form-control" id="dataInput" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="select1">Select 1</label>
+                                    <select class="form-control" id="select1" required>
+                                        <option value="">Selecione</option>
+                                        <option value="opcao1">Opção 1</option>
+                                        <option value="opcao2">Opção 2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="select2">Select 2</label>
+                                    <select class="form-control" id="select2" required>
+                                        <option value="">Selecione</option>
+                                        <option value="opcao1">Opção 1</option>
+                                        <option value="opcao2">Opção 2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nomeInput">Nome</label>
+                                    <input type="text" class="form-control" id="nomeInput" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantidadeInput">Quantidade</label>
+                                    <input type="number" class="form-control" id="quantidadeInput" required>
+                                </div>
+                                <button type="button" class="btn btn-success" onclick="adicionarInfo()">Adicionar Informações</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Informações Adicionadas</h5>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="infoTabela">
+                                    <!-- Informações serão adicionadas aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" onclick="salvarDados()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    const informacoes = [];
+
+    function adicionarInfo() {
+        const nome = document.getElementById('nomeInput').value;
+        const quantidade = document.getElementById('quantidadeInput').value;
+
+        if (nome && quantidade) {
+            informacoes.push({ nome, quantidade });
+            atualizarTabela();
+            limparInputs();
+        } else {
+            alert('Por favor, preencha todos os campos.');
+        }
+    }
+
+    function atualizarTabela() {
+        const tabela = document.getElementById('infoTabela');
+        tabela.innerHTML = informacoes.map(info =>
+            `<tr>
+                <td>${info.nome}</td>
+                <td>${info.quantidade}</td>
+            </tr>`
+        ).join('');
+    }
+
+    function limparInputs() {
+        document.getElementById('nomeInput').value = '';
+        document.getElementById('quantidadeInput').value = '';
+        document.getElementById('dataInput').value = '';
+        document.getElementById('select1').value = '';
+        document.getElementById('select2').value = '';
+    }
+
+    function salvarDados() {
+        console.log("Dados salvos:", informacoes);
+        alert('Dados salvos com sucesso!');
+        $('#myModal').modal('hide');
+    }
+</script>
+
+</body>
+</html>

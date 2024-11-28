@@ -1,0 +1,487 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="_csrf" th:content="${_csrf.token}">
+<title>PowerX|Adm</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
+<link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
+<link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
+</head>
+<body>
+	<nav
+		class="navbar navbar-expand-lg bg-body-tertiary navbar-custom bg-body-tertiary-custom">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/home}"><img id="goto-home"
+				alt="Power X" th:src="@{/images/powerx-logo.png}"></a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-link" aria-current="page" th:href="@{/home}">Ínicio</a>
+					<a class="nav-link" th:href="@{/fuel}">Combustível</a> <a
+						class="nav-link" th:href="@{/incentive}">Incentivos</a>
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
+						<a th:if="user.role.role == 'ROLE_ADMIN'" class="nav-link"
+							th:href="@{/adm}">Administrativo</a>
+					</sec:authorize>
+					<a class="nav-link" th:href="@{/user/{id}(id=${user.Id})}">Perfil</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+				<div class="position-sticky position-sticky-custom">
+					<h5 class="sidebar-title">Administração</h5>
+					<ul class="nav flex-column">
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/users}" id="link-users">Usuários</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/partner-groups}" id="link-partner-groups">Grupos
+								Parceiros</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/customers}" id="link-customers">Clientes</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/products}" id="link-products">Produtos</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/employees}" id="link-awards">Premiados</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/incentives}" id="link-incentives-launch">Lançamentos
+								de Incentivos</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/fuel/predictions}" id="link-fuel-predictions">Previsões
+								de Combustível</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/payments}" id="link-payments">Pagamentos</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/positions}" id="link-positions">Cargos</a></li>
+					</ul>
+				</div>
+			</nav>
+			<div style="display: flex; flex-direction: column; margin-top: 10px;"
+				class="col-md-10">
+				<div th:if="${param.updated}" class="col-md-10">
+					<div id="alert" class="alert alert-success" role="alert">
+						Atualização realizada com sucesso!</div>
+				</div>
+				<div th:if="${param.saved}" class="col-md-10">
+					<div id="alert" class="alert alert-success" role="alert">
+						Salvamento realizado com sucesso!</div>
+				</div>
+				<div th:if="${param.error}" class="col-md-10">
+					<div id="alert" class="alert alert-danger" role="alert">Erro
+						ao encontrar usuário</div>
+				</div>
+				<div id="option-selected" class="col-md-10 fill-container"></div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+
+	<script th:src="@{/js/sidebar.js}"></script>
+	<script th:src="@{/js/search.js}"></script>
+	<script th:src="@{/js/applyUserFilters.js}"></script>
+	<script th:src="@{/js/resetUserFilter.js}"></script>
+	<script th:src="@{/js/manageIncentiveValue2.js}"></script>
+	<script th:src="@{/js/applyCustomerFilters.js}"></script>
+	<script th:src="@{/js/resetCustomerFilter.js}"></script>
+	<script>
+    document.querySelectorAll(".modal").forEach(modal => {
+        modal.addEventListener("shown.bs.modal", function() {
+            window.loadEmployeeConsultantData = loadEmployeeConsultantData;
+            window.loadEmployeeMechanicData = loadEmployeeMechanicData;
+            window.createApurationSection = createApurationSection;
+            window.saveSale = saveSale;
+          
+        });
+    });
+    
+    
+
+    
+    
+    function loadEmployeeData(title, customerId, dynamicSectionId) {
+        const url = `/customers/${customerId}/employees`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar dados do cliente: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const dynamicSections = document.getElementById(dynamicSectionId);
+                dynamicSections.innerHTML = "";
+
+                let employees, products;
+
+                if (title === "Consultores") {
+                    employees = data.consultores;
+                    products = data.produtos;
+                } else if (title === "Mecânicos") {
+                    employees = data.mecanicos;
+                    products = data.produtos;
+                }
+
+                if (employees && employees.length > 0) {
+                    createApurationSection(title, employees, products, dynamicSectionId, customerId);
+                } else {
+                    dynamicSections.innerHTML = `Sem ${title.toLowerCase()} nesta loja, clique em avançar.`;
+                }
+            })
+            .catch(error => {
+                console.error("Erro ao carregar funcionários:", error);
+            });
+    }
+
+
+
+    function createApurationSection(title, employees, products, dynamicSectionId, customerId) {
+        const section = document.getElementById(dynamicSectionId);
+        if (!section) {
+            console.error(`Erro: Seção dinâmica com ID '${dynamicSectionId}' não encontrada.`);
+            return;
+        }
+
+        section.innerHTML = "";
+
+        const sectionTitle = document.createElement("h5");
+        sectionTitle.textContent = `Apuração ${title}`;
+        section.appendChild(sectionTitle);
+
+        const employeeSelect = document.createElement("select");
+        employeeSelect.classList.add("form-select", "mb-3");
+        employeeSelect.setAttribute("id", `${dynamicSectionId}EmployeeSelect`);
+        employeeSelect.innerHTML = `<option value="default">Selecione um ${title.toLowerCase()}</option>`;
+        employees.forEach(employee => {
+            const option = document.createElement("option");
+            option.value = employee.id;
+            option.textContent = employee.name;
+            employeeSelect.appendChild(option);
+        });
+        section.appendChild(employeeSelect);
+
+        const productTable = document.createElement("table");
+        productTable.classList.add("table", "table-bordered", "mb-3");
+        productTable.setAttribute("id", `${dynamicSectionId}ProductsTable`);
+        productTable.innerHTML = `
+            <thead>
+                <tr>
+                    <th>CÓD.</th>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${products
+                    .map(
+                        product => `
+                        <tr data-product-id="${product.id}">
+                            <td>${product.productCode}</td>
+                            <td>${product.productName}</td>
+                            <td><input type="number" class="form-control" name="${title.toLowerCase()}Quantities[${product.id}]"></td>
+                        </tr>`
+                    )
+                    .join("")}
+            </tbody>
+        `;
+        section.appendChild(productTable);
+        
+        const saveNewButton = document.createElement("button");
+        saveNewButton.type = "button";
+        saveNewButton.classList.add("btn", "btn-primary", "mt-2");
+        saveNewButton.textContent = "Salvar Novo";
+        saveNewButton.addEventListener("click", function () {
+            saveSale(title, `${dynamicSectionId}EmployeeSelect`, "", `${dynamicSectionId}ProductsTable`, "");
+        });
+        section.appendChild(saveNewButton);
+    }
+    
+    function saveSale(sectionType, employeeSelectId, employees, productTableId, products) {
+        const employeeSelect = document.getElementById(employeeSelectId);
+        const employeeSelected = employeeSelect.value;
+        console.log("Id do Funcionário selecionado: " + employeeSelected);
+        
+        if (employeeSelected === "default") {
+            alert("Selecione um funcionário antes de salvar!");
+            return;
+        }
+
+        const productTable = document.getElementById(productTableId);
+        console.log("Id da tabela de produto: " + productTableId);
+        const productQuantity = new Map();
+        const rows = productTable.querySelectorAll('tbody tr');
+        
+        let totalQuantity = 0; 
+        
+        rows.forEach(row => {
+            const productId = row.getAttribute('data-product-id'); 
+            const quantity = parseInt(row.querySelector('input[type="number"]').value, 10); 
+            productQuantity.set(productId, quantity);
+            totalQuantity += quantity;
+        });
+
+        productQuantity.forEach((quantity, id) => { 
+            console.log(`ID: ${id}, Quantidade: ${quantity}`); 
+        });
+
+        const resumePaneModal = document.getElementById("resumePane");
+        const resumePaneTableBody = resumePaneModal.querySelector("#modalSalesTable tbody");
+
+        // Criar uma nova linha na tabela de resumo
+        const newRow = document.createElement('tr');
+
+        // Coluna 1: Nome do funcionário
+        const employeeNameCell = document.createElement('td');
+        const employeeName = employeeSelect.options[employeeSelect.selectedIndex].text; // Obtém o texto do funcionário selecionado
+        employeeNameCell.textContent = employeeName;
+        newRow.appendChild(employeeNameCell);
+
+        // Coluna 2: Quantidade total de produtos
+        const totalQuantityCell = document.createElement('td');
+        totalQuantityCell.textContent = totalQuantity;
+        newRow.appendChild(totalQuantityCell);
+
+        // Coluna 3: Botões
+        const actionsCell = document.createElement('td');
+        
+        // Botão 1: Editar
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Editar';
+        editButton.classList.add('btn', 'btn-edit', 'btn-primary');
+        editButton.onclick = () => {
+            console.log(`Editando venda para o funcionário ${employeeName}`);
+            // Adicione lógica para editar
+        };
+        actionsCell.appendChild(editButton);
+
+        // Botão 2: Remover
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remover';
+        removeButton.onclick = () => {
+            newRow.remove();
+            console.log(`Venda removida para o funcionário ${employeeName}`);
+        };
+        actionsCell.appendChild(removeButton);
+
+        newRow.appendChild(actionsCell);
+
+        // Adicionar a nova linha ao corpo da tabela
+        resumePaneTableBody.appendChild(newRow);
+    }
+
+    
+    
+    
+    
+    
+    function saveNewSale(sectionType) {
+        const employeeSelectId = sectionType === "consultores" ? "consultantSelect" : "mechanicSelect";
+        const tableId = "modalSalesTable"; // Tabela de resumo no modal resumePane
+        const salesToSaveTableId = "finalSalesTable"; // Tabela final de vendas
+
+        const employeeSelect = document.getElementById(employeeSelectId);
+        const selectedEmployeeId = employeeSelect.value;
+        const selectedEmployeeName = employeeSelect.options[employeeSelect.selectedIndex].text;
+
+        if (selectedEmployeeId === "default") {
+            alert("Selecione um funcionário antes de salvar!");
+            return;
+        }
+
+        // Obtém os produtos e quantidades
+        const productRows = document.querySelectorAll(`#${sectionType}ProductsTable tbody tr`);
+        const productsSold = [];
+
+        productRows.forEach(row => {
+            const productId = row.dataset.productId;
+            const quantityInput = row.querySelector("input");
+            const quantity = parseInt(quantityInput.value, 10);
+
+            if (!isNaN(quantity) && quantity > 0) {
+                productsSold.push({
+                    productId,
+                    productName: row.cells[1].textContent,
+                    quantity
+                });
+            }
+        });
+
+        if (productsSold.length === 0) {
+            alert("Insira pelo menos uma quantidade de produto!");
+            return;
+        }
+
+        // Adiciona os dados na tabela de resumo
+        const summaryTable = document.getElementById(tableId).querySelector("tbody");
+        const row = document.createElement("tr");
+        row.dataset.employeeId = selectedEmployeeId;
+
+        const totalQuantity = productsSold.reduce((sum, product) => sum + product.quantity, 0);
+
+        row.innerHTML = `
+            <td>${selectedEmployeeName}</td>
+            <td>${totalQuantity}</td>
+            <td>
+                <button class="btn btn-warning btn-edit" onclick="editSale('${selectedEmployeeId}', '${sectionType}')">Editar</button>
+                <button class="btn btn-danger btn-remove" onclick="removeSale('${selectedEmployeeId}')">Remover</button>
+            </td>
+        `;
+
+        summaryTable.appendChild(row);
+
+        // Atualiza o modal salesToSave com IDs
+        const salesToSaveTable = document.getElementById(salesToSaveTableId).querySelector("tbody");
+
+        productsSold.forEach(product => {
+            const saveRow = document.createElement("tr");
+            saveRow.dataset.employeeId = selectedEmployeeId;
+            saveRow.dataset.productId = product.productId;
+
+            saveRow.innerHTML = `
+                <td>Cliente X</td>
+                <td>${selectedEmployeeId}</td>
+                <td>${product.productId}</td>
+                <td>${product.quantity}</td>
+            `;
+            salesToSaveTable.appendChild(saveRow);
+        });
+
+        alert("Venda registrada com sucesso!");
+
+        // Limpa os campos
+        employeeSelect.value = "default";
+        productRows.forEach(row => row.querySelector("input").value = "");
+    }
+
+    
+    function isEmployeeAlreadyRegistered(employeeId, tableId) {
+        const summaryTable = document.getElementById(tableId).querySelector("tbody");
+        
+        if (!summaryTable) {
+            console.error(`Tabela com ID '${tableId}' não encontrada.`);
+            return false;
+        }
+
+        const existingRow = Array.from(summaryTable.rows).find(row => row.dataset.employeeId === employeeId);
+        return existingRow !== undefined;
+    }
+
+
+
+
+
+    function updateResumePaneTable(title, employeeId, employeeName, salesData) {
+        const tableId = title === "Consultores" ? "consultantSalesTable" : "mechanicSalesTable";
+        const table = document.getElementById(tableId).querySelector("tbody");
+
+        let totalQuantity = salesData.reduce((sum, item) => sum + item.quantity, 0);
+
+        const newRow = document.createElement("tr");
+        newRow.dataset.employeeId = employeeId;
+        newRow.innerHTML = `
+            <td>${employeeName}</td>
+            <td>${totalQuantity}</td>
+            <td>
+                <button class="btn btn-warning btn-sm" onclick="editSale('${employeeId}', '${title}')">Editar</button>
+                <button class="btn btn-danger btn-sm" onclick="removeSale(this, '${employeeId}', '${title}')">Remover</button>
+            </td>
+        `;
+        table.appendChild(newRow);
+    }
+
+    function editSale(employeeId, sectionType) {
+        const saleModal = new bootstrap.Modal(document.getElementById("sale"));
+        const salesResumeTable = document.getElementById("modalSalesResumeTable").querySelector("tbody");
+
+        salesResumeTable.innerHTML = ""; // Limpa os dados antigos
+
+        const salesToSaveRows = document.querySelectorAll(`#finalSalesTable tbody tr[data-employee-id="${employeeId}"]`);
+
+        salesToSaveRows.forEach(row => {
+            const productId = row.dataset.productId;
+            const productName = row.cells[2].textContent;
+            const quantity = row.cells[3].textContent;
+
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${productId}</td>
+                <td>${productName}</td>
+                <td><input type="number" value="${quantity}" class="form-control"></td>
+            `;
+            salesResumeTable.appendChild(newRow);
+        });
+
+        document.getElementById("confirmSaleButton").onclick = function () {
+            confirmEdit(employeeId);
+        };
+
+        saleModal.show();
+    }
+
+
+    function confirmEdit(employeeId) {
+        const salesResumeTable = document.getElementById("modalSalesResumeTable").querySelector("tbody");
+        const updatedSales = Array.from(salesResumeTable.querySelectorAll("tr")).map(row => ({
+            productId: row.cells[0].textContent,
+            quantity: parseInt(row.querySelector("input").value, 10)
+        }));
+
+        const salesToSaveRows = document.querySelectorAll(`#finalSalesTable tbody tr[data-employee-id="${employeeId}"]`);
+
+        updatedSales.forEach(updatedSale => {
+            salesToSaveRows.forEach(row => {
+                if (row.dataset.productId === updatedSale.productId) {
+                    row.cells[3].textContent = updatedSale.quantity;
+                }
+            });
+        });
+
+        // Atualiza a tabela de resumo
+        const summaryRow = document.querySelector(`#modalSalesTable tbody tr[data-employee-id="${employeeId}"]`);
+        const totalQuantity = updatedSales.reduce((sum, sale) => sum + sale.quantity, 0);
+        summaryRow.cells[1].textContent = totalQuantity;
+
+        alert("Venda atualizada com sucesso!");
+        const saleModal = bootstrap.Modal.getInstance(document.getElementById("sale"));
+        saleModal.hide();
+    }
+
+    function removeSale(employeeId) {
+        const summaryRow = document.querySelector(`#modalSalesTable tbody tr[data-employee-id="${employeeId}"]`);
+        const salesToSaveRows = document.querySelectorAll(`#finalSalesTable tbody tr[data-employee-id="${employeeId}"]`);
+
+        summaryRow.remove(); // Remove da tabela de resumo
+
+        salesToSaveRows.forEach(row => row.remove()); // Remove da tabela de vendas finais
+
+        alert("Venda removida com sucesso!");
+    }
+
+</script>
+
+
+
+</body>
+</html>

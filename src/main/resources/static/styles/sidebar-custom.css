@@ -1,0 +1,36 @@
+.sidebar {
+	padding-top: 20px;
+}
+
+.sidebar .nav-item {
+	border-bottom: 1px solid #e0e0e0;
+	margin-bottom: 10px;
+	color: #c1c1c1;
+}
+
+.sidebar .nav-link {
+	text-decoration: none;
+	padding: 10px 15px;
+	color: #000;
+}
+
+.sidebar .nav-link:hover {
+	background-color: #b0b0b0;
+}
+
+.nav-item-custom {
+	border-bottom: 1px solid #e0e0e0;
+	margin-bottom: 10px;
+	color: #33342d;
+}
+
+.nav-link-custom:hover {
+	color: #1c1c1c;
+	background-color: #e9ecef !important;
+}
+
+.position-sticky-custom {
+	position: -webkit-sticky !important;
+	position: sticky !important;
+	margin: 25px 15px;
+}

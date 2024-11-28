@@ -1,0 +1,16 @@
+#goto-home {
+	width: 150px;
+}
+
+.navbar-custom{
+	--bs-navbar-brand-margin-end: 15rem;
+}
+
+.bg-body-tertiary-custom {
+    background-color: #1c1c1c !important;
+}
+
+.navbar-nav{
+	--bs-nav-link-color: #f1f1f1;
+	--bs-nav-link-hover-color: #f7e940;
+}
