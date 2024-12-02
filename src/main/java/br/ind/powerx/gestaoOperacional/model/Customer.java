@@ -41,6 +41,9 @@ public class Customer {
 	@Column(name = "registered_name", unique = true, nullable = false, length = 255)
 	private String registeredName;
 	
+	@Column(name = "fantasy_name", unique = true, nullable = false, length = 255)
+	private String fantasyName;
+	
 	@Column(length = 255)
 	private String address;
 	

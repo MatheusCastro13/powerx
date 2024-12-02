@@ -239,7 +239,7 @@
 			      </div>
 			      <div class="modal-footer">
 			      	<button type="button" class="btn btn-secondary" data-bs-target="#saleMechanicLaunch" data-bs-toggle="modal">Voltar</button>
-			        <button type="button" class="btn btn-primary" data-bs-target="#salesToSave" data-bs-toggle="modal">Confirmar</button>
+			        <button type="button" class="btn btn-primary" id="confirmSalesButton" >Confirmar</button>
 			      </div>
 			    </div>
 			  </div>
@@ -292,6 +292,42 @@
 					    
 					    </tbody>
 					</table>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<div class="modal fade" id="incentivesCalculatedModal" tabindex="-1" aria-labelledby="incentivesCalculatedModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="incentivesCalculatedModalLabel">Incentivos</h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+				  	<table>
+				  		<thead>
+				  			<tr>
+				  				<th>Mês</th>
+				  				<th>Região</th>
+				  				<th>Tipo</th>
+				  				<th>Modalidade</th>
+				  				<th>CPF</th>
+				  				<th>Nome</th>
+				  				<th>Total</th>
+				  				<th>Função</th>
+				  				<th>Loja</th>
+				  				<th>CNPJ</th>
+				  			</tr>
+				  		</thead>
+				  		<tbody id="incentivesCalculatedTableBody">
+				  		
+				  		</tbody>
+				  	</table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-target="#resumePane" data-bs-toggle="modal">Voltar</button>
+			        <button type="button" class="btn btn-primary">Save changes</button>
 			      </div>
 			    </div>
 			  </div>

@@ -112,6 +112,10 @@
             window.createApurationSection = createApurationSection;
             window.saveSale = saveSale;
             window.editSale = editSale;
+            window.populateResumePane = populateResumePane;
+            window.removeSale = removeSale;
+            window.populateFinalSalesTable = populateFinalSalesTable;
+          
         });
     });
     
@@ -220,6 +224,8 @@
     let salesData = []; // Array global para armazenar vendas
 
     function saveSale(title, employeeSelectId, employees, productsTableId, products) {
+    	const customerSelect = document.getElementById("customerSelect");
+    	const selectedCustomerId = customerSelect.value;
         const employeeSelect = document.getElementById(employeeSelectId);
         const selectedEmployeeId = employeeSelect.value;
         const selectedEmployee = employees.find(emp => emp.id == selectedEmployeeId);
@@ -234,6 +240,8 @@
         
         let totalProductsSold = 0;
         let saleDetails = {
+            customerId: selectedCustomerId,
+            employeeId: selectedEmployee.id,
             employee: selectedEmployee.name,
             products: []
         };
@@ -265,6 +273,12 @@
         document.getElementById("finalizeMechanicButton").addEventListener("click", () => {
             populateResumePane();
         });
+        
+        document.getElementById("confirmSalesButton").addEventListener("click", () => {
+    	    populateFinalSalesTable();
+    	    const incentivesCalculatedModal = new bootstrap.Modal(document.getElementById('incentivesCalculatedModal'));
+    	    incentivesCalculatedModal.show(); // Abrir modal salesToSave após preencher a tabela
+    	});
     }
 
     
@@ -306,6 +320,10 @@
         // Salva o índice atual da venda que está sendo editada
         document.getElementById("confirmSaleButton").setAttribute("data-sale-index", index);
 
+        // Abre o modal de edição
+        const saleModal = new bootstrap.Modal(document.getElementById('sale'));
+        saleModal.show();
+
         document.getElementById("confirmSaleButton").addEventListener("click", () => {
             const saleIndex = document.getElementById("confirmSaleButton").getAttribute("data-sale-index");
             const tableBody = document.querySelector("#modalSalesResumeTable tbody");
@@ -338,10 +356,6 @@
             const saleModal = bootstrap.Modal.getInstance(document.getElementById('sale'));
             saleModal.hide();
         });
-
-        // Abre o modal de edição
-        const saleModal = new bootstrap.Modal(document.getElementById('sale'));
-        saleModal.show();
     }
 
 
@@ -351,10 +365,24 @@
         populateResumePane();
     }
 
-    document.getElementById("finalizeMechanicButton").addEventListener("click", () => {
-        populateResumePane();
-    });
-    
+
+	function populateFinalSalesTable() {
+	    const tableBody = document.querySelector("#finalSalesTable tbody");
+	    tableBody.innerHTML = ""; // Limpa a tabela antes de preenchê-la novamente
+
+	    salesData.forEach(sale => {
+	        sale.products.forEach(product => {
+	            const row = document.createElement("tr");
+	            row.innerHTML = `
+	                <td>${sale.customerId}</td> <!-- Substitua pelo ID correto do cliente -->
+	                <td>${sale.employeeId}</td> <!-- Substitua pelo ID correto do funcionário -->
+	                <td>${product.productId}</td>
+	                <td>${product.quantity}</td>
+	            `;
+	            tableBody.appendChild(row);
+	        });
+	    });
+	}
 </script>
 
 
