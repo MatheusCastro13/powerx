@@ -71,8 +71,12 @@ public class CustomerController {
 	}
 
 	@PostMapping("/save")
-	public String save(@ModelAttribute Customer customer, @RequestParam Long userId, @RequestParam Long groupId,
-			@RequestParam Long mechanicApurationId, @RequestParam List<Long> employees, Model model) {
+	public String save(@ModelAttribute Customer customer, 
+            @RequestParam Long userId, 
+            @RequestParam Long groupId,
+            @RequestParam Long mechanicApurationId, 
+            @RequestParam(required = false) List<Long> employees, 
+            Model model) {
 		customer.setActive(true);
 		customerService.save(customer, userId, groupId, mechanicApurationId, employees);
 

@@ -2,7 +2,9 @@ package br.ind.powerx.gestaoOperacional.model.enums;
 
 public enum State {
 
-	SP("SP"),
+	SP1("SP1"),
+	SP2("SP2"),
+	SP3("SP3"),
 	MG("MG"),
 	RJ("RJ"),
 	PB("PB"),

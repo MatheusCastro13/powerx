@@ -53,6 +53,10 @@
                         <input type="text" class="form-control" name="registeredName" required>
                     </div>
                     <div class="mb-3">
+                        <label for="newRegisteredName" class="form-label">Nome Fantasia</label>
+                        <input type="text" class="form-control" name="fantasyName" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="newAddress" class="form-label">Endereço</label>
                         <input type="text" class="form-control" name="address">
                     </div>
@@ -112,6 +116,10 @@
                         <input type="text" class="form-control" th:value="${customer.registeredName}" name="registeredName" required>
                     </div>
                     <div class="mb-3">
+                        <label for="editRegisteredNamel" class="form-label">Nome Fantasia</label>
+                        <input type="text" class="form-control" th:value="${customer.fantasyName}" name="fantasyName" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="editAddress" class="form-label">Endereço</label>
                         <input type="text" class="form-control" th:value="${customer.address}" name="address">
                     </div>
@@ -160,10 +168,11 @@
 	      	<p>Grupo: <span th:text="${customer.group?.name}"></span></p>
 	        <p>CNPJ: <span th:text="${customer.cnpj}"></span></p>
             <p>Razão Social: <span th:text="${customer.registeredName}"></span></p>
+            <p>Nome Fantasia: <span th:text="${customer.fantasyName}"></span></p>
 			<p>Endereço: <span th:text="${customer.address}"></span></p>
 			<p>Representante: <span th:text="${customer.user?.name}"></span></p>
 			<p>Apuração dos Mecânicos: <span th:text="${customer.mechanicApuration?.name}"></span></p>
-			<div class="vstack gap-2 col-md-5 mx-auto .g-col-3 .g-start-2">
+			<div class="vstack gap-2 col-md-5 mx-auto">
 				<button class="btn btn-primary" th:data-bs-target="'#showEmployeesModal' + ${customer.id}" data-bs-toggle="modal">Premiados</button>
 	            <button class="btn btn-primary" th:data-bs-target="'#showIncentivesModal' + ${customer.id}" data-bs-toggle="modal">Incentivos</button>
 	            <button class="btn btn-primary" th:data-bs-target="'#showSalesModal' + ${customer.id}" data-bs-toggle="modal">Vendas</button>

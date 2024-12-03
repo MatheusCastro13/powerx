@@ -25,7 +25,7 @@
     <div th:replace="/fragments/products/products-table.html :: products-table(products=${products})">
     
     </div>
-</div>
+</div>	
 
 
 <div class="modal fade" id="newProductModal" tabindex="-1" aria-labelledby="newProductModalLabel" aria-hidden="true">
@@ -91,7 +91,7 @@
 </div>
 
 	<div th:each="product : ${products}" class="modal fade" th:id="'editIncentiveValuesModal' + ${product.id}" tabindex="-1" aria-labelledby="'editIncentiveValuesModalLabel' + ${product.id}" aria-hidden="true">
-	    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+	    <div class="modal-dialog modal-dialog-scrollable modal-xl">
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <h5 class="modal-title" th:id="'editIncentiveValuesModalLabel' + ${product.id}">Editar Incentivos Produto</h5>

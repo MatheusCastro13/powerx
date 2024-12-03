@@ -1,4 +1,4 @@
-package br.ind.powerx.gestaoOperacional.controllers;
+  package br.ind.powerx.gestaoOperacional.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import br.ind.powerx.gestaoOperacional.model.dtos.SalesRequest;
+import br.ind.powerx.gestaoOperacional.model.dtos.SalesDTO;
 import br.ind.powerx.gestaoOperacional.services.SaleService;
 
 @Controller
@@ -18,7 +18,7 @@ public class SaleController {
 	public SaleService saleService;
 	
 	@PostMapping("/saveAll")
-	public ResponseEntity<?> saveSales(@RequestBody SalesRequest salesRequest){
+	public ResponseEntity<?> saveSales(@RequestBody SalesDTO salesRequest){
 		
 		saleService.saveSales(salesRequest);
 		return ResponseEntity.noContent().build();

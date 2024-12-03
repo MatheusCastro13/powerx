@@ -1,4 +1,4 @@
-package br.ind.powerx.gestaoOperacional.model;
+  package br.ind.powerx.gestaoOperacional.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

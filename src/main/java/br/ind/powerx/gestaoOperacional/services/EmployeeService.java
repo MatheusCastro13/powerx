@@ -68,7 +68,7 @@ public class EmployeeService {
 			});
 		
 		paymentMethod.addEmployee(emp);
-		emp.setPaymentMethod(null);
+		emp.setPaymentMethod(paymentMethod);
 		
 		employeeRepository.save(emp);
 	}

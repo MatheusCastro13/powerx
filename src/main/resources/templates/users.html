@@ -76,7 +76,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="newCustomers" class="form-label">Selecione os Clientes</label>
-                        <select class="form-select" name="customers" required multiple>
+                        <select class="form-select" name="customers" multiple>
                             <option th:each="customer : ${availableCustomers}" th:value="${customer.id}" th:text="${customer.registeredName}"></option>
                         </select>
                     </div>
