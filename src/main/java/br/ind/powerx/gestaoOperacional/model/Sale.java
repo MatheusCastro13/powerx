@@ -53,10 +53,18 @@ public class Sale {
 	private Product product;
 	
 	@Column(name = "quantity", nullable = false)
-	private Double quantity;
+	private Integer quantity;
 	
 	@OneToMany(mappedBy = "sale", cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Incentive> incentives = new ArrayList<>();
+	
+	public Sale(Customer customer, Employee employee, Product product, Integer quantity) {
+		this.customer = customer;
+		this.employee = employee;
+		this.product = product;
+		this.quantity = quantity;
+		
+	}
 	
 	public void setCustomer(Customer customer) {
 		if(customer != null) {
@@ -87,6 +95,19 @@ public class Sale {
 		if(incentives.remove(incentive)) {
 			incentive.setSale(null);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "Cliente: Nome - " + this.customer.getRegisteredName()
+					+ "\n cnpj - " + this.customer.getCnpj() +
+					"\nVendedor: Nome - " + this.employee.getName()
+					+ "\n cpf - " + this.employee.getCpf() + 
+					"\nProduto: Nome - " + this.product.getProductName()
+					+ "\n codigo - " + this.product.getProductCode() +
+					"\nQuantidade: Nome - " + this.quantity
+					; 
 	}
 	
 }

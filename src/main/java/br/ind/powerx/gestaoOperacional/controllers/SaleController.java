@@ -28,12 +28,6 @@ public class SaleController {
 		saleService.saveSales(sales);
 		return ResponseEntity.noContent().build();
 	}
-	
-	@GetMapping
-	public ResponseEntity<?> teste(){
-		System.out.println("Entrou");
-		return ResponseEntity.noContent().build();
-	}
 
 
 }

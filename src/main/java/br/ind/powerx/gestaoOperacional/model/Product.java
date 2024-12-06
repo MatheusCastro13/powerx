@@ -43,6 +43,7 @@ public class Product {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<IncentiveValue> incentiveValues = new ArrayList<>();
 	
+	@ToString.Exclude
 	@ManyToMany(mappedBy = "products")
 	private List<Group> groups = new ArrayList<>();
 	

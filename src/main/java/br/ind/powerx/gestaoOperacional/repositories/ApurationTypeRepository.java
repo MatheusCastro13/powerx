@@ -8,4 +8,6 @@ import br.ind.powerx.gestaoOperacional.model.ApurationType;
 @Repository
 public interface ApurationTypeRepository extends JpaRepository<ApurationType, Long> {
 
+	ApurationType findByName(String string);
+
 }

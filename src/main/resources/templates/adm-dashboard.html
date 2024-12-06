@@ -401,6 +401,10 @@
         .catch(error => {
             console.error("Erro ao enviar vendas:", error);
         });
+        
+        
+        const incentivesCalculatedModal = new bootstrap.Modal.getInstance(document.getElementById('incentivesCalculatedModal'));
+        incentivesCalculatedModal.show();
     }
 
 
