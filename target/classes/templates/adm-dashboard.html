@@ -4,7 +4,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
 <title>PowerX|Adm</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -114,7 +116,7 @@
             window.editSale = editSale;
             window.populateResumePane = populateResumePane;
             window.removeSale = removeSale;
-            window.populateFinalSalesTable = populateFinalSalesTable;
+            window.sendSalesToController = sendSalesToController;
           
         });
     });
@@ -274,11 +276,8 @@
             populateResumePane();
         });
         
-        document.getElementById("confirmSalesButton").addEventListener("click", () => {
-    	    populateFinalSalesTable();
-    	    const incentivesCalculatedModal = new bootstrap.Modal(document.getElementById('incentivesCalculatedModal'));
-    	    incentivesCalculatedModal.show(); // Abrir modal salesToSave após preencher a tabela
-    	});
+        document.getElementById("saveAllSalesButton").addEventListener("click", sendSalesToController);
+
     }
 
     
@@ -364,25 +363,49 @@
         salesData = salesData.filter(sale => sale.employee !== employeeName);
         populateResumePane();
     }
+    
+    function sendSalesToController() {
+        // Recupera o token CSRF e o nome do cabeçalho dinamicamente do HTML
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+        
+        // Exibe os valores no console para debug
+        console.log("CSRF Token:", csrfToken); 
+        console.log("CSRF Header Name:", csrfHeader);
+
+        const url = `/sale/calcule`;
+
+        // Configuração correta do cabeçalho com nomes dinâmicos
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        // Adiciona o cabeçalho CSRF usando a chave dinâmica recuperada
+        headers[csrfHeader] = csrfToken;
+
+        fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(salesData), // Serializa os dados corretamente
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro ao enviar vendas: ${response.statusText}`);
+            }
+            return response.text(); // Use .text() caso o servidor não retorne JSON
+        })
+        .then(data => {
+            alert("Vendas enviadas com sucesso!");
+            console.log("Resposta do servidor:", data);
+        })
+        .catch(error => {
+            console.error("Erro ao enviar vendas:", error);
+        });
+    }
 
 
-	function populateFinalSalesTable() {
-	    const tableBody = document.querySelector("#finalSalesTable tbody");
-	    tableBody.innerHTML = ""; // Limpa a tabela antes de preenchê-la novamente
 
-	    salesData.forEach(sale => {
-	        sale.products.forEach(product => {
-	            const row = document.createElement("tr");
-	            row.innerHTML = `
-	                <td>${sale.customerId}</td> <!-- Substitua pelo ID correto do cliente -->
-	                <td>${sale.employeeId}</td> <!-- Substitua pelo ID correto do funcionário -->
-	                <td>${product.productId}</td>
-	                <td>${product.quantity}</td>
-	            `;
-	            tableBody.appendChild(row);
-	        });
-	    });
-	}
+    
 </script>
 
 

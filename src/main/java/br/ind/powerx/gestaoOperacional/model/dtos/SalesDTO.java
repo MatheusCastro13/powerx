@@ -1,5 +1,7 @@
 package br.ind.powerx.gestaoOperacional.model.dtos;
 
-public class SalesDTO {
+import java.util.List;
+
+public record SalesDTO (Long customerId, Long employeeId, List<ProductSaleDTO> products){
 
 }
