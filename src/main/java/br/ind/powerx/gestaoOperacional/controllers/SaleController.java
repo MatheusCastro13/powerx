@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.ind.powerx.gestaoOperacional.model.CompactIncentive;
 import br.ind.powerx.gestaoOperacional.model.dtos.SalesDTO;
 import br.ind.powerx.gestaoOperacional.services.SaleService;
 
@@ -25,7 +26,7 @@ public class SaleController {
 	@ResponseBody
 	public ResponseEntity<?> saveSales(@RequestBody List<SalesDTO> sales){
 		System.out.println("ENTROU NO CONTROLADOR");
-		saleService.saveSales(sales);
+		List<CompactIncentive> incentives = saleService.saveSales(sales);
 		return ResponseEntity.noContent().build();
 	}
 
