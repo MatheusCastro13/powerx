@@ -69,21 +69,26 @@ public class Employee {
 	@Column(name = "active", nullable = false)
 	private boolean active;
 	
+	@ToString.Exclude
 	@ManyToMany
 	@JoinTable(name = "employee_function",
     joinColumns = @JoinColumn(name = "employee_id"),
     inverseJoinColumns = @JoinColumn(name = "function_id"))
 	private List<Function> functions = new ArrayList<>();
 	
+	@ToString.Exclude
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Sale> sales = new ArrayList<>();
 	
+	@ToString.Exclude
 	@ManyToMany(mappedBy = "employees")
 	private List<Customer> customers = new ArrayList<>();
 	
+	@ToString.Exclude
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Incentive> incentives = new ArrayList<>();
 	
+	@ToString.Exclude
 	@ManyToMany
 	@JoinTable(name = "employee_apuration_type",
     joinColumns = @JoinColumn(name = "employee_id"),

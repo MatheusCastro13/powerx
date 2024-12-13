@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.ind.powerx.gestaoOperacional.model.IncentiveValue;
-import br.ind.powerx.gestaoOperacional.repositories.InentiveValueRepository;
+import br.ind.powerx.gestaoOperacional.repositories.IncentiveValueRepository;
 
 @Service
 public class IncentiveValueService {
 
 	@Autowired
-	private InentiveValueRepository valueRepository;
+	private IncentiveValueRepository valueRepository;
 	
 	public void save(IncentiveValue value) {
 		valueRepository.save(value);
