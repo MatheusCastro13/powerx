@@ -17,4 +17,7 @@ public interface IncentiveValueRepository extends JpaRepository<IncentiveValue, 
 
 	IncentiveValue findByCustomerAndProductAndFunction(Customer customer, Product product, Function function);
 
+
+	List<IncentiveValue> findByCustomer(Customer customer);
+
 }

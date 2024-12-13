@@ -83,25 +83,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void addIncentiveValue(Long id, List<Long> customers, List<Long> functions, List<Double> ccValues, List<Double> nfsValues) {
-
-		customers.forEach(c ->{
-			System.out.println("id do cliente" + c);
-		});
-		
-		functions.forEach(c ->{
-			System.out.println("id da funcao" + c);
-		});
-		
-		ccValues.forEach(c ->{
-			System.out.println("valor conta corrente" + c);
-		});
-		
-		nfsValues.forEach(c ->{
-			System.out.println("valor nf serviço" + c);
-		});
-		
-		
+	public void addIncentiveValue(Long id, List<Long> customers, List<Long> functions, List<Double> ccValues, List<Double> nfsValues) {		
 	    Product product = productRepository.findById(id)
 	            .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
 

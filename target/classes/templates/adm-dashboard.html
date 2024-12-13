@@ -268,6 +268,13 @@
         if (saleDetails.products.length > 0) {
             salesData.push(saleDetails);
             alert("Venda salva com sucesso!");
+            employeeSelect.value = "default"; 
+            rows.forEach(row => {
+                const quantityInput = row.querySelector('input');
+                if (quantityInput) {
+                    quantityInput.value = ""; 
+                }
+            });
         } else {
             alert("Preencha ao menos um produto com uma quantidade válida.");
         }
@@ -403,7 +410,7 @@
         });
         
         
-        const incentivesCalculatedModal = new bootstrap.Modal.getInstance(document.getElementById('incentivesCalculatedModal'));
+        const incentivesCalculatedModal = new bootstrap.Modal(document.getElementById('incentivesCalculatedModal'));
         incentivesCalculatedModal.show();
     }
 

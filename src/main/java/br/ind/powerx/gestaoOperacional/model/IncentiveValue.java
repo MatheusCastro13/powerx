@@ -56,5 +56,15 @@ public class IncentiveValue {
     @Column(name = "nfs_value", nullable = false, precision = 10, scale = 2)
 	private BigDecimal nfsValue;
 	
-	
+	@Override
+	public String toString() {
+		return "Valor do Incentivo para: \n" +
+				"Cliente - " + customer.getFantasyName() +
+				"\nFuncão - " + function.getName() +
+				"\nProduto - " + product.getProductCode() + " " + product.getProductName() +
+				"\nConta Corrente - " + ccValue +
+				"\nNF Serviço - " + nfsValue;
+				
+				
+	}
 }

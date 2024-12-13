@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.ind.powerx.gestaoOperacional.model.CompactIncentive;
 import br.ind.powerx.gestaoOperacional.model.Customer;
 import br.ind.powerx.gestaoOperacional.model.Employee;
 import br.ind.powerx.gestaoOperacional.model.Incentive;
@@ -39,7 +40,7 @@ public class SaleService {
 	@Autowired
 	private CalculeIncentiveService calculeIncentiveService;
 	
-	public void saveSales(List<SalesDTO> salesDTO) {
+	public List<CompactIncentive> saveSales(List<SalesDTO> salesDTO) {
 		List<Sale> sales = new ArrayList<>();
 		for(SalesDTO sale : salesDTO) {			
 			if(sale.customerId() == null) {
@@ -78,7 +79,9 @@ public class SaleService {
 				
 			}
 		}
-		List<Incentive> incentives = calculeIncentiveService.calculeIncentive(sales);
+		List<CompactIncentive> incentives = calculeIncentiveService.calculateIncentives(sales);
+		
+		return incentives;
 	}
 }
 
