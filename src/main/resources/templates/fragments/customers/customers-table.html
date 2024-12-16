@@ -10,7 +10,7 @@
             
             <tr th:each="customer : ${customers}">
                 <td th:text="${customer.id}"></td>
-                <td th:text="${customer.registeredName}"></td>
+                <td th:text="${customer.fantasyName}"></td>
                 <td>
                     <button type="button" class="btn btn-warning" data-bs-toggle="modal" th:data-bs-target="'#editCustomerModal' + ${customer.id}">Editar</button>
                     <button type="button" class="btn btn-info" data-bs-toggle="modal" th:data-bs-target="'#detailsCustomerModal' + ${customer.id}">Detalhes</button>

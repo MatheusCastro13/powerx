@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import br.ind.powerx.gestaoOperacional.model.CompactIncentive;
 import br.ind.powerx.gestaoOperacional.model.Customer;
 import br.ind.powerx.gestaoOperacional.model.Employee;
-import br.ind.powerx.gestaoOperacional.model.Incentive;
 import br.ind.powerx.gestaoOperacional.model.Product;
 import br.ind.powerx.gestaoOperacional.model.Sale;
 import br.ind.powerx.gestaoOperacional.model.dtos.ProductSaleDTO;
@@ -41,6 +40,7 @@ public class SaleService {
 	private CalculeIncentiveService calculeIncentiveService;
 	
 	public List<CompactIncentive> saveSales(List<SalesDTO> salesDTO) {
+		
 		List<Sale> sales = new ArrayList<>();
 		for(SalesDTO sale : salesDTO) {			
 			if(sale.customerId() == null) {
@@ -74,15 +74,26 @@ public class SaleService {
 				
 				productAndQuantity.put(productFinded, product.quantity());
 				
+				
 				Sale saleToSave = new Sale(customer, emp, productFinded, product.quantity());
+				
+				Integer maxOrdem = saleRepository.findMaxOrderForCustomer(customer.getId());
+
+		        int novaOrdem = (maxOrdem != null ? maxOrdem : 0) + 1;
+
+		        saleToSave.setOrdem(novaOrdem);
+		        
 				sales.add(saleToSave);
 				
 			}
 		}
+		
+		
 		List<CompactIncentive> incentives = calculeIncentiveService.calculateIncentives(sales);
 		
 		return incentives;
 	}
+	
 }
 
 

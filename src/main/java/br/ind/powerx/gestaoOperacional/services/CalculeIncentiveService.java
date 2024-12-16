@@ -1,10 +1,12 @@
 package br.ind.powerx.gestaoOperacional.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import br.ind.powerx.gestaoOperacional.model.Sale;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.repositories.ApurationTypeRepository;
 import br.ind.powerx.gestaoOperacional.repositories.FunctionRepository;
+import br.ind.powerx.gestaoOperacional.repositories.IncentiveRepository;
 import br.ind.powerx.gestaoOperacional.repositories.IncentiveValueRepository;
 
 
@@ -30,6 +33,9 @@ public class CalculeIncentiveService {
 	
 	@Autowired
 	private FunctionRepository funcRepo;
+	
+	@Autowired
+	private IncentiveRepository incentiveRepository;
 	
 	@Autowired
 	private IncentiveValueRepository incentiveValueRepository;
@@ -53,9 +59,8 @@ public class CalculeIncentiveService {
 	    for (Sale sale : sales) {
 	        incentives.addAll(calculateIncentivesForSale(sale, apurationTypes, customer, user));
 	    }
-
+	    
 	    incentives.addAll(calculateIncentivesForRoles(customer, sales, apurationTypes, user));
-	    printIncentives(incentives);
 
 	    return compactIncentives(incentives);
 	}
@@ -76,10 +81,14 @@ public class CalculeIncentiveService {
 	}
 
 	private int calculateTotalQuantity(List<Sale> sales, Product product) {
-	    return sales.stream()
-	                .filter(sale -> sale.getProduct().equals(product)) // Filtra pelo produto
-	                .mapToInt(Sale::getQuantity) // Mapeia a quantidade das vendas filtradas
-	                .sum(); // Soma as quantidades
+	    int totalQuantity = 0;
+	    for(Sale sale : sales) {
+	    	if(sale.getProduct().equals(product) && !sale.getEmployee().getFunctions().stream().anyMatch(f -> f.getName().equalsIgnoreCase("Mecânico"))) {
+	    		totalQuantity += sale.getQuantity();
+	    	}
+	    }
+	    System.out.println("\nAquantidade somada para o produto " + product.getProductName() + " = " + totalQuantity + "\n");
+	    return totalQuantity;
 	}
 
 
@@ -98,14 +107,13 @@ public class CalculeIncentiveService {
 	        if (isRelevantFunction(function)) {
 	            IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
 
-	            
 	            BigDecimal ccValue = BigDecimal.ZERO;
 	            BigDecimal nfsValue = BigDecimal.ZERO;
 	            
 	            if(value != null) {
 	            	ccValue = value.getCcValue().multiply(BigDecimal.valueOf(quantity));
 		            nfsValue = value.getNfsValue().multiply(BigDecimal.valueOf(quantity));
-		            incentives.addAll(createIncentives(ccValue, nfsValue, employee, function, sale.getCustomer(), sale, user, apurationTypes));
+		            incentives.addAll(createIncentives(ccValue, nfsValue, employee, function, sale.getCustomer(), sale.getOrdem(), user, apurationTypes));
 	            }
 	            
 	        }
@@ -116,10 +124,11 @@ public class CalculeIncentiveService {
 
 	private List<Incentive> calculateIncentivesForRoles(Customer customer, List<Sale> sales,
 	                                                    Map<String, ApurationType> apurationTypes, User user) {
+		System.out.println("\nCalculando incentivos por funções fora ct e m\n");
 		
 	    List<Incentive> incentives = new ArrayList<>();
 
-	    List<String> roles = List.of("Chefe de Oficina", "Gerente de Pós Venda", "Diretor de Pós Venda", "Gerente de Peças");
+	    List<String> roles = List.of("Chefe de Oficina", "Gerente de Pós Venda", "Diretor de Pós venda", "Gerente de Peças");
 	    List<Employee> relevantEmployees = customer.getEmployees().stream()
 	            .filter(emp -> emp.getFunctions().stream().anyMatch(func -> roles.contains(func.getName())))
 	            .collect(Collectors.toList());
@@ -127,21 +136,57 @@ public class CalculeIncentiveService {
 	    for (Employee emp : relevantEmployees) {
 	        for (Product product : customer.getGroup().getProducts()) {
 	            for (Function function : emp.getFunctions()) {
-	            	int totalQuantity = calculateTotalQuantity(sales, product);
-	            	
-	                IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
-	                
-	                BigDecimal ccValue = BigDecimal.ZERO;
-	                BigDecimal nfsValue = BigDecimal.ZERO;
-	                
-	                if(value != null) {
-	                	ccValue = value.getCcValue().multiply(BigDecimal.valueOf(totalQuantity));
-		                nfsValue = value.getNfsValue().multiply(BigDecimal.valueOf(totalQuantity));
-		                incentives.addAll(createIncentives(ccValue, nfsValue, emp, function, customer, null, user, apurationTypes));
-	                }
+	            	if(!function.getName().equalsIgnoreCase("Mecânico") && !function.getName().equalsIgnoreCase("Consultor Técnico")) {
+	            		int totalQuantity = calculateTotalQuantity(sales, product);
+		            	System.out.println("Premiado - " + emp.getName());
+		            	System.out.println("Função - " + function.getName());
+		            	System.out.println("produto vendido - " + product.getProductCode() + " " + product.getProductName());
+		            	System.out.println("Quantidade de produtos - " + totalQuantity);
+		            	
+		                IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
+		                
+		                BigDecimal ccValue = BigDecimal.ZERO;
+		                BigDecimal nfsValue = BigDecimal.ZERO;
+		                
+		                if(value != null) {
+		                	System.out.println(value);
+		                	ccValue = value.getCcValue().multiply(BigDecimal.valueOf(totalQuantity));
+			                nfsValue = value.getNfsValue().multiply(BigDecimal.valueOf(totalQuantity));
+			                System.out.println("\ncc - " + ccValue + " nfs - " + nfsValue + "\n");
+			                incentives.addAll(createIncentives(ccValue, nfsValue, emp, function, customer, null, user, apurationTypes));
+		                }
+	            	}
 
 	            }
 	        }
+	    }
+	    
+	    if(customer.getMechanicApuration() != null) {
+	    	if(customer.getMechanicApuration().getName().equalsIgnoreCase("Linear")) {
+	    		List<Employee> mechanics = customer.getEmployees().stream()
+	    	            .filter(emp -> emp.getFunctions().stream().anyMatch(func -> func.getName().equalsIgnoreCase("Mecânico")))
+	    	            .collect(Collectors.toList());
+	    		
+	    		for (Employee emp : mechanics) {
+	    	        for (Product product : customer.getGroup().getProducts()) {
+	    	            for (Function function : emp.getFunctions()) {
+	    	            	int totalQuantity = calculateTotalQuantity(sales, product);
+	    	            	
+	    	                IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
+	    	                
+	    	                BigDecimal ccValue = BigDecimal.ZERO;
+	    	                BigDecimal nfsValue = BigDecimal.ZERO;
+	    	                
+	    	                if(value != null) {
+	    	                	ccValue = value.getCcValue().multiply(BigDecimal.valueOf(totalQuantity));
+	    		                nfsValue = value.getNfsValue().multiply(BigDecimal.valueOf(totalQuantity));
+	    		                incentives.addAll(createIncentives(ccValue, nfsValue, emp, function, customer, null, user, apurationTypes));
+	    	                }
+ 
+	    	            }
+	    	        }
+	    	    }
+	    	}
 	    }
 
 	    return incentives;
@@ -152,30 +197,28 @@ public class CalculeIncentiveService {
 	}
 
 	private List<Incentive> createIncentives(BigDecimal ccValue, BigDecimal nfsValue, Employee employee, Function function,
-	                                         Customer customer, Sale sale, User user, Map<String, ApurationType> apurationTypes) {
+	                                         Customer customer, Integer saleOrdem, User user, Map<String, ApurationType> apurationTypes) {
+		
+		if(saleOrdem == null) {
+			saleOrdem = 0;
+		}
+		
 	    List<Incentive> incentives = new ArrayList<>();
+	    Integer maxOrdem = incentiveRepository.findMaxOrderForCustomer(customer.getId());
+
+        int newOrdem = (maxOrdem != null ? maxOrdem : 0) + 1;
 
 	    if (ccValue.compareTo(BigDecimal.ZERO) > 0) {
-	        incentives.add(new Incentive(null, null, user.getState(), employee.getPaymentMethod(), apurationTypes.get("Conta Corrente"),
-	                employee, employee.getCpf(), ccValue, function, customer, sale, user));
+	        incentives.add(new Incentive(null, newOrdem, null, user.getState(), employee.getPaymentMethod(), apurationTypes.get("Conta Corrente"),
+	                employee, employee.getCpf(), ccValue, function, customer, saleOrdem, user));
 	    }
 
 	    if (nfsValue.compareTo(BigDecimal.ZERO) > 0) {
-	        incentives.add(new Incentive(null, null, user.getState(), employee.getPaymentMethod(), apurationTypes.get("NF Serviço"),
-	                employee, employee.getCpf(), nfsValue, function, customer, sale, user));
+	        incentives.add(new Incentive(null, newOrdem, null, user.getState(), employee.getPaymentMethod(), apurationTypes.get("NF Serviço"),
+	                employee, employee.getCpf(), nfsValue, function, customer, saleOrdem, user));
 	    }
-
+	    
 	    return incentives;
-	}
-
-	private void printIncentives(List<Incentive> incentives) {
-	    incentives.forEach(i -> {
-	        System.out.println("Vendedor : " + i.getEmployee().getName());
-	        System.out.println("Valor : " + i.getIncentiveValue());
-	        System.out.println("Metodo de pagamento: " + i.getPaymentMethod().getName());
-	        System.out.println("Apuração : " + i.getApurationType().getName());
-	        System.out.println();
-	    });
 	}
 
 	public List<CompactIncentive> compactIncentives(List<Incentive> incentives) {
@@ -191,26 +234,70 @@ public class CalculeIncentiveService {
 	        List<Incentive> employeeIncentives = entry.getValue();
 
 	        Incentive firstIncentive = employeeIncentives.get(0);
-	        String monthYear = firstIncentive.getReferenceDate().format(monthYearFormatter);
-	        String employeeName = firstIncentive.getEmployee().getName();
-	        String region = firstIncentive.getUser().getState().getState();
-	        String type = firstIncentive.getApurationType().getName();
-	        String modality = firstIncentive.getPaymentMethod().getName();
-	        String function = firstIncentive.getEmployeeFunction().getName();
-	        String store = firstIncentive.getCustomer().getFantasyName();
-	        String cnpj = firstIncentive.getCustomer().getCnpj();
+
+	        String incentiveOrdem = firstIncentive.getOrdem() != null ? firstIncentive.getOrdem().toString() : "N/A";
+	        String saleOrdem = firstIncentive.getSaleOrdem() != null ? firstIncentive.getSaleOrdem().toString() : "N/A";
+
+	        String monthYear;
+	        if (firstIncentive.getReferenceDate() != null) {
+	            monthYear = firstIncentive.getReferenceDate().format(monthYearFormatter);
+	        } else {
+	            monthYear = LocalDate.now().format(monthYearFormatter);
+	        }
+
+	        String employeeName = firstIncentive.getEmployee() != null ? firstIncentive.getEmployee().getName() : "Sem Nome";
+	        String region = firstIncentive.getUser() != null ? firstIncentive.getUser().getState().getState() : "Região Desconhecida";
+	        String type = firstIncentive.getApurationType() != null ? firstIncentive.getApurationType().getName() : "Tipo Desconhecido";
+	        String modality = firstIncentive.getPaymentMethod() != null ? firstIncentive.getPaymentMethod().getName() : "Modalidade Desconhecida";
+	        String function = firstIncentive.getEmployeeFunction() != null ? firstIncentive.getEmployeeFunction().getName() : "Função Desconhecida";
+	        String store = firstIncentive.getCustomer() != null ? firstIncentive.getCustomer().getFantasyName() : "Loja Desconhecida";
+	        String cnpj = firstIncentive.getCustomer() != null ? firstIncentive.getCustomer().getCnpj() : "CNPJ Desconhecido";
 
 	        BigDecimal total = employeeIncentives.stream()
 	            .map(Incentive::getIncentiveValue)
+	            .filter(Objects::nonNull)
 	            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
 	        compactedList.add(new CompactIncentive(
-	            monthYear, region, type, modality, cpf, employeeName, total, function, store, cnpj
+	            incentiveOrdem, 
+	            saleOrdem, 
+	            monthYear, 
+	            region, 
+	            type, 
+	            modality, 
+	            cpf, 
+	            employeeName, 
+	            total, 
+	            function, 
+	            store, 
+	            cnpj
 	        ));
 	    }
 
+	    printCompactIncentives(compactedList);
+
 	    return compactedList;
 	}
+	
+	public void printCompactIncentives(List<CompactIncentive> compactedIncentives) {
+		System.out.println("\nINCENTIVOS COMPACTADOS\n");
+	    for (CompactIncentive incentive : compactedIncentives) {
+	    	System.out.println("Ordem de incentivo: " + incentive.getIncentiveOrdem());
+	    	System.out.println("Ordem de venda: " + incentive.getSaleOrdem());
+	        System.out.println("Mês-Ano: " + incentive.getMonthYear());
+	        System.out.println("Região: " + incentive.getRegion());
+	        System.out.println("Tipo: " + incentive.getType());
+	        System.out.println("Modalidade: " + incentive.getModality());
+	        System.out.println("CPF: " + incentive.getCpf());
+	        System.out.println("Nome do Funcionário: " + incentive.getEmployeeName());
+	        System.out.println("Total: R$ " + incentive.getTotal());
+	        System.out.println("Função: " + incentive.getFunction());
+	        System.out.println("Loja: " + incentive.getStore());
+	        System.out.println("CNPJ: " + incentive.getCnpj());
+	        System.out.println("-----------------------------------------");
+	    }
+	}
+
 	
 }
 

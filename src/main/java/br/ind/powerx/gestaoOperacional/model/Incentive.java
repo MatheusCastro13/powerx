@@ -26,14 +26,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
 @Entity
 @Table(name = "incentive")
 public class Incentive {
@@ -41,6 +39,9 @@ public class Incentive {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name = "order_sequence", nullable = false)
+    private Integer ordem;
 	
 	@Past
 	@Column(name = "reference_date", nullable = false)
@@ -80,13 +81,30 @@ public class Incentive {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinColumn(name = "sale_id")
-	private Sale sale; 
+	@Column(name = "sale_order_sequence", nullable = false)
+	private Integer saleOrdem; 
 	
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@Override
+	public String toString() {
+		return "INCENTIVO DE ORDEM - " + this.getOrdem() +
+				"\nId - " + this.getId() +
+				"\nData - " + this.getReferenceDate() +
+				"\nRegião - " + this.getState().getState() +
+				"\nMétodo de Pagamento - " + this.getPaymentMethod().getName() +
+				"\nApuração - " + this.getApurationType().getName() +
+				"\nPremiado - " + this.getEmployee().getName() +
+				"\nCPF - " + this.getCpf() +
+				"\nValor - " + this.getIncentiveValue() +
+				"\nCliente - " + this.customer.getFantasyName() +
+				"\nCNPJ - " + this.getCustomer().getCnpj() +
+				"\nOrdem de venda - " + this.getSaleOrdem() +
+				"\nUsuario responsável - " + this.getUser().getName();
+		
+	}
 	
 }
 

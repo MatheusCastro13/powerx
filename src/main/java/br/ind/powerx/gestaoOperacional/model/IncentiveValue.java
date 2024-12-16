@@ -58,12 +58,12 @@ public class IncentiveValue {
 	
 	@Override
 	public String toString() {
-		return "Valor do Incentivo para: \n" +
+		return "\nValor do Incentivo para: \n" +
 				"Cliente - " + customer.getFantasyName() +
 				"\nFuncão - " + function.getName() +
 				"\nProduto - " + product.getProductCode() + " " + product.getProductName() +
 				"\nConta Corrente - " + ccValue +
-				"\nNF Serviço - " + nfsValue;
+				"\nNF Serviço - " + nfsValue + "\n\n";
 				
 				
 	}
