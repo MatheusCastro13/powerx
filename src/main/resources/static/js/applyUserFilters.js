@@ -3,6 +3,8 @@ function applyUserFilters() {
     
     const selectedPositions = Array.from(document.getElementById('filterPosition').selectedOptions).map(option => option.value);
     const selectedStates = Array.from(document.getElementById('filterState').selectedOptions).map(option => option.value);
+	console.log(selectedPositions);
+	console.log(selectedStates);
     
     const filters = {
         positions: selectedPositions,
@@ -19,10 +21,12 @@ function applyUserFilters() {
     })
     .then(response => response.text())
     .then(html => {
-        document.getElementById('tableBody').innerHTML = html;
+        const div = document.getElementById('user-table');
+		div.innerHTML = '';
+		div.innerHTML = html;
         
-        const filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
-        filterModal.hide();
+		const filterModal = bootstrap.Modal.getInstance(document.getElementById('filterModal'));
+		filterModal.hide();
     })
     .catch(error => console.error('Erro ao aplicar filtros:', error));
 }

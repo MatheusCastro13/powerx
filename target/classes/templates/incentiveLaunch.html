@@ -1,316 +1,367 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta charset="UTF-8">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="_csrf" th:content="${_csrf.token}" style="display: hidden" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}"
+	style="display: hidden" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PowerX|Lançamento</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
+<link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
+<link rel="stylesheet" th:href="@{/styles/sales-details-header.css}">
 <title>Lançamento de incentivos</title>
 </head>
 <body>
-	<div class="container mt-4">
-	<h1>Incentivos</h1>
-		<div>
-			<div class="mb-3">
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#incentiveLaunch">Novo Incentivo</button>
-				<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterIncentive">Filtrar Incentivo</button>	
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="container-fluid" style="margin-top: 60px">
+		<div class="row">
+			<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+			<div style="display: flex; flex-direction: column; margin-top: 10px;"
+				class="col-md-10">
+
+				<div class="col-md-10 fill-container">
+					<div th:if="${error}">
+						<p>
+							<span th:text="${error}"></span>
+						</p>
+					</div>
+					<div class="container mt-4">
+						<h1>Incentivos</h1>
+						<div>
+							<div class="mb-3">
+								<button type="button" class="btn btn-primary"
+									data-bs-toggle="modal" data-bs-target="#incentiveLaunch">Novo
+									Incentivo</button>
+								<button type="button" class="btn btn-secondary"
+									data-bs-toggle="modal" data-bs-target="#filterIncentive">Filtrar
+									Incentivo</button>
+							</div>
+							<input type="text" class="form-control w-auto" id="searchByName"
+								placeholder="Pesquisar por Nome" oninput="searchByName()">
+						</div>
+
+						<div class="container">
+							<div class="my-5">
+								<table class="table table-striped" id="tableBody">
+									<thead>
+										<tr>
+											<th scope="col">N° do Documento</th>
+											<th scope="col">Detalhes</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="documentNumber : ${documentNumbers}">
+											<td th:text="${documentNumber}"></td>
+											<td>
+												<button type="button" class="btn btn-secondary"
+													th:data-document-number="${documentNumber}"
+													onclick="loadDocumentDetails(this)">Detalhes</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="d-flex justify-content-center mt-3">
+							<ul class="pagination">
+								<li class="page-item"
+									th:classappend="${currentPage == 0} ? 'disabled'"><a
+									class="page-link"
+									th:href="@{/incentives(page=${currentPage - 1}, size=25)}">Anterior</a>
+								</li>
+								<li class="page-item"
+									th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+									th:classappend="${i == currentPage} ? 'active'"><a
+									class="page-link" th:href="@{/incentives(page=${i}, size=25)}"
+									th:text="${i + 1}"></a></li>
+								<li class="page-item"
+									th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+									<a class="page-link"
+									th:href="@{/incentives(page=${currentPage + 1}, size=25)}">Próximo</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="modal fade" id="documentModal" tabindex="-1"
+						aria-labelledby="documentModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="documentModalLabel">Detalhes
+										do Documento</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div id="header-infos" class="mb-3"></div>
+								<div class="modal-body">
+									<h3>Vendas:</h3>
+									<div id="salesContainer"></div>
+
+									<h3>Incentivos:</h3>
+									<table class="table table-sm table-bordered">
+										<thead>
+											<tr>
+												<th>Região</th>
+												<th>Tipo</th>
+												<th>CPF</th>
+												<th>Nome</th>
+												<th>Total</th>
+												<th>Função</th>
+											</tr>
+										</thead>
+										<tbody id="incentivesTableBody"></tbody>
+									</table>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Fechar</button>
+									<button type="button" class="btn btn-primary"
+										id="downloadReport">Baixar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="container">
+						<div class="modal fade" id="incentiveLaunch" tabindex="-1"
+							aria-labelledby="incentiveLaunchLabel" aria-hidden="true">
+							<div
+								class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="incentiveLaunchLabel">Lançamento</h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="my-3 mx-3">
+										<h6>
+											<strong>Selecionar Cliente</strong><i
+												class="bi bi-arrow-right-short"></i><span>Lançar
+												vendas consultores</span><i class="bi bi-arrow-right-short"></i><span
+												th:if="i">Lançar vendas mecânicos</span>
+										</h6>
+									</div>
+									<div class="modal-body">
+										<div>
+											<div class="mb-3">
+												<label for="newGroup" class="form-label">Selecione o
+													Cliente</label> <select class="form-select" name="groupId" required
+													id="customerSelect" style="width: 65%">
+													<option th:each="customer : ${customers}"
+														th:value="${customer.id}"
+														th:text="${customer.registeredName}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-primary"
+											data-bs-target="#saleLaunch" data-bs-toggle="modal"
+											onclick="loadEmployeeData('Consultores', document.getElementById('customerSelect').value, 'dynamicConsultantSections')">
+											Avançar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="saleLaunch" tabindex="-1"
+							aria-labelledby="saleLaunchLabel" aria-hidden="true">
+							<div
+								class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="saleLaunchLabel">Lançar
+											vendas consultores</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="my-3 mx-3">
+										<h6>
+											Selecionar Cliente<i class="bi bi-arrow-right-short"></i><span><strong>Lançar
+													vendas consultores</strong></span><i class="bi bi-arrow-right-short"></i><span>Lançar
+												vendas mecânicos</span>
+										</h6>
+									</div>
+									<div class="modal-body" id="dynamicConsultantSections"></div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-target="#incentiveLaunch" data-bs-toggle="modal">Voltar</button>
+										<button type="button" class="btn btn-primary"
+											data-bs-target="#saleMechanicLaunch" data-bs-toggle="modal"
+											onclick="loadEmployeeData('Mecânicos', document.getElementById('customerSelect').value, 'dynamicMechanicSections')">
+											Avançar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="saleMechanicLaunch" tabindex="-1"
+							aria-labelledby="#saleMechanicLaunchLabel" aria-hidden="true">
+							<div
+								class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="#saleMechanicLaunchLabel">Lançar
+											vendas Mecânicos</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="my-3 mx-3">
+										<h6>
+											Selecionar Cliente<i class="bi bi-arrow-right-short"></i><span>Lançar
+												vendas consultores</span><i class="bi bi-arrow-right-short"></i><span><strong>Lançar
+													vendas mecânicos</strong></span>
+										</h6>
+									</div>
+									<div class="modal-body" id="dynamicMechanicSections"></div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-target="#saleLaunch" data-bs-toggle="modal"
+											onclick="loadEmployeeData('Consultores', document.getElementById('customerSelect').value, 'dynamicConsultantSections')">
+											Voltar</button>
+										<button type="button" class="btn btn-primary"
+											id="finalizeMechanicButton" data-bs-target="#resumePane"
+											data-bs-toggle="modal">Avançar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="resumePane" tabindex="-1"
+							aria-labelledby="resumePaneLabel" aria-hidden="true">
+							<div
+								class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="resumePaneLabel">Vendas
+											Registradas</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<table id="modalSalesTable"
+											class="table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th>Vendedor</th>
+													<th>Total de produtos vendidos</th>
+													<th>Ações</th>
+												</tr>
+											</thead>
+											<tbody>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-target="#saleMechanicLaunch" data-bs-toggle="modal">Voltar</button>
+										<button type="button" class="btn btn-primary"
+											id="saveAllSalesButton">Confirmar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="sale" tabindex="-1"
+							aria-labelledby="saleLabel" aria-hidden="true">
+							<div
+								class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="saleLabel">Venda</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<table id="modalSalesResumeTable"
+											class="table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th>CÓD</th>
+													<th>Nome</th>
+													<th>Quantidade</th>
+												</tr>
+											</thead>
+											<tbody>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-target="#resumePane" data-bs-toggle="modal">Voltar</button>
+										<button type="button" id="confirmSaleButton"
+											class="btn btn-success">Confirmar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="incentivesCalculatedModal"
+							tabindex="-1" aria-labelledby="incentivesCalculatedModalLabel"
+							aria-hidden="true">
+							<div
+								class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5"
+											id="incentivesCalculatedModalLabel">Incentivos</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<table class="table table-sm table-bordered">
+											<thead>
+												<tr>
+													<th>Mês</th>
+													<th>Região</th>
+													<th>Tipo</th>
+													<th>Modalidade</th>
+													<th>CPF</th>
+													<th>Nome</th>
+													<th>Total</th>
+													<th>Função</th>
+													<th>Loja</th>
+													<th>CNPJ</th>
+												</tr>
+											</thead>
+											<tbody id="incentivesCalculatedTableBody">
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal" aria-label="Close">Voltar</button>
+										<button type="button" class="btn btn-primary"
+											onclick="downloadLastReport()">Gerar Relatório</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-		
-		<div class="container">
-			<div class="my-5">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th scope="col">Data</th>
-							<th scope="col">Cliente</th>
-							<th scope="col">Valor</th>
-							<th scope="col">Detalhes</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="incentive : ${incentives}">
-							<td th:text="${incentive.referenceDate}"></td>
-							<td th:text="${incentive.customer?.registeredName}"></td>
-							<td th:text="${incentive.incentiveValue}"></td>
-							<td>
-								<button type="button" class="btn btn-secondary" data-bs-toggle="modal" th:data-bs-target="'#incentiveDetails' + ${incentive.id}">Detalhes</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		
-		<div th:each="incentive : ${incentives}">
-			<div class="modal fade" tabindex="-1" 
-				 th:id="'incentiveDetails' + ${incentive.id}" 
-				 aria-labelledby="'#incentiveDetails' + ${incentive.id}" 
-				 aria-hidden="true">
-				 
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title fs-5" th:id="'incentiveDetails' + ${incentive.id}">Incentivo <span th:text="${incentive.customer?.registeredName}"></span></h5>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-			        <table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col">Data</th>
-								<th scope="col">Estado</th>
-								<th scope="col">Tipo</th>
-								<th scope="col">Método</th>
-								<th scope="col">Premiado</th>
-								<th scope="col">Função</th>
-								<th scope="col">CNPJ</th>
-								<th scope="col">Loja</th>
-								<th scope="col">Venda</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td th:text="${incentive.referenceDate}"></td>
-								<td th:text="${incentive.state}"></td>
-								<td th:text="${incentive.apurationType?.name}"></td>
-								<td th:text="${incentive.paymentMethod?.name}"></td>
-								<td th:text="${incentive.employee?.name}"></td>
-								<td th:text="${incentive.employeeFunction?.name}"></td>
-								<td th:text="${incentive.customer?.cnpj}"></td>
-								<td th:text="${incentive.customer?.registeredName}"></td> 
-								<td>
-									<button class="btn btn-primary" th:data-bs-target="'#showIncentiveSalesModal' + ${incentive.id}" data-bs-toggle="modal">Vendas</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
-			<div class="modal fade" tabindex="-1" 
-				 th:id="'showIncentiveSalesModal' + ${incentive.id}"
-				 aria-labelledby="'showIncentiveSalesModalLabel' + ${incentive.id}"
-				 aria-hidden="true">
-				 
-			  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title fs-5" id="'showIncentiveSalesModalLabel' + ${incentive.id}">Venda</h5>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-			       <table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col">Premiado</th>
-								<th scope="col">Produto</th>
-								<th scope="col">Quantidade</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td th:text="${incentive.sale?.employee}"></td>
-								<td th:text="${incentive.sale?.product}"></td>
-								<td th:text="${incentive.sale?.quantity}"></td>
-							</tr>
-						</tbody>
-					</table>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" th:data-bs-target="'#incentiveDetails' + ${incentive.id}" data-bs-toggle="modal">Voltar</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-		</div>
-		
-		<div class="container">
-			<div class="modal fade" id="incentiveLaunch" tabindex="-1" aria-labelledby="incentiveLaunchLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title" id="incentiveLaunchLabel">Lançamento</h5>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="my-3 mx-3">
-			      	<h6><strong>Selecionar Cliente</strong><i class="bi bi-arrow-right-short"></i><span>Lançar vendas consultores</span><i class="bi bi-arrow-right-short"></i><span th:if="i">Lançar vendas mecânicos</span></h6>
-			      </div>
-			      <div class="modal-body">
-			        <div>
-			        	<div class="mb-3">
-	                        <label for="newGroup" class="form-label">Selecione o Cliente</label>
-	                        <select class="form-select" name="groupId" required id="customerSelect">
-	                            <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.registeredName}"></option>
-	                        </select>
-	                    </div>
-			        </div>
-			      </div>
-			      <div class="modal-footer">
-					<button type="button" 
-					        class="btn btn-primary" 
-					        data-bs-target="#saleLaunch" 
-					        data-bs-toggle="modal" 
-					        onclick="loadEmployeeData('Consultores', document.getElementById('customerSelect').value, 'dynamicConsultantSections')">
-					    Avançar
-					</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
-			<div class="modal fade" id="saleLaunch" tabindex="-1" aria-labelledby="saleLaunchLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="saleLaunchLabel">Lançar vendas consultores</h1>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="my-3 mx-3">
-			      	<h6>Selecionar Cliente<i class="bi bi-arrow-right-short"></i><span><strong>Lançar vendas consultores</strong></span><i class="bi bi-arrow-right-short"></i><span>Lançar vendas mecânicos</span></h6>
-			      </div>
-			      <div class="modal-body" id="dynamicConsultantSections">
-			        
-			      </div>
-			      <div class="modal-footer">
-			      	<button type="button" class="btn btn-secondary" data-bs-target="#incentiveLaunch" data-bs-toggle="modal">Voltar</button>
-					<button type="button" 
-					        class="btn btn-primary" 
-					        data-bs-target="#saleMechanicLaunch" 
-					        data-bs-toggle="modal" 
-					        onclick="loadEmployeeData('Mecânicos', document.getElementById('customerSelect').value, 'dynamicMechanicSections')">
-					    Avançar
-					</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
-			<div class="modal fade" id="saleMechanicLaunch" tabindex="-1" aria-labelledby="#saleMechanicLaunchLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="#saleMechanicLaunchLabel">Lançar vendas Mecânicos</h1>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="my-3 mx-3">
-			      	<h6>Selecionar Cliente<i class="bi bi-arrow-right-short"></i><span>Lançar vendas consultores</span><i class="bi bi-arrow-right-short"></i><span><strong>Lançar vendas mecânicos</strong></span></h6>
-			      </div>
-			      <div class="modal-body" id="dynamicMechanicSections">
-			        
-			      </div>
-			      <div class="modal-footer">
-					<button type="button" 
-					        class="btn btn-secondary" 
-					        data-bs-target="#saleLaunch" 
-					        data-bs-toggle="modal" 
-					        onclick="loadEmployeeData('Consultores', document.getElementById('customerSelect').value, 'dynamicConsultantSections')">
-					    Voltar
-					</button>
-			      	<button type="button" class="btn btn-primary" id="finalizeMechanicButton" data-bs-target="#resumePane" data-bs-toggle="modal">Avançar</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
-			<div class="modal fade" id="resumePane" tabindex="-1" aria-labelledby="resumePaneLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="resumePaneLabel">Vendas Registradas</h1>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-			        <table id="modalSalesTable" class="table table-bordered table-striped">
-	                    <thead>
-	                        <tr>
-	                            <th>Vendedor</th>
-	                            <th>Total de produtos vendidos</th>
-	                            <th>Ações</th>
-	                        </tr>
-	                    </thead>
-	                    <tbody>
-	                        
-	                    </tbody>
-	                </table>
-			      </div>
-			      <div class="modal-footer">
-			      	<button type="button" class="btn btn-secondary" data-bs-target="#saleMechanicLaunch" data-bs-toggle="modal">Voltar</button>
-			        <button type="button" class="btn btn-primary" id="saveAllSalesButton" >Confirmar</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
-			<div class="modal fade" id="sale" tabindex="-1" aria-labelledby="saleLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="saleLabel">Venda</h1>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-			        <table id="modalSalesResumeTable" class="table table-bordered table-striped">
-	                    <thead>
-	                        <tr>
-	                            <th>CÓD</th>
-	                            <th>Nome</th>
-	                            <th>Quantidade</th>
-	                        </tr>
-	                    </thead>
-	                    <tbody>
-	                        
-	                    </tbody>
-	                </table>
-			      </div>
-			      <div class="modal-footer">
-			      	<button type="button" class="btn btn-secondary" data-bs-target="#resumePane" data-bs-toggle="modal">Voltar</button>
-			        <button type="button" id="confirmSaleButton" class="btn btn-success">Confirmar</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
-			<div class="modal fade" id="incentivesCalculatedModal" tabindex="-1" aria-labelledby="incentivesCalculatedModalLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="incentivesCalculatedModalLabel">Incentivos</h1>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-				  	<table>
-				  		<thead>
-				  			<tr>
-				  				<th>Mês</th>
-				  				<th>Região</th>
-				  				<th>Tipo</th>
-				  				<th>Modalidade</th>
-				  				<th>CPF</th>
-				  				<th>Nome</th>
-				  				<th>Total</th>
-				  				<th>Função</th>
-				  				<th>Loja</th>
-				  				<th>CNPJ</th>
-				  			</tr>
-				  		</thead>
-				  		<tbody id="incentivesCalculatedTableBody">
-				  		
-				  		</tbody>
-				  	</table>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Voltar</button>
-			        <button type="button" class="btn btn-primary">Save changes</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
 		</div>
 	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+	<script th:src="@{/js/incentives.js}"></script>
+	<script th:src="@{/js/search.js}"></script>
+
 </body>
 </html>

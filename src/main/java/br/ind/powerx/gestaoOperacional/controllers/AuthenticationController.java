@@ -18,7 +18,7 @@ import br.ind.powerx.gestaoOperacional.services.UserService;
 public class AuthenticationController {
 	
 	@Autowired
-	UserService userService;
+	private UserService userService;
 	
 	@PostMapping("/register")
 	public String register(@ModelAttribute RegisterDTO registerDTO, Model model) {
@@ -40,11 +40,6 @@ public class AuthenticationController {
 		return "login";
 	}
 	
-	@GetMapping("/register")
-	public String registerPage(Model model) {
-		model.addAttribute("registerDTO", new RegisterDTO(null, null, null, null, null, null));
-		return "register";
-	}
 	
 }
 

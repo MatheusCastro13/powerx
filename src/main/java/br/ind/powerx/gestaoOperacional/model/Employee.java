@@ -35,7 +35,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
 @Entity
 @Table(name = "employee")
 public class Employee {

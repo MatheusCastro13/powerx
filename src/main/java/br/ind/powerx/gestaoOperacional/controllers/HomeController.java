@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.ind.powerx.gestaoOperacional.model.Incentive;
-import br.ind.powerx.gestaoOperacional.model.Prevision;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.services.AuthenticationService;
 
@@ -25,10 +24,6 @@ public class HomeController {
     @GetMapping
     public String home(Model model) {
        User user = authenticationService.getUserAuthenticated();
-       List<Prevision> last10previsions = user.getPrevisions().stream()
-    		   .sorted(Comparator.comparing(Prevision::getCreationDate).reversed())
-    		   .limit(10)
-    		   .collect(Collectors.toList());
     		   
        List<Incentive> allIncentives = user.getCustomers().stream()
                .flatMap(customer -> customer.getIncentives().stream())
@@ -41,7 +36,6 @@ public class HomeController {
        
        if(user != null) {
     	   model.addAttribute("user", user);
-    	   model.addAttribute("previsions", last10previsions);
     	   model.addAttribute("incentives", last10Incentives);
        }
        

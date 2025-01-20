@@ -18,31 +18,25 @@ function removeIncentiveValue(productId, incentiveId) {
 }
 
 function addIncentiveRow(productId) {
-    // Identificar o tbody da tabela do produto específico
     const tableBody = document.querySelector(`#tableBody-${productId}`);
 
-    // Criar uma nova linha <tr>
     const newRow = document.createElement('tr');
 
-    // Gerar um ID único temporário para a nova linha
     const tempId = `temp-${Date.now()}`;
 
-    // Definir o ID para a nova linha
     newRow.id = `row-${tempId}`;
 
-    // Clonar as opções dos templates ocultos
     const customerSelectTemplate = document.querySelector("#customerOptionsTemplate");
     const functionSelectTemplate = document.querySelector("#functionOptionsTemplate");
 
     const customerSelect = customerSelectTemplate.cloneNode(true);
-    customerSelect.id = "";  // Remover ID para evitar duplicação
+    customerSelect.id = "";
     customerSelect.name = "customer";
 
     const functionSelect = functionSelectTemplate.cloneNode(true);
-    functionSelect.id = "";  // Remover ID para evitar duplicação
+    functionSelect.id = "";
     functionSelect.name = "function";
 
-    // Adicionar o conteúdo HTML para os inputs e selects na nova linha
     newRow.innerHTML = `
         <td>
             <div class="col">
@@ -56,12 +50,12 @@ function addIncentiveRow(productId) {
         </td>
         <td>
             <div class="col">
-                <input type="number" class="form-control" name="ccValue" placeholder="Conta Corrente" required>
+                <input type="number" class="form-control" name="ccValue" placeholder="Conta Corrente" step="any" required>
             </div>
         </td>
         <td>
             <div class="col">
-                <input type="number" class="form-control" name="nfsValue" placeholder="NF Serviço" required>
+                <input type="number" class="form-control" name="nfsValue" placeholder="NF Serviço" step="any" required>
             </div>
         </td>
         <td>
@@ -73,7 +67,6 @@ function addIncentiveRow(productId) {
         </td>
     `;
 
-    // Adicionar a nova linha ao tbody
     tableBody.appendChild(newRow);
 }
 
@@ -86,14 +79,6 @@ function removeRow(rowId) {
     }
 }
 
-function removeRow(rowId) {
-    const row = document.querySelector(`#row-${rowId}`);
-    if (row) {
-        row.remove();
-    } else {
-        console.error(`Linha com ID #row-${rowId} não encontrada.`);
-    }
-}
 
 
 

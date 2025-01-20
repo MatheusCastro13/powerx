@@ -35,6 +35,9 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name = "unydoft_code", unique = true, length = 10)
+    private String unysoftCode;
+	
 	@Column(name = "cnpj", unique = true, nullable = false, length = 18)
 	private String cnpj;
 	
@@ -54,13 +57,21 @@ public class Customer {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
 	private Group group;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mechanic_apuration_id")
 	private MechanicApuration mechanicApuration;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "industry_id")
+	private Industry industry;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "flag_id")
+	private Flag flag;
 	
 	@ManyToMany
 	@JoinTable(name = "customer_employee",
@@ -68,25 +79,14 @@ public class Customer {
     inverseJoinColumns = @JoinColumn(name = "employee_id"))
 	private List<Employee> employees = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Incentive> incentives = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Sale> sales = new ArrayList<>();
 	
-	
-	
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	public boolean isActive() {
-		return active;
-	}
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TablePrice> tables = new ArrayList<>();
 	
 	public void addSale(Sale sale) {
 		if(sale != null && !sales.contains(sale)) {
@@ -127,6 +127,46 @@ public class Customer {
 		}
 	}
 	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public void setGroup(Group group) {
+		this.group = group;
+		group.addCustomer(this);
+	}
+	
+	public void setMechanicApuration(MechanicApuration mechanicApuration) {
+		this.mechanicApuration = mechanicApuration;
+		mechanicApuration.addCustomer(this);
+	}
+	
+	public void setIndustry(Industry industry) {
+		this.industry = industry;
+		industry.addCustomer(this);
+	}
+	
+	public void setFlag(Flag flag) {
+		this.flag = flag;
+		flag.addCustomer(this);
+	}
+	
+	public void addTable(TablePrice table) {
+		if(table != null && !tables.contains(table)) {
+			tables.add(table);
+			if(table.getCustomer() != this) {
+				table.setCustomer(this);
+			}
+		}
+	}
+	
+	public void removeTable(TablePrice table) {
+		if(tables.remove(table)) {
+			if(table.getCustomer() == this) {
+				table.setCustomer(null);
+			}
+		}
+	}
 }
 
 

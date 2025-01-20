@@ -1,5 +1,6 @@
 package br.ind.powerx.gestaoOperacional.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,9 +9,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.ind.powerx.gestaoOperacional.model.CompactIncentive;
 import br.ind.powerx.gestaoOperacional.model.Customer;
 import br.ind.powerx.gestaoOperacional.model.Employee;
+import br.ind.powerx.gestaoOperacional.model.Incentive;
 import br.ind.powerx.gestaoOperacional.model.Product;
 import br.ind.powerx.gestaoOperacional.model.Sale;
 import br.ind.powerx.gestaoOperacional.model.dtos.ProductSaleDTO;
@@ -39,8 +40,11 @@ public class SaleService {
 	@Autowired
 	private CalculeIncentiveService calculeIncentiveService;
 	
-	public List<CompactIncentive> saveSales(List<SalesDTO> salesDTO) {
-		
+	public List<Incentive> saveSales(List<SalesDTO> salesDTO) {
+		Integer maxDocumentNumeber = saleRepository.findMaxDocumentNumber();
+
+        int newDocumentNumeber = (maxDocumentNumeber != null ? maxDocumentNumeber : 0) + 1;
+        
 		List<Sale> sales = new ArrayList<>();
 		for(SalesDTO sale : salesDTO) {			
 			if(sale.customerId() == null) {
@@ -74,22 +78,17 @@ public class SaleService {
 				
 				productAndQuantity.put(productFinded, product.quantity());
 				
-				
 				Sale saleToSave = new Sale(customer, emp, productFinded, product.quantity());
 				
-				Integer maxOrdem = saleRepository.findMaxOrderForCustomer(customer.getId());
-
-		        int novaOrdem = (maxOrdem != null ? maxOrdem : 0) + 1;
-
-		        saleToSave.setOrdem(novaOrdem);
+				saleToSave.setReferenceDate(LocalDate.now().minusMonths(1));
+		        saleToSave.setDocumentNumber(newDocumentNumeber);
 		        
 				sales.add(saleToSave);
 				
 			}
 		}
 		
-		
-		List<CompactIncentive> incentives = calculeIncentiveService.calculateIncentives(sales);
+		List<Incentive> incentives = calculeIncentiveService.calculateIncentives(sales);
 		
 		return incentives;
 	}

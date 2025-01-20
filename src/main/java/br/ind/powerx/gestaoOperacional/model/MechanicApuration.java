@@ -38,17 +38,21 @@ public class MechanicApuration {
 	private List<Customer> customers = new ArrayList<>();
 	
 	public void addCustomer(Customer customer) {
-		if(!customers.contains(customer)) {
-			customers.add(customer);
-			customer.setMechanicApuration(this);
-		}
-	}
-	
-	public void removeCustomer(Customer customer) {
-		if(customers.remove(customer)) {
-			customer.setMechanicApuration(null);
-		}
-	}
+        if (customer != null && !customers.contains(customer)) {
+            customers.add(customer);
+            if (customer.getMechanicApuration() != this) {
+                customer.setMechanicApuration(this);
+            }
+        }
+    }
+
+    public void removeCustomer(Customer customer) {
+        if (customers.remove(customer)) {
+            if (customer.getMechanicApuration() == this) {
+                customer.setMechanicApuration(null);
+            }
+        }
+    }
 }
 
 

@@ -1,0 +1,245 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="sale-report" language="java" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1f6e516c-1c7c-44ae-a477-5f56ae0ec07b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="padding-left">
+		<box leftPadding="2"/>
+	</style>
+	<dataset name="ProductDataset" uuid="30d2b7fc-0d91-4a41-945f-80a81fb68017">
+		<query language="sql"><![CDATA[]]></query>
+		<field name="productCode" class="java.lang.String"/>
+		<field name="productName" class="java.lang.String"/>
+		<field name="quantity" class="java.lang.Integer"/>
+	</dataset>
+	<dataset name="incentivesDataset" uuid="7a70024c-2994-4171-b0ef-5924be5bef0e">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<query language="sql"><![CDATA[]]></query>
+		<field name="state" class="java.lang.String"/>
+		<field name="apurationType" class="java.lang.String"/>
+		<field name="employeeName" class="java.lang.String"/>
+		<field name="total" class="java.math.BigDecimal"/>
+		<field name="function" class="java.lang.String"/>
+	</dataset>
+	<parameter name="referenceDate" class="java.sql.Date"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="customerCNPJ" class="java.lang.String"/>
+	<parameter name="method" class="java.lang.String"/>
+	<parameter name="documentNumber" class="java.lang.Integer"/>
+	<parameter name="incentives" class="java.util.List"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="employeeName" class="java.lang.String"/>
+	<field name="products" class="java.util.List"/>
+	<group name="EmployeeGroup">
+		<expression><![CDATA[$F{employeeName}]]></expression>
+		<groupHeader>
+			<band height="142" splitType="Stretch">
+				<element kind="textField" uuid="a0a0cdeb-9815-4522-93a2-cd6b34a10065" x="2" y="20" width="278" height="30" fontSize="11.0" bold="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{employeeName}]]></expression>
+				</element>
+				<element kind="component" uuid="5ec233dc-cf1f-445f-b581-4e73f04cb7fd" x="1" y="60" width="349" height="63" removeLineWhenBlank="true" printWhenDetailOverflows="true">
+					<component kind="table">
+						<datasetRun uuid="8524cb88-f7b8-4edc-95c9-7bc72924bf56" subDataset="ProductDataset">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{products})
+]]></dataSourceExpression>
+						</datasetRun>
+						<column kind="single" uuid="d0868dbc-e896-487c-9c6f-2fd4ad49b51f" width="80">
+							<columnHeader height="30" style="Table_CH">
+								<element kind="staticText" uuid="73a80f52-1526-4eae-b602-c76af29b5dd9" x="0" y="0" width="80" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Cód.]]></text>
+								</element>
+							</columnHeader>
+							<detailCell height="30" style="Table_TD">
+								<element kind="textField" uuid="23835d08-2dca-4f32-a080-31d13e5123d2" x="0" y="0" width="80" height="30" fontSize="9.0" evaluationTime="Page" hTextAlign="Left" vTextAlign="Middle" style="padding-left">
+									<paragraph spacingAfter="0" style="padding-left"/>
+									<expression><![CDATA[$F{productCode}]]></expression>
+									<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="c6b249a0-e0ea-4255-8dbb-ef9103b21f8f" width="210">
+							<columnHeader height="30" style="Table_CH">
+								<element kind="staticText" uuid="950ce23f-2507-4bcf-b722-241cad5cb17d" x="0" y="0" width="210" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Descrição]]></text>
+								</element>
+							</columnHeader>
+							<detailCell height="30" style="Table_TD">
+								<element kind="textField" uuid="cd51de31-7ee9-472a-a6d4-fdb23e39b424" x="0" y="0" width="210" height="30" fontSize="9.0" hTextAlign="Left" vTextAlign="Middle" style="padding-left">
+									<expression><![CDATA[$F{productName}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="732ebf7a-0f15-46bd-8c7e-4b7fb0edfdd2" width="50">
+							<columnHeader height="30" style="Table_CH">
+								<element kind="staticText" uuid="205a899b-7fad-4efe-ad8c-3b2a9b4a662f" x="0" y="0" width="50" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<text><![CDATA[Qtd.]]></text>
+								</element>
+							</columnHeader>
+							<detailCell height="30" style="Table_TD">
+								<element kind="textField" uuid="9cafe002-8226-4f05-bd2c-96ad42ca5e3e" x="0" y="0" width="50" height="30" fontSize="9.0" hTextAlign="Left" vTextAlign="Middle" style="padding-left">
+									<expression><![CDATA[$F{quantity}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+					</component>
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</element>
+			</band>
+		</groupHeader>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="195" splitType="Stretch">
+		<element kind="textField" uuid="1df0aa13-08e0-4869-b112-8b50d29fa6a4" x="0" y="0" width="100" height="30" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA[$P{referenceDate}]]></expression>
+		</element>
+		<element kind="textField" uuid="86497d21-9914-495d-927e-d2471df2e65a" x="0" y="119" width="280" height="30" fontSize="11.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA["Cliente: " + $P{customerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="72b4f684-c7d7-4bef-a964-c3dabb34245c" x="0" y="151" width="280" height="30" fontSize="11.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA["CNPJ: " + $P{customerCNPJ}]]></expression>
+		</element>
+		<element kind="textField" uuid="53f2cacc-29bd-47ee-9825-97fd8242d424" x="360" y="119" width="190" height="30" fontSize="11.0" bold="true" vTextAlign="Middle">
+			<expression><![CDATA["Método de pagamento: " + $P{method}]]></expression>
+		</element>
+		<element kind="textField" uuid="e79c0fcd-d323-4f92-a0f9-b4d292dca144" x="470" y="11" width="84" height="30" fontSize="15.0" vTextAlign="Middle">
+			<expression><![CDATA["N° " + $P{documentNumber}]]></expression>
+		</element>
+		<element kind="rectangle" uuid="af92eeef-d9a6-46b2-90d7-ef2c4066d498" x="2" y="190" width="551" height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="e676c5fd-8913-4742-bf1b-15572fb12602" x="179" y="6" width="202" height="93" fontSize="18.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Registro de Vendas e Incentivos]]></text>
+		</element>
+	</title>
+	<summary height="125" splitType="Stretch">
+		<element kind="staticText" uuid="09adac46-3da4-4c57-88de-24774185cd3d" x="5" y="17" width="100" height="30" fontSize="13.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Incentivos]]></text>
+		</element>
+		<element kind="component" uuid="8e6cff58-7119-4935-9db8-142e5891bfbb" x="6" y="60" width="514" height="55" removeLineWhenBlank="true" printWhenDetailOverflows="true">
+			<component kind="table">
+				<datasetRun uuid="372f0493-8ba2-465a-9c22-2a2b0fcf26a5" subDataset="incentivesDataset">
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{incentives})]]></dataSourceExpression>
+				</datasetRun>
+				<column kind="single" uuid="6d85128b-7413-4d40-b9be-ff8c026712be" width="50">
+					<columnHeader height="30" style="Table 1_CH">
+						<element kind="staticText" uuid="bb3beedc-2d13-4511-876e-b6f6c06d9668" x="0" y="0" width="50" height="30" fontSize="11.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+							<text><![CDATA[Região]]></text>
+						</element>
+					</columnHeader>
+					<detailCell height="30" style="Table 1_TD">
+						<element kind="textField" uuid="f2b0f163-ac0f-48b1-97d1-e8d9cef83613" x="0" y="0" width="50" height="30" vTextAlign="Middle" style="padding-left">
+							<expression><![CDATA[$F{state}]]></expression>
+						</element>
+					</detailCell>
+				</column>
+				<column kind="single" uuid="58b70c60-f05c-47d3-ac6a-dc9154292238" width="100">
+					<columnHeader height="30" style="Table 1_CH">
+						<element kind="staticText" uuid="f4619a25-a841-4e23-90e4-9485a1542473" x="0" y="0" width="100" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+							<text><![CDATA[Apuração]]></text>
+						</element>
+					</columnHeader>
+					<detailCell height="30" style="Table 1_TD">
+						<element kind="textField" uuid="37cb6d3e-0af2-49ec-a7c3-736b65d67819" x="0" y="0" width="100" height="30" vTextAlign="Middle" style="padding-left">
+							<expression><![CDATA[$F{apurationType}]]></expression>
+						</element>
+					</detailCell>
+				</column>
+				<column kind="single" uuid="1155445e-9c24-43bf-88f6-a70d1bf0125a" width="200">
+					<columnHeader height="30" style="Table 1_CH">
+						<element kind="staticText" uuid="9dde0a4d-cc1d-426a-aba0-e8848e6c9d64" x="0" y="0" width="200" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+							<text><![CDATA[Premiado]]></text>
+						</element>
+					</columnHeader>
+					<detailCell height="30" style="Table 1_TD">
+						<element kind="textField" uuid="4b80b7b9-1d9c-46b0-81bd-18f1d095d07d" x="0" y="0" width="200" height="30" vTextAlign="Middle" style="padding-left">
+							<expression><![CDATA[$F{employeeName}]]></expression>
+						</element>
+					</detailCell>
+				</column>
+				<column kind="single" uuid="6f8954af-b99d-4ef8-b80e-7b421f72a7fd" width="50">
+					<columnHeader height="30" style="Table 1_CH">
+						<element kind="staticText" uuid="885b2bd1-7e77-4d56-a489-97c259a39f0b" x="0" y="0" width="50" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+							<text><![CDATA[Total]]></text>
+						</element>
+					</columnHeader>
+					<detailCell height="30" style="Table 1_TD">
+						<element kind="textField" uuid="972741a9-0d00-4c3c-b547-c128f4112991" x="0" y="0" width="50" height="30" vTextAlign="Middle" style="padding-left">
+							<expression><![CDATA[$F{total}]]></expression>
+						</element>
+					</detailCell>
+				</column>
+				<column kind="single" uuid="0879e7a7-17e7-49cf-98bd-d34fb8d591d4" width="110">
+					<columnHeader height="30" style="Table 1_CH">
+						<element kind="staticText" uuid="6d38e3b6-acdc-4645-a54d-921187badf79" x="0" y="0" width="110" height="30" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+							<text><![CDATA[Função]]></text>
+						</element>
+					</columnHeader>
+					<detailCell height="30" style="Table 1_TD">
+						<element kind="textField" uuid="c752527f-cdfc-4088-9ca8-dbc6da6e218c" x="0" y="0" width="110" height="30" vTextAlign="Middle" style="padding-left">
+							<expression><![CDATA[$F{function}]]></expression>
+						</element>
+					</detailCell>
+				</column>
+			</component>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+			<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+			<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+		</element>
+	</summary>
+</jasperReport>

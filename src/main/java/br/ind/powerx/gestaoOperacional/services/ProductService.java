@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.ind.powerx.gestaoOperacional.model.Customer;
@@ -139,6 +141,10 @@ public class ProductService {
 			valueService.delete(incentive);
 		}
 		
+	}
+
+	public Page<Product> findAll(Pageable pageable) {
+		return productRepository.findAll(pageable);
 	}
 
 	

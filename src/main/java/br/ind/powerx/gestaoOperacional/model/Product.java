@@ -34,6 +34,9 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name = "unydoft_code", unique = true, length = 10)
+    private String unysoftCode;
+	
 	@Column(name = "product_code", nullable = false, unique = true)
 	private String productCode;
 	
@@ -46,6 +49,10 @@ public class Product {
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "products")
 	private List<Group> groups = new ArrayList<>();
+	
+	@ToString.Exclude
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TablePrice> tables = new ArrayList<>();
 	
 	public void addIncentiveValue(IncentiveValue incentiveValue) {
 		if(incentiveValue != null && !incentiveValues.contains(incentiveValue)) {
@@ -71,5 +78,45 @@ public class Product {
 		
 	}
 	
+	public void addTable(TablePrice table) {
+		if(table != null && !tables.contains(table)) {
+			tables.add(table);
+			if(table.getProduct() != this) {
+				table.setProduct(this);
+			}
+		}
+	}
 	
+	public void removeTable(TablePrice table) {
+		if(tables.remove(table)) {
+			if(table.getProduct() == this) {
+				table.setProduct(null);
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

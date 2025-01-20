@@ -4,8 +4,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="_csrf" th:content="${_csrf.token}" />
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<meta name="_csrf" th:content="${_csrf.token}" style="display: hidden" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}"
+	style="display: hidden" />
 
 <title>PowerX|Adm</title>
 <link
@@ -32,13 +33,17 @@
 			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 				<div class="navbar-nav">
 					<a class="nav-link" aria-current="page" th:href="@{/home}">Ínicio</a>
-					<a class="nav-link" th:href="@{/fuel}">Combustível</a> <a
-						class="nav-link" th:href="@{/incentive}">Incentivos</a>
-					<sec:authorize access="hasRole('ROLE_ADMIN')">
-						<a th:if="user.role.role == 'ROLE_ADMIN'" class="nav-link"
-							th:href="@{/adm}">Administrativo</a>
-					</sec:authorize>
-					<a class="nav-link" th:href="@{/user/{id}(id=${user.Id})}">Perfil</a>
+					<a class="nav-link" th:href="@{/incentives}">Incentivos</a> <a
+						class="nav-link" th:href="@{/adm}"
+						sec:authorize="hasRole('ADMIN')">Administrativo</a> <a
+						class="nav-link" th:href="@{/user/{id}(id=${user.Id})}">Perfil</a>
+					<form id="logout-form" th:action="@{/logout}" method="post"
+						style="display: none;">
+						<input type="hidden" />
+					</form>
+
+					<a class="nav-link" href="#"
+						onclick="document.getElementById('logout-form').submit();">Logout</a>
 				</div>
 			</div>
 		</div>
@@ -65,33 +70,22 @@
 							th:href="@{/incentives}" id="link-incentives-launch">Lançamentos
 								de Incentivos</a></li>
 						<li class="nav-item"><a class="nav-link nav-link-custom"
-							th:href="@{/fuel/predictions}" id="link-fuel-predictions">Previsões
-								de Combustível</a></li>
+							th:href="@{/payment-order}" id="link-payment-order">Pedido de
+								Pagamento por Cliente</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/payment-order/state}" id="link-payment-order">Pedido
+								de Pagamento por Região</a></li>
 						<li class="nav-item"><a class="nav-link nav-link-custom"
 							th:href="@{/payments}" id="link-payments">Pagamentos</a></li>
 						<li class="nav-item"><a class="nav-link nav-link-custom"
-							th:href="@{/positions}" id="link-positions">Cargos</a></li>
+							th:href="@{/industry}" id="link-payments">Seguimentos</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/flags}" id="link-payments">Bandeiras</a></li>
+						<li class="nav-item"><a class="nav-link nav-link-custom"
+							th:href="@{/table-prices}" id="link-payments">Tabela de Preço</a></li>
 					</ul>
 				</div>
 			</nav>
-			<div style="display: flex; flex-direction: column; margin-top: 10px;"
-				class="col-md-10">
-				<div th:if="${param.updated}" class="col-md-10">
-					<div id="alert" class="alert alert-success" role="alert">
-						Atualização realizada com sucesso!</div>
-				</div>
-				<div th:if="${param.saved}" class="col-md-10">
-					<div id="alert" class="alert alert-success" role="alert">
-						Salvamento realizado com sucesso!</div>
-				</div>
-				<div th:if="${param.error}" class="col-md-10">
-					<div id="alert" class="alert alert-danger" role="alert">Erro
-						ao encontrar usuário</div>
-				</div>
-				<div id="option-selected" class="col-md-10 fill-container"></div>
-			</div>
-
-
 		</div>
 	</div>
 
@@ -100,324 +94,14 @@
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 
-	<script th:src="@{/js/sidebar.js}"></script>
 	<script th:src="@{/js/search.js}"></script>
 	<script th:src="@{/js/applyUserFilters.js}"></script>
 	<script th:src="@{/js/resetUserFilter.js}"></script>
 	<script th:src="@{/js/manageIncentiveValue2.js}"></script>
 	<script th:src="@{/js/applyCustomerFilters.js}"></script>
 	<script th:src="@{/js/resetCustomerFilter.js}"></script>
-	<script>
-    document.querySelectorAll(".modal").forEach(modal => {
-        modal.addEventListener("shown.bs.modal", function() {
-            window.loadEmployeeData = loadEmployeeData;
-            window.createApurationSection = createApurationSection;
-            window.saveSale = saveSale;
-            window.editSale = editSale;
-            window.populateResumePane = populateResumePane;
-            window.removeSale = removeSale;
-            window.sendSalesToController = sendSalesToController;
-          
-        });
-    });
-    
-    
+	<script th:src="@{/js/incentives.js}"></script>
 
-    
-    
-    function loadEmployeeData(title, customerId, dynamicSectionId) {
-        const url = `/customers/${customerId}/employees`;
-
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erro ao buscar dados do cliente: ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const dynamicSections = document.getElementById(dynamicSectionId);
-                dynamicSections.innerHTML = "";
-
-                let employees, products;
-
-                if (title === "Consultores") {
-                    employees = data.consultores;
-                    products = data.produtos;
-                } else if (title === "Mecânicos") {
-                    employees = data.mecanicos;
-                    products = data.produtos;
-                }
-
-                if (employees && employees.length > 0) {
-                    createApurationSection(title, employees, products, dynamicSectionId, customerId);
-                } else {
-                    dynamicSections.innerHTML = `Sem ${title.toLowerCase()} nesta loja, clique em avançar.`;
-                }
-            })
-            .catch(error => {
-                console.error("Erro ao carregar funcionários:", error);
-            });
-    }
-
-
-
-    function createApurationSection(title, employees, products, dynamicSectionId, customerId) {
-        const section = document.getElementById(dynamicSectionId);
-        if (!section) {
-            console.error(`Erro: Seção dinâmica com ID '${dynamicSectionId}' não encontrada.`);
-            return;
-        }
-
-        section.innerHTML = "";
-
-        const sectionTitle = document.createElement("h5");
-        sectionTitle.textContent = `Apuração ${title}`;
-        section.appendChild(sectionTitle);
-
-        const employeeSelect = document.createElement("select");
-        employeeSelect.classList.add("form-select", "mb-3");
-        employeeSelect.setAttribute("id", `${dynamicSectionId}EmployeeSelect`);
-        employeeSelect.innerHTML = `<option value="default">Selecione um ${title.toLowerCase()}</option>`;
-        employees.forEach(employee => {
-            const option = document.createElement("option");
-            option.value = employee.id;
-            option.textContent = employee.name;
-            employeeSelect.appendChild(option);
-        });
-        section.appendChild(employeeSelect);
-
-        const productTable = document.createElement("table");
-        productTable.classList.add("table", "table-bordered", "mb-3");
-        productTable.setAttribute("id", `${dynamicSectionId}ProductsTable`);
-        productTable.innerHTML = `
-            <thead>
-                <tr>
-                    <th>CÓD.</th>
-                    <th>Nome</th>
-                    <th>Quantidade</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${products
-                    .map(
-                        product => `
-                        <tr data-product-id="${product.id}">
-                            <td>${product.productCode}</td>
-                            <td>${product.productName}</td>
-                            <td><input type="number" class="form-control" name="${title.toLowerCase()}Quantities[${product.id}]"></td>
-                        </tr>`
-                    )
-                    .join("")}
-            </tbody>
-        `;
-        section.appendChild(productTable);
-        
-        const saveNewButton = document.createElement("button");
-        saveNewButton.type = "button";
-        saveNewButton.classList.add("btn", "btn-primary", "mt-2");
-        saveNewButton.textContent = "Salvar Novo";
-        saveNewButton.addEventListener("click", function () {
-            saveSale(title, `${dynamicSectionId}EmployeeSelect`, employees, `${dynamicSectionId}ProductsTable`, products);
-        });
-        section.appendChild(saveNewButton);
-    }
-    
-    let salesData = []; // Array global para armazenar vendas
-
-    function saveSale(title, employeeSelectId, employees, productsTableId, products) {
-    	const customerSelect = document.getElementById("customerSelect");
-    	const selectedCustomerId = customerSelect.value;
-        const employeeSelect = document.getElementById(employeeSelectId);
-        const selectedEmployeeId = employeeSelect.value;
-        const selectedEmployee = employees.find(emp => emp.id == selectedEmployeeId);
-
-        if (!selectedEmployeeId || selectedEmployeeId === 'default') {
-            alert("Selecione um funcionário válido.");
-            return;
-        }
-
-        const productsTable = document.getElementById(productsTableId);
-        const rows = productsTable.querySelectorAll("tbody tr");
-        
-        let totalProductsSold = 0;
-        let saleDetails = {
-            customerId: selectedCustomerId,
-            employeeId: selectedEmployee.id,
-            employee: selectedEmployee.name,
-            products: []
-        };
-
-        rows.forEach(row => {
-            const productId = row.getAttribute('data-product-id');
-            const quantityInput = row.querySelector('input');
-            const quantity = parseInt(quantityInput.value) || 0;
-
-            if (quantity > 0) {
-                saleDetails.products.push({
-                    productId: productId,
-                    productName: products.find(p => p.id == productId).productName,
-                    quantity: quantity
-                });
-                totalProductsSold += quantity;
-            }
-        });
-
-        saleDetails.totalProductsSold = totalProductsSold;
-
-        if (saleDetails.products.length > 0) {
-            salesData.push(saleDetails);
-            alert("Venda salva com sucesso!");
-            employeeSelect.value = "default"; 
-            rows.forEach(row => {
-                const quantityInput = row.querySelector('input');
-                if (quantityInput) {
-                    quantityInput.value = ""; 
-                }
-            });
-        } else {
-            alert("Preencha ao menos um produto com uma quantidade válida.");
-        }
-        
-        document.getElementById("finalizeMechanicButton").addEventListener("click", () => {
-            populateResumePane();
-        });
-        
-        document.getElementById("saveAllSalesButton").addEventListener("click", sendSalesToController);
-
-    }
-
-    
-    function populateResumePane() {
-        const tableBody = document.querySelector("#modalSalesTable tbody");
-        tableBody.innerHTML = "";
-
-        salesData.forEach((sale, index) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${sale.employee}</td>
-                <td>${sale.totalProductsSold}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" onclick="editSale(${index})">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="removeSale('${sale.employee}')">Remover</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
-    
-    function editSale(index) {
-        const sale = salesData[index];
-
-        // Preenche a tabela do modal `sale` com os dados do funcionário selecionado
-        const tableBody = document.querySelector("#modalSalesResumeTable tbody");
-        tableBody.innerHTML = "";
-
-        sale.products.forEach(product => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${product.productId}</td>
-                <td>${product.productName}</td>
-                <td><input type="number" class="form-control" value="${product.quantity}" min="0" data-product-id="${product.productId}"></td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-        // Salva o índice atual da venda que está sendo editada
-        document.getElementById("confirmSaleButton").setAttribute("data-sale-index", index);
-
-        // Abre o modal de edição
-        const saleModal = new bootstrap.Modal(document.getElementById('sale'));
-        saleModal.show();
-
-        document.getElementById("confirmSaleButton").addEventListener("click", () => {
-            const saleIndex = document.getElementById("confirmSaleButton").getAttribute("data-sale-index");
-            const tableBody = document.querySelector("#modalSalesResumeTable tbody");
-            const rows = tableBody.querySelectorAll("tr");
-
-            let totalProductsSold = 0;
-            const updatedProducts = [];
-
-            rows.forEach(row => {
-                const productId = row.querySelector("input").getAttribute("data-product-id");
-                const quantity = parseInt(row.querySelector("input").value) || 0;
-
-                totalProductsSold += quantity;
-
-                updatedProducts.push({
-                    productId: productId,
-                    productName: row.cells[1].textContent,
-                    quantity: quantity
-                });
-            });
-
-            // Atualiza os dados na estrutura de vendas
-            salesData[saleIndex].products = updatedProducts;
-            salesData[saleIndex].totalProductsSold = totalProductsSold;
-
-            // Atualiza o modal de resumo
-            populateResumePane();
-
-            // Fecha o modal de edição
-            const saleModal = bootstrap.Modal.getInstance(document.getElementById('sale'));
-            saleModal.hide();
-        });
-    }
-
-
-
-    function removeSale(employeeName) {
-        salesData = salesData.filter(sale => sale.employee !== employeeName);
-        populateResumePane();
-    }
-    
-    function sendSalesToController() {
-        // Recupera o token CSRF e o nome do cabeçalho dinamicamente do HTML
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-        
-        // Exibe os valores no console para debug
-        console.log("CSRF Token:", csrfToken); 
-        console.log("CSRF Header Name:", csrfHeader);
-
-        const url = `/sale/calcule`;
-
-        // Configuração correta do cabeçalho com nomes dinâmicos
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
-        // Adiciona o cabeçalho CSRF usando a chave dinâmica recuperada
-        headers[csrfHeader] = csrfToken;
-
-        fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(salesData), // Serializa os dados corretamente
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erro ao enviar vendas: ${response.statusText}`);
-            }
-            return response.text(); // Use .text() caso o servidor não retorne JSON
-        })
-        .then(data => {
-            alert("Vendas enviadas com sucesso!");
-            console.log("Resposta do servidor:", data);
-        })
-        .catch(error => {
-            console.error("Erro ao enviar vendas:", error);
-        });
-        
-        
-        const incentivesCalculatedModal = new bootstrap.Modal(document.getElementById('incentivesCalculatedModal'));
-        incentivesCalculatedModal.show();
-    }
-
-
-
-    
-</script>
 
 
 

@@ -48,17 +48,21 @@ public class Group {
 	private List<Product> products = new ArrayList<>();
 	
 	public void addCustomer(Customer customer) {
-		if(customer != null && !customers.contains(customer)) {
-			customers.add(customer);
-			customer.setGroup(this);
-		}
-	}
-	
-	public void removeCustomer(Customer customer) {
-		if(customers.remove(customer)) {
-			customer.setGroup(null);
-		}
-	}
+        if (customer != null && !customers.contains(customer)) {
+            customers.add(customer);
+            if (customer.getGroup() != this) {
+                customer.setGroup(this);
+            }
+        }
+    }
+
+    public void removeCustomer(Customer customer) {
+        if (customers.remove(customer)) {
+            if (customer.getGroup() == this) {
+                customer.setGroup(null);
+            }
+        }
+    }
 	
 	public void addProduct(Product product) {
 		if(product != null && !products.contains(product)) {

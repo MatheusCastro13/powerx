@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.ind.powerx.gestaoOperacional.model.Customer;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.model.dtos.UserFilterDTO;
+import br.ind.powerx.gestaoOperacional.model.dtos.UserUpdateDTO;
 import br.ind.powerx.gestaoOperacional.model.enums.Position;
 import br.ind.powerx.gestaoOperacional.model.enums.State;
+import br.ind.powerx.gestaoOperacional.services.AuthenticationService;
 import br.ind.powerx.gestaoOperacional.services.CustomerService;
 import br.ind.powerx.gestaoOperacional.services.UserService;
 
@@ -26,15 +30,26 @@ import br.ind.powerx.gestaoOperacional.services.UserService;
 @RequestMapping("/users")
 public class UserController {
 	
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
+	
+	private final CustomerService customerService;
+	
+	private final AuthenticationService authenticationService;
 	
 	@Autowired
-	private CustomerService customerService;
+	public UserController(UserService userService, CustomerService customerService,
+			AuthenticationService authenticationService) {
+		this.userService = userService;
+		this.customerService = customerService;
+		this.authenticationService = authenticationService;
+	}
 	
 	@GetMapping
-	public String getUsers(Model model) {
-		List<User> userList = userService.findAllByActiveTrue();
+	public String getUsers(@RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "50") int size, 
+            Model model) {
+		User user = authenticationService.getUserAuthenticated();
+		Page<User> usersPage = userService.findAll(PageRequest.of(page, size));
 		List<Customer> availableCustomers = customerService.findAllByUserIdNull();
 		List<Position> positionList = new ArrayList<>();
 		List<State> stateList = new ArrayList<>();
@@ -50,8 +65,10 @@ public class UserController {
 		for(State s : states) {
 			stateList.add(s);
 		}
-	
-		model.addAttribute("users" , userList);
+		model.addAttribute("users", usersPage.getContent());
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", usersPage.getTotalPages());
+	    model.addAttribute("user", user);
 	    model.addAttribute("positions", positionList);
 	    model.addAttribute("states", stateList);
 	    model.addAttribute("availableCustomers", availableCustomers);
@@ -60,12 +77,12 @@ public class UserController {
 	
 	 @PostMapping("/update/{id}")
 	    public String updateUser(@PathVariable Long id,
-	                             @ModelAttribute User user,
-	                             @RequestParam List<Long> customers, 
+	                             @ModelAttribute UserUpdateDTO user,
+	                             @RequestParam(required = false) List<Long> customers, 
 	                             Model model) {
 	        userService.update(user, customers);
 
-	        return "redirect:/adm?updated=true";
+	        return "redirect:/users";
 	    }
 
 
@@ -76,26 +93,40 @@ public class UserController {
 							Model model) {
 		userService.save(user);
 		
-		return "redirect:/adm?saved=true";
+		return "redirect:/users";
 	}
 
 	@PostMapping("/filter")
-	public String filterUsers(@RequestBody UserFilterDTO filters, Model model) {
+	public String filterUsers(@RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "50") int size,
+            @RequestBody UserFilterDTO filters, 
+            Model model) {
+		System.out.println("States no controlador :" + filters.states());
+		System.out.println("Positions no controlador :" + filters.positions());
+		
+	    Page<User> filteredUsers = userService.filterUsers(filters.positions(), filters.states(), PageRequest.of(page, size));
+	    
+	    model.addAttribute("users", filteredUsers.getContent());
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", filteredUsers.getTotalPages());
 
-	    List<User> filteredUsers = userService.filterUsers(filters.positions(), filters.states());
-	    model.addAttribute("usersFiltered", filteredUsers);
-
-	    return "fragments/user-table :: userTable(usersFiltered=${usersFiltered})";
+		return "fragments/filteredUsers :: filtered-users";
 	}
 	
 	@GetMapping("/clearFilters")
-    public String clearFilters(Model model) {
-        List<User> allUsers = userService.findAllByActiveTrue();
+    public String clearFilters(@RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "50") int size,
+            Model model) {
+		Page<User> filteredUsers = userService.findAll(PageRequest.of(page, size));
+	    
+	    model.addAttribute("users", filteredUsers.getContent());
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", filteredUsers.getTotalPages());
 
-        model.addAttribute("users", allUsers);
-
-        return "fragments/all-users-table :: userTable(allUsers=${users})";
+		return "fragments/filteredUsers :: filtered-users";
     }
+	
+	
 
 }
 

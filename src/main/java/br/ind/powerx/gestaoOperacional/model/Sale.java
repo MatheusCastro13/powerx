@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class Sale {
 	@GeneratedValue
 	private Long id;
 	
-	@Past
+	@PastOrPresent
 	@Column(name = "reference_date", nullable = false)
 	private LocalDate referenceDate;
 	
@@ -50,8 +50,8 @@ public class Sale {
 	@Column(name = "quantity", nullable = false)
 	private Integer quantity;
 	
-	@Column(name = "order_sequence", nullable = false)
-    private Integer ordem;
+	@Column(name = "document_number", nullable = false)
+    private Integer documentNumber;
 	
 	public Sale(Customer customer, Employee employee, Product product, Integer quantity) {
 		this.customer = customer;
@@ -82,15 +82,14 @@ public class Sale {
 	@Override
 	public String toString() {
 		
-		return "Venda - Ordem " + this.getOrdem()
-				+ "Cliente: Nome - " + this.customer.getRegisteredName()
-					+ "\n cnpj - " + this.customer.getCnpj() +
-					"\nVendedor: Nome - " + this.employee.getName()
-					+ "\n cpf - " + this.employee.getCpf() + 
-					"\nProduto: Nome - " + this.product.getProductName()
-					+ "\n codigo - " + this.product.getProductCode() +
-					"\nQuantidade: Nome - " + this.quantity + "\n"
-					; 
+		return "Venda - Ordem " + this.getDocumentNumber() + 
+				"\nCliente: Nome - " + this.customer.getRegisteredName() + 
+				"\ncnpj - " + this.customer.getCnpj() +
+				"\nVendedor: Nome - " + this.employee.getName() + 
+				"\nCpf - " + this.employee.getCpf() + 
+				"\nProduto: Nome - " + this.product.getProductName() + 
+				"\nCodigo - " + this.product.getProductCode() +
+				"\nQuantidade: Nome - " + this.quantity + "\n"; 
 	}
 	
 }

@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CompactIncentive {
 	
-	private String incentiveOrdem;
-	private String saleOrdem;
+	private String saleDocumentNumber;
     private String monthYear;
     private String region;
     private String type;

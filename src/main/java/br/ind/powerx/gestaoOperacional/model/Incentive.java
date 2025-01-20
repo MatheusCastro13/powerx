@@ -20,7 +20,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,10 +40,7 @@ public class Incentive {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "order_sequence", nullable = false)
-    private Integer ordem;
-	
-	@Past
+	@PastOrPresent
 	@Column(name = "reference_date", nullable = false)
 	private LocalDate referenceDate;
 	
@@ -81,8 +78,8 @@ public class Incentive {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	@Column(name = "sale_order_sequence", nullable = false)
-	private Integer saleOrdem; 
+	@Column(name = "sale_document_number", nullable = false)
+    private Integer saleDocumentNumber;
 	
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -90,7 +87,8 @@ public class Incentive {
 	
 	@Override
 	public String toString() {
-		return "INCENTIVO DE ORDEM - " + this.getOrdem() +
+		return  "--------------------------------------------------------" +
+				"INCENTIVO " +
 				"\nId - " + this.getId() +
 				"\nData - " + this.getReferenceDate() +
 				"\nRegião - " + this.getState().getState() +
@@ -101,8 +99,9 @@ public class Incentive {
 				"\nValor - " + this.getIncentiveValue() +
 				"\nCliente - " + this.customer.getFantasyName() +
 				"\nCNPJ - " + this.getCustomer().getCnpj() +
-				"\nOrdem de venda - " + this.getSaleOrdem() +
-				"\nUsuario responsável - " + this.getUser().getName();
+				"\nOrdem de venda - " + this.getSaleDocumentNumber() +
+				"Usuario responsável - " + this.getUser().getName() +
+				"--------------------------------------------------------\n";
 		
 	}
 	

@@ -1,21 +1,29 @@
 package br.ind.powerx.gestaoOperacional.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import br.ind.powerx.gestaoOperacional.controllers.CustomerUpdateDTO;
 import br.ind.powerx.gestaoOperacional.model.Customer;
 import br.ind.powerx.gestaoOperacional.model.Employee;
+import br.ind.powerx.gestaoOperacional.model.Flag;
 import br.ind.powerx.gestaoOperacional.model.Group;
+import br.ind.powerx.gestaoOperacional.model.Industry;
 import br.ind.powerx.gestaoOperacional.model.MechanicApuration;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.repositories.CustomerRepository;
+import br.ind.powerx.gestaoOperacional.repositories.FlagRepository;
+import br.ind.powerx.gestaoOperacional.repositories.IndustryRepository;
 import br.ind.powerx.gestaoOperacional.repositories.MechanicApurationRepository;
 import br.ind.powerx.gestaoOperacional.repositories.PartnerGroupRepository;
 import br.ind.powerx.gestaoOperacional.repositories.UserRepository;
+import br.ind.powerx.gestaoOperacional.repositories.specifications.CustomerSpecifications;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -28,6 +36,10 @@ public class CustomerService {
 	
 	private final PartnerGroupRepository groupRepository;
 	
+	private final IndustryRepository industryRepository;
+	
+	private final FlagRepository flagRepository;
+	
 	private final UserRepository userRepository;
 	
 	private final MechanicApurationRepository mechanicApurationuserRepository;
@@ -35,17 +47,20 @@ public class CustomerService {
 	
 	@Autowired
     public CustomerService(CustomerRepository customerRepository, EmployeeService employeeService,
-    						PartnerGroupRepository groupRepository, UserRepository userRepository, 
+    						PartnerGroupRepository groupRepository, IndustryRepository industryRepository, 
+    						FlagRepository flagRepository, UserRepository userRepository, 
     						MechanicApurationRepository mechanicApurationuserRepository) {
         this.customerRepository = customerRepository;
         this.employeeService = employeeService;
         this.groupRepository = groupRepository;
+        this.industryRepository = industryRepository;
+        this.flagRepository = flagRepository;
         this.userRepository = userRepository;
         this.mechanicApurationuserRepository = mechanicApurationuserRepository;
     }
 	
 	@Transactional
-	public void save(Customer customer, Long userId, Long groupId, Long mechanicApurationId, List<Long> employees) {
+	public void save(Customer customer, Long userId, Long groupId, Long industryId, Long flagId, Long mechanicApurationId, List<Long> employees) {
 		User user = userRepository.findById(userId)
 		        .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
 		customer.setUser(user);
@@ -53,6 +68,14 @@ public class CustomerService {
 		Group group = groupRepository.findById(groupId)
 		        .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
 		customer.setGroup(group);
+		
+		Industry industry = industryRepository.findById(industryId)
+				.orElseThrow(() -> new EntityNotFoundException("Seguimento não encontrado"));
+		customer.setIndustry(industry);
+		
+		Flag flag = flagRepository.findById(flagId)
+				.orElseThrow(() -> new EntityNotFoundException("Marca/Bandeira não encontrado"));
+		customer.setFlag(flag);
 
 		MechanicApuration mechanicApuration = mechanicApurationuserRepository.findById(mechanicApurationId)
 				.orElseThrow(()-> new EntityNotFoundException("Apuração de mecânico não encontrada"));
@@ -67,68 +90,57 @@ public class CustomerService {
 	}
 	
 	@Transactional
-	public void update(Customer customerToUpdate, Long userId, Long groupId, Long mechanicApurationId, List<Long> employees) {
-		Customer existingCustomer = customerRepository.findById(customerToUpdate.getId())
-				.orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
-		existingCustomer.setCnpj(customerToUpdate.getCnpj());
-		existingCustomer.setRegisteredName(customerToUpdate.getRegisteredName());
-		existingCustomer.setAddress(customerToUpdate.getAddress());
-		
-		Group group = groupRepository.findById(groupId)
-				.orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
-		group.addCustomer(existingCustomer);
-		existingCustomer.setGroup(group);
-		
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
-		user.addCustomer(existingCustomer);
-		existingCustomer.setUser(user);
-		
-		MechanicApuration mechanicApuration = mechanicApurationuserRepository.findById(mechanicApurationId)
-				.orElseThrow(()-> new EntityNotFoundException("Apuração de mecânico não encontrada"));
-		mechanicApuration.addCustomer(existingCustomer);
-		existingCustomer.setMechanicApuration(mechanicApuration);
-		
-		List<Employee> currentEmployees = existingCustomer.getEmployees();
-		
-		List<Employee> employeesToUpdate = employeeService.findAllById(employees);
-		
-		List<Employee> employeesToRemove = new ArrayList<>(currentEmployees);
+	public void update(CustomerUpdateDTO customerToUpdate, Long userId, Long groupId, Long industryId, Long flagId, Long mechanicApurationId, List<Long> employeeIds) {
+	    Customer existingCustomer = customerRepository.findById(customerToUpdate.id())
+	            .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
-		for (Employee e : employeesToRemove) {
-		    e.removeCustomer(existingCustomer);
-		    employeeService.save(e);
-		}
+	    existingCustomer.setUnysoftCode(customerToUpdate.unysoftCode());
+	    existingCustomer.setCnpj(customerToUpdate.cnpj());
+	    existingCustomer.setRegisteredName(customerToUpdate.registeredName());
+	    existingCustomer.setFantasyName(customerToUpdate.fantasyName());
+	    existingCustomer.setAddress(customerToUpdate.address());
+	    existingCustomer.setActive(true);
 
-		existingCustomer.getEmployees().clear();
-		customerRepository.save(existingCustomer);
+	    existingCustomer.setGroup(groupRepository.findById(groupId)
+	            .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado")));
+	    existingCustomer.setIndustry(industryRepository.findById(industryId)
+	            .orElseThrow(() -> new EntityNotFoundException("Seguimento não encontrado")));
+	    existingCustomer.setFlag(flagRepository.findById(flagId)
+	            .orElseThrow(() -> new EntityNotFoundException("Marca/Bandeira não encontrado")));
+	    existingCustomer.setUser(userRepository.findById(userId)
+	            .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
+	    existingCustomer.setMechanicApuration(mechanicApurationuserRepository.findById(mechanicApurationId)
+	            .orElseThrow(() -> new EntityNotFoundException("Apuração de mecânico não encontrada")));
 
-		
-		for(Employee e : employeesToUpdate) {
-			existingCustomer.addEmployee(e);
-		}
-		
-		existingCustomer.setActive(true);
-		
-		customerRepository.save(existingCustomer);
+	    List<Employee> newEmployees = employeeService.findAllById(employeeIds);
+	    existingCustomer.getEmployees().clear();
+	    newEmployees.forEach(existingCustomer::addEmployee);
+
 	}
+
 	
-	public List<Customer> filterCustomers(List<Long> users, List<Long> groups) {
+	public Page<Customer> filterCustomers(List<Long> users, List<Long> groups, List<Long> industries, List<Long> flags, Pageable pageable) {
 
-        if ((users == null || users.isEmpty()) && (groups == null || groups.isEmpty())) {
-            return customerRepository.findAll();
-        }
+	    Specification<Customer> spec = Specification.where(null);
 
-        if (users != null && !users.isEmpty() && (groups == null || groups.isEmpty())) {
-            return customerRepository.findByUserIdIn(users);
-        }
+	    if (users != null && !users.isEmpty()) {
+	        spec = spec.and(CustomerSpecifications.userIdIn(users));
+	    }
 
-        if ((users == null || users.isEmpty()) && groups != null && !groups.isEmpty()) {
-            return customerRepository.findByGroupIdIn(groups);
-        }
+	    if (groups != null && !groups.isEmpty()) {
+	        spec = spec.and(CustomerSpecifications.groupIdIn(groups));
+	    }
 
-        return customerRepository.findByUserIdInAndGroupIdIn(users, groups);
-    }
+	    if (industries != null && !industries.isEmpty()) {
+	        spec = spec.and(CustomerSpecifications.industryIdIn(industries));
+	    }
+
+	    if (flags != null && !flags.isEmpty()) {
+	        spec = spec.and(CustomerSpecifications.flagIdIn(flags));
+	    }
+
+	    return customerRepository.findAll(spec, pageable);
+	}
 	
 	
 	public List<Customer> findAllByActiveTrue(){
@@ -150,7 +162,15 @@ public class CustomerService {
 		return customerRepository.findAllByGroupIdNull();
 	}
 
-	public Optional<Customer> findById(Long apurationTypeId) {
-		return customerRepository.findById(apurationTypeId);
+	public Optional<Customer> findById(Long cutomerId) {
+		return customerRepository.findById(cutomerId);
+	}
+
+	public Page<Customer> findAll(Pageable pageable) {
+		return customerRepository.findAll(pageable);
+	}
+
+	public List<Customer> findAll() {
+		return customerRepository.findAll();
 	}
 }

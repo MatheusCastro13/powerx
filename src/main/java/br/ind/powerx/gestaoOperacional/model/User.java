@@ -1,5 +1,6 @@
 package br.ind.powerx.gestaoOperacional.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +21,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 
 @NoArgsConstructor
@@ -33,7 +34,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
 @Entity
 @Table(name = "users")
 public class User{
@@ -41,9 +41,21 @@ public class User{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	
+	@Column(name = "unydoft_code", unique = true, length = 10)
+    private String unysoftCode;
 
     @Column(nullable = false, length = 100)
     private String name;
+    
+    @Column(length = 14)
+    private String cpf;
+    
+    @Past
+    private LocalDate birthday;
+    
+    @Column(length = 255)
+    private String address;
 
     @Column(nullable = false, unique = true, length = 150)
     private String email;
@@ -51,7 +63,7 @@ public class User{
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, length = 20)
     private String role;
 
     @Enumerated(EnumType.STRING)
@@ -72,8 +84,11 @@ public class User{
     @UpdateTimestamp
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
+    
+    @Column(name = "start_of_activities", updatable = false)
+    private LocalDate startOfActivities;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -139,15 +154,20 @@ public class User{
     public void addCustomer(Customer customer) {
         if (customer != null && !customers.contains(customer)) {
             customers.add(customer);
-            customer.setUser(this);
+            if (customer.getUser() != this) {
+                customer.setUser(this);
+            }
         }
     }
 
     public void removeCustomer(Customer customer) {
         if (customers.remove(customer)) {
-            customer.setUser(null);
+            if (customer.getUser() == this) {
+                customer.setUser(null);
+            }
         }
     }
+
 
     public void addPrevision(Prevision prevision) {
         if (prevision != null && !previsions.contains(prevision)) {
@@ -160,6 +180,19 @@ public class User{
         if (previsions.remove(prevision)) {
             prevision.setUser(null);
         }
+    }
+    
+    @Override
+    public String toString() {
+    	return "Usuario:" +
+    			"\nId - " + this.id +
+    			"\nNome - " + this.name +
+    			"\nEmail - " + this.email +
+    			"\nRole - " + this.role +
+    			"\nCargo - " + this.position +
+    			"\nRegião - " + this.state +
+    			"\nAtivo - " + this.active;
+    			
     }
    
 }

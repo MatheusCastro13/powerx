@@ -7,7 +7,9 @@ function clearCustomerFilters() {
         })
         .then(response => response.text())
         .then(html => {
-            document.getElementById('tableBody').innerHTML = html;
+            const div = document.getElementById('customer-table');
+			div.innerHTML = '';
+			div.innerHTML = html;
 
             const filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
             filterModal.hide();
