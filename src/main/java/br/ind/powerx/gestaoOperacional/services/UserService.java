@@ -120,6 +120,19 @@ public class UserService {
 		user.setActive(true);
 	}
 	
+	private void updateUserDetails(User user, User dto) {
+		user.setUnysoftCode(dto.getUnysoftCode());
+		user.setName(dto.getName());
+		user.setCpf(dto.getCpf());
+		user.setAddress(dto.getAddress());
+		user.setBirthday(dto.getBirthday());
+		user.setEmail(dto.getEmail());
+		user.setRole(dto.getRole());
+		user.setPosition(dto.getPosition());
+		user.setState(dto.getState());
+		user.setActive(true);
+	}
+	
 	private void updateUserCustomers(User user, List<Long> customerIds) {
 	    List<Customer> updatedCustomers = customerService.findAllById(customerIds);
 
@@ -153,4 +166,16 @@ public class UserService {
 	public List<User> findAllByActiveTrue() {
 		return userRepository.findAllByActiveTrue();
 	}
+
+
+	@Transactional
+	public void update(Long id, User user) {
+		User existingUser = userRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("User não encontrado"));
+		updateUserDetails(existingUser, user);
+	}
 }
+
+
+
+

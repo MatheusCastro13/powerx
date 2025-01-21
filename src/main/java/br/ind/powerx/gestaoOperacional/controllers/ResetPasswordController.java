@@ -3,6 +3,7 @@ package br.ind.powerx.gestaoOperacional.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class ResetPasswordController {
 	@GetMapping
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
     	System.out.println("Token: " + token);
-        Optional<PasswordResetToken> resetTokenOpt = tokenService.findPasswordResetToken(token);
+        Optional<PasswordResetToken> resetTokenOpt = tokenService.findPasswordResetTokenByToken(token);
         
         System.out.println("PasswordResetToken: " + resetTokenOpt);
         
@@ -52,11 +53,12 @@ public class ResetPasswordController {
             return "reset-password";
         }
 
-        Optional<PasswordResetToken> resetTokenOpt = tokenService.findPasswordResetToken(token);
+        Optional<PasswordResetToken> resetTokenOpt = tokenService.findPasswordResetTokenByToken(token);
         if (resetTokenOpt.isPresent() && !resetTokenOpt.get().isExpired()) {
             User user = resetTokenOpt.get().getUser();
-            user.setPasswordHash(password);
-            userService.save(user);
+            String encryptedPassword = new BCryptPasswordEncoder().encode(password);
+            user.setPasswordHash(encryptedPassword);
+            userService.update(user.getId(), user);
             tokenService.deletePasswordResetToken(resetTokenOpt.get());
             model.addAttribute("message", "Sua senha foi redefinida com sucesso.");
             return "login";

@@ -9,30 +9,9 @@
   	<link rel="stylesheet" th:href="@{/styles/home-custom.css}">
   </head>
 <body>
-	<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-custom bg-body-tertiary-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/home}"><img id="goto-home" alt="Power X" th:src="@{/images/powerx-logo.png}"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" 
-                    aria-controls="nav	barNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link" aria-current="page" th:href="@{/home}">Ínicio</a>
-                    <a class="nav-link" th:href="@{/incentives}">Incentivos</a>
-                    <a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administrativo</a>
-                    <a class="nav-link" th:href="@{/user/{id}(id=${user.id})}">Perfil</a>
-                    <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;">
-					    <input type="hidden" />
-					</form>
-					
-					<a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit();">Logout</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
 	
-	<div class="container-custom mt-4 mt-4-custom">
+	<div class="container-fluid" style="margin-top: 80px">
       <div class="row">
         <div class="col-12">
           <h4>Bem vindo(a) de volta, <span th:text="${user.name}">!</span></h4>

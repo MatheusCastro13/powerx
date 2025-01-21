@@ -12,6 +12,14 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
 <link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
+<link rel="stylesheet" th:href="@{/styles/multiple-select.css}">
+
+<link rel="icon" th:href="@{/images/powerx-icon.png}"
+	type="image/x-icon">
+<title>Grupos Parceiros</title>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css"
+	rel="stylesheet" />
 </head>
 <body>
 	<div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -106,16 +114,16 @@
 											</div>
 											<div class="mb-3">
 												<label for="editProducts" class="form-label">Selecione
-													os Produtos</label> <select class="form-select" name="products"
-													multiple>
+													os Produtos</label> <select id="multiSelectNewProduct"
+													class="form-select" name="products" multiple>
 													<option th:each="product : ${products}"
 														th:value="${product.id}" th:text="${product.productName}"></option>
 												</select>
 											</div>
 											<div class="mb-3">
 												<label for="editCustomers" class="form-label">Selecione
-													os Clientes</label> <select class="form-select" name="customers"
-													multiple>
+													os Clientes</label> <select id="multiSelectNewCustomer"
+													class="form-select" name="customers" multiple>
 													<option th:each="customer : ${availableCustomers}"
 														th:value="${customer.id}"
 														th:text="${customer.registeredName}"></option>
@@ -161,16 +169,19 @@
 											</div>
 											<div class="mb-3">
 												<label for="editProducts" class="form-label">Selecione
-													os Produtos</label> <select class="form-select" name="products"
-													required multiple>
+													os Produtos</label> <select
+													class="form-select multiSelectEditProduct" name="products"
+													multiple>
 													<option th:each="product : ${products}"
-														th:value="${product.id}" th:text="${product.productName}"></option>
+														th:value="${product.id}" th:text="${product.productName}"
+														th:selected="${group.products.contains(product)}"></option>
 												</select>
 											</div>
 											<div class="mb-3">
 												<label for="editProducts" class="form-label">Selecione
-													os Clientes</label> <select class="form-select" name="customers"
-													required multiple>
+													os Clientes</label> <select
+													class="form-select multiSelectEditCustomer"
+													name="customers" multiple>
 													<option th:each="customer : ${group.customers}"
 														th:value="${customer.id}"
 														th:text="${customer.registeredName}" selected></option>
@@ -199,7 +210,7 @@
 								aria-labelledby="'detailsGroupModalLabel' + ${group.id}"
 								tabindex="-1">
 								<div
-									class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+									class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 									<div class="modal-content">
 										<div class="modal-header">
 											<h1 class="modal-title fs-5"
@@ -210,14 +221,14 @@
 										</div>
 										<div class="modal-body">
 											<p>
-												ID: <span th:text="${group.id}"></span>
+												<Strong>ID: </Strong><span th:text="${group.id}"></span>
 											</p>
 											<p>
-												Nome: <span th:text="${group.name}"></span>
+												<Strong>Nome: </Strong><span th:text="${group.name}"></span>
 											</p>
 											<div
-												class="vstack gap-2 col-md-5 mx-auto .g-col-3 .g-start-2">
-												<button class="btn btn-primary"
+												class="vstack gap-2 col-md-5 d-flex justify-content-start">
+												<button class="btn btn-primary mt-2	"
 													th:data-bs-target="'#showCustomerModal' + ${group.id}"
 													data-bs-toggle="modal">Clientes</button>
 												<button class="btn btn-primary"
@@ -320,10 +331,17 @@
 		</div>
 	</div>
 
-	<script th:src="@{/js/search.js}"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+		integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
+	<script th:src="@{/js/search.js}"></script>
+	<script th:src="@{/js/multipleSelectGroupPage.js}"></script>
 </body>
 </html>

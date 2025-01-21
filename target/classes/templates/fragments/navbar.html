@@ -20,6 +20,7 @@
                     <a class="nav-link" th:href="@{/incentives}">Incentivos</a>
                     <a class="nav-link" th:href="@{/adm}" sec:authorize="hasRole('ADMIN')">Administrativo</a>
                     <a class="nav-link" th:href="@{/user/{id}(id=${user.Id})}">Perfil</a>
+                    <a class="nav-link" th:href="@{/contacts}">Contatos</a>
                     <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;">
                         <input type="hidden"/>
                     </form>

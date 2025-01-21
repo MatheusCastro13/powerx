@@ -12,8 +12,13 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
 <link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
-
+<link rel="stylesheet" th:href="@{/styles/multiple-select.css}">
+<link rel="icon" th:href="@{/images/powerx-icon.png}"
+	type="image/x-icon">
 <title>Usuários</title>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css"
+	rel="stylesheet" />
 </head>
 <body>
 	<div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -148,7 +153,7 @@
 												</div>
 												<div class="mb-3">
 													<label for="newStartOfActivities" class="form-label">Data
-														de Início das Atividades</label> <input type="text"
+														de Início das Atividades</label> <input type="date"
 														class="form-control" name="startOfActivities" required>
 												</div>
 												<div class="mb-3">
@@ -190,8 +195,8 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="newCustomers" class="form-label">Selecione
-														os Clientes</label> <select class="form-select" name="customers"
-														multiple>
+														os Clientes</label> <select id="multiSelectNew" class="form-select"
+														name="customers" multiple>
 														<option th:each="customer : ${availableCustomers}"
 															th:value="${customer.id}"
 															th:text="${customer.registeredName}"></option>
@@ -300,8 +305,8 @@
 												</div>
 												<div class="mb-3">
 													<label for="editCustomers" class="form-label">Selecione
-														os Clientes</label> <select class="form-select" name="customers"
-														multiple>
+														os Clientes</label> <select id="multiSelectEdit"
+														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${availableCustomers}"
 															th:value="${customer.id}"
 															th:text="${customer.registeredName}"></option>
@@ -352,13 +357,15 @@
 													<Strong>ID: </Strong><span th:text="${user.id}"></span>
 												</p>
 												<p>
-													<Strong>Código Unysoft: </Strong><span th:text="${user.unysoftCode}"></span>
+													<Strong>Código Unysoft: </Strong><span
+														th:text="${user.unysoftCode}"></span>
 												</p>
 												<p>
 													<Strong>Nome: </Strong><span th:text="${user.name}"></span>
 												</p>
 												<p>
-													<Strong>Data de Nascimento: </Strong><span th:text="${user.birthday}"></span>
+													<Strong>Data de Nascimento: </Strong><span
+														th:text="${user.birthday}"></span>
 												</p>
 												<p>
 													<Strong>CPF: </Strong><span th:text="${user.cpf}"></span>
@@ -382,17 +389,20 @@
 
 											<div class="col-md-6">
 												<p>
-													<Strong>Data de cadastro: </Strong><span th:text="${user.creationDate}"></span>
+													<Strong>Data de cadastro: </Strong><span
+														th:text="${user.creationDate}"></span>
 												</p>
 												<p>
 													<Strong>Data de início das atividades: </Strong><span
 														th:text="${user.startOfActivities}"></span>
 												</p>
 												<p>
-													<Strong>Última alteração: </Strong><span th:text="${user.lastUpdate}"></span>
+													<Strong>Última alteração: </Strong><span
+														th:text="${user.lastUpdate}"></span>
 												</p>
 												<p>
-													<Strong>Ativo: </Strong><span th:text="${user.active ? 'Sim' : 'Não'}"></span>
+													<Strong>Ativo: </Strong><span
+														th:text="${user.active ? 'Sim' : 'Não'}"></span>
 												</p>
 												<p>
 													<Strong>Tipo de usuário: </Strong><span
@@ -552,14 +562,19 @@
 
 
 
-
-	<script th:src="@{/js/search.js}"></script>
-	<script th:src="@{/js/applyUserFilters.js}"></script>
-	<script th:src="@{/js/resetUserFilter.js}"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+		integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
+	<script th:src="@{/js/search.js}"></script>
+	<script th:src="@{/js/applyUserFilters.js}"></script>
+	<script th:src="@{/js/resetUserFilter.js}"></script>
+	<script th:src="@{/js/multipleSelectUserPage.js}"></script>
 </body>
 </html>
 

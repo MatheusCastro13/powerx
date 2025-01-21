@@ -7,19 +7,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.ind.powerx.gestaoOperacional.model.PasswordResetToken;
+import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.repositories.PasswordResetTokenRepository;
+import br.ind.powerx.gestaoOperacional.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PasswordResetTokenService {
 
+	
+	private final PasswordResetTokenRepository tokenRepository;
+	
+	private final UserRepository userRepository;
+	
 	@Autowired
-	private PasswordResetTokenRepository tokenRepository;
+	public PasswordResetTokenService(PasswordResetTokenRepository tokenRepository, UserRepository userRepository) {
+		this.tokenRepository = tokenRepository;
+		this.userRepository = userRepository;
+	}
 	
 	public void savePasswordResetToken(PasswordResetToken token) {
         tokenRepository.save(token);
     }
 
-    public Optional<PasswordResetToken> findPasswordResetToken(String token) {
+    public Optional<PasswordResetToken> password(String token) {
         Optional<PasswordResetToken> resetToken = tokenRepository.findByToken(token);
         if (resetToken.isPresent() && resetToken.get().getExpiryDate().isAfter(LocalDateTime.now())) {
             return resetToken;
@@ -31,8 +43,11 @@ public class PasswordResetTokenService {
         tokenRepository.delete(token);
     }
     
+    @Transactional
     public void deletePasswordResetTokenByUserId(Long id) {
-        tokenRepository.deleteByUserId(id);
+    	User user = userRepository.findById(id)
+    			.orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
+        tokenRepository.deleteByUser(user);
     }
 
 	public Optional<PasswordResetToken> findPasswordResetTokenByUser(Long id) {
@@ -52,6 +67,10 @@ public class PasswordResetTokenService {
         }
         
         return Optional.empty();
+	}
+
+	public Optional<PasswordResetToken> findPasswordResetTokenByToken(String token) {
+		return tokenRepository.findByToken(token);
 	}
 }
 

@@ -12,7 +12,8 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
 <link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
-<title>Usuários</title>
+<link rel="icon" th:href="@{/images/powerx-icon.png}" type="image/x-icon">
+<title>Produtos</title>
 </head>
 <body>
 	<div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -20,7 +21,7 @@
 	<div class="container-fluid" style="margin-top: 60px">
 		<div class="row">
 			<div th:replace="~{fragments/sidebar :: sidebar}"></div>
-			
+
 			<div style="display: flex; flex-direction: column; margin-top: 10px;"
 				class="col-md-10">
 
@@ -112,6 +113,11 @@
 
 								<form th:action="@{/products/save}" method="post">
 									<div class="mb-3">
+										<label for="newUnysoftCode" class="form-label">Código
+											Unysoft</label> <input type="text" class="form-control"
+											name="unysoftCode" required>
+									</div>
+									<div class="mb-3">
 										<label for="newCode" class="form-label">Código Produto</label>
 										<input type="text" class="form-control" name="productCode"
 											required>
@@ -154,6 +160,12 @@
 										method="post">
 										<input type="hidden" name="id" th:value="${product.id}"
 											required>
+										<div class="mb-3">
+											<label for="editCode" class="form-label">Código
+												Unysoft</label> <input type="text" class="form-control"
+												th:value="${product.unysoftCode}" name="unysoftCode"
+												required>
+										</div>
 										<div class="mb-3">
 											<label for="editCode" class="form-label">Código
 												Produto</label> <input type="text" class="form-control"
@@ -283,13 +295,16 @@
 								</div>
 								<div class="modal-body">
 									<p>
-										ID: <span th:text="${product.id}"></span>
+										<Strong>ID: </Strong><span th:text="${product.id}"></span>
 									</p>
 									<p>
-										Código: <span th:text="${product.productCode}"></span>
+										<Strong>Código Unysoft: </Strong><span th:text="${product.unysoftCode}"></span>
 									</p>
 									<p>
-										Descrição: <span th:text="${product.productName}"></span>
+										<Strong>Código: </Strong><span th:text="${product.productCode}"></span>
+									</p>
+									<p>
+										<Strong>Descrição: </Strong><span th:text="${product.productName}"></span>
 									</p>
 									<button class="btn btn-primary"
 										th:data-bs-target="'#showIncentiveValueModal' + ${product.id}"
