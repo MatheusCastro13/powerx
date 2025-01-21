@@ -29,6 +29,7 @@ import br.ind.powerx.gestaoOperacional.model.MechanicApuration;
 import br.ind.powerx.gestaoOperacional.model.TablePrice;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.model.dtos.CustomerFilterDTO;
+import br.ind.powerx.gestaoOperacional.model.dtos.CustomerUpdateDTO;
 import br.ind.powerx.gestaoOperacional.model.dtos.EmployeeDTO;
 import br.ind.powerx.gestaoOperacional.model.dtos.ProductDTO;
 import br.ind.powerx.gestaoOperacional.services.AuthenticationService;

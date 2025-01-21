@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import br.ind.powerx.gestaoOperacional.controllers.CustomerUpdateDTO;
 import br.ind.powerx.gestaoOperacional.model.Customer;
 import br.ind.powerx.gestaoOperacional.model.Employee;
 import br.ind.powerx.gestaoOperacional.model.Flag;
@@ -17,6 +16,7 @@ import br.ind.powerx.gestaoOperacional.model.Group;
 import br.ind.powerx.gestaoOperacional.model.Industry;
 import br.ind.powerx.gestaoOperacional.model.MechanicApuration;
 import br.ind.powerx.gestaoOperacional.model.User;
+import br.ind.powerx.gestaoOperacional.model.dtos.CustomerUpdateDTO;
 import br.ind.powerx.gestaoOperacional.repositories.CustomerRepository;
 import br.ind.powerx.gestaoOperacional.repositories.FlagRepository;
 import br.ind.powerx.gestaoOperacional.repositories.IndustryRepository;
