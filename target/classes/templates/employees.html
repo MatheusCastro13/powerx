@@ -15,16 +15,20 @@
 <link rel="icon" th:href="@{/images/powerx-icon.png}"
 	type="image/x-icon">
 <title>Premiados</title>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css"
+	rel="stylesheet" />
 </head>
 <body>
 	<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 	<div class="container-fluid" style="margin-top: 60px">
 		<div class="row">
-			<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+			<div class="col-md-2 d-none d-md-block sidebar-wrapper"
+				th:replace="~{fragments/sidebar :: sidebar}"></div>
 
 			<div style="display: flex; flex-direction: column; margin-top: 10px;"
-				class="col-md-10">
+				class="col-md-10 offset-md-2 content-main">
 
 				<div class="col-md-10 fill-container">
 					<div th:if="${error}">
@@ -138,45 +142,29 @@
 												</div>
 												<div class="mb-3">
 													<label for="newFunctions" class="form-label">Selecione
-														as Funções</label> <select class="form-select" name="functions"
-														multiple>
+														as Funções</label> <select id="multiSelectFunctionsNew"
+														class="form-select" name="functions" multiple>
 														<option th:each="func : ${functions}"
 															th:value="${func.id}" th:text="${func.name}"></option>
 													</select>
 												</div>
 												<div class="mb-3">
 													<label for="newCustomers" class="form-label">Selecione
-														os Clientes</label> <select class="form-select" name="customers"
-														multiple>
+														os Clientes</label> <select id="multiSelectCustomersNew"
+														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${customers}"
 															th:value="${customer.id}"
 															th:text="${customer.registeredName}"></option>
 													</select>
 												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="newApurationTypes" class="form-label">Selecione
-														os Tipos de Apuração</label> <select class="form-select"
+														os Tipos de Apuração</label> <select
+														id="multiSelectApurationTypesNew" class="form-select"
 														name="apurationTypes" multiple>
 														<option th:each="apurationType : ${apurationTypes}"
 															th:value="${apurationType.id}"
 															th:text="${apurationType.name}"></option>
-													</select>
-												</div>
-											</div>
-
-											<div class="col-md-6">
-												<div class="mb-3">
-													<label for="newPaymentMethods" class="form-label">Selecione
-														o Método de Pagamento</label> <select class="form-select"
-														name="paymentMethod" required>
-														<option th:each="paymentMethod : ${paymentMethods}"
-															th:value="${paymentMethod.id}"
-															th:text="${paymentMethod.name}"></option>
 													</select>
 												</div>
 											</div>
@@ -198,125 +186,100 @@
 
 
 
-					<div th:each="employee : ${employees}">
-						<div class="modal fade"
-							th:id="'editEmployeeModal' + ${employee.id}" tabindex="-1"
-							aria-labelledby="'editEmployeeModalLabel' + ${employee.id}"
-							aria-hidden="true">
-							<div class="modal-dialog modal-dialog-scrollable modal-lg">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title"
-											th:id="'editEmployeeModalLabel' + ${employee.id}">Editar
-											Premiado</h5>
-										<button type="button" class="btn-close"
-											data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<form th:action="@{/employees/update/{id}(id=${employee.id})}"
-											method="post">
-											<input type="hidden" name="id" th:value="${employee.id}"
-												required>
 
-											<div class="row">
-												<div class="col-md-6">
-													<div class="mb-3">
-														<label for="editCpf" class="form-label">Cpf</label> <input
-															type="text" class="form-control"
-															th:value="${employee.cpf}" name="cpf" required>
-													</div>
-													<div class="mb-3">
-														<label for="editName" class="form-label">Nome</label> <input
-															type="text" class="form-control"
-															th:value="${employee.name}" name="name" required>
-													</div>
-													<div class="mb-3">
-														<label for="editEmail" class="form-label">Email</label> <input
-															type="email" class="form-control"
-															th:value="${employee.email}" name="email">
-													</div>
-													<div class="mb-3">
-														<label for="editPhone" class="form-label">Telefone</label>
-														<input type="text" class="form-control"
-															th:value="${employee.phone}" name="phone">
-													</div>
+					<div th:each="employee : ${employees}" class="modal fade"
+						th:id="'editEmployeeModal' + ${employee.id}" tabindex="-1"
+						th:aria-labelledby="'editEmployeeModalLabel' + ${employee.id}"
+						aria-hidden="true">
+						<div class="modal-dialog modal-dialog-scrollable modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title"
+										th:id="'editEmployeeModalLabel' + ${employee.id}">Editar
+										Premiado</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form th:action="@{/employees/update/{id}(id=${employee.id})}"
+										method="post">
+										<input type="hidden" name="id" th:value="${employee.id}"
+											required>
+
+										<div class="row">
+											<div class="col-md-6">
+												<div class="mb-3">
+													<label for="editCpf" class="form-label">Cpf</label> <input
+														type="text" class="form-control"
+														th:value="${employee.cpf}" name="cpf" required>
 												</div>
-
-												<div class="col-md-6">
-													<div class="mb-3">
-														<label for="editBirthDate" class="form-label">Data
-															de Nascimento</label> <input type="date" class="form-control"
-															th:value="${employee.birthDate}" name="birthDate">
-													</div>
-													<div class="mb-3">
-														<label for="newFunctions" class="form-label">Selecione
-															as Funções</label> <select class="form-select" name="functions"
-															multiple>
-															<option th:each="func : ${functions}"
-																th:value="${func.id}" th:text="${func.name}"
-																th:selected="${employee.functions.contains(func)}">
-															</option>
-														</select>
-													</div>
-													<div class="mb-3">
-														<label for="newCustomers" class="form-label">Selecione
-															os Clientes</label> <select class="form-select" name="customers"
-															multiple>
-															<option th:each="customer : ${customers}"
-																th:value="${customer.id}"
-																th:text="${customer.registeredName}"
-																th:selected="${employee.customers.contains(customer)}">
-															</option>
-														</select>
-													</div>
+												<div class="mb-3">
+													<label for="editName" class="form-label">Nome</label> <input
+														type="text" class="form-control"
+														th:value="${employee.name}" name="name" required>
+												</div>
+												<div class="mb-3">
+													<label for="editEmail" class="form-label">Email</label> <input
+														type="email" class="form-control"
+														th:value="${employee.email}" name="email">
+												</div>
+												<div class="mb-3">
+													<label for="editPhone" class="form-label">Telefone</label>
+													<input type="text" class="form-control"
+														th:value="${employee.phone}" name="phone">
 												</div>
 											</div>
 
-											<div class="row">
-												<div class="col-md-6">
-													<div class="mb-3">
-														<label for="newApurationTypes" class="form-label">Selecione
-															os Tipos de Apuração</label> <select class="form-select"
-															name="apurationTypes" multiple>
-															<option th:each="apurationType : ${apurationTypes}"
-																th:value="${apurationType.id}"
-																th:text="${apurationType.name}"
-																th:selected="${employee.apurationTypes.contains(apurationType)}">
-															</option>
-														</select>
-													</div>
+											<div class="col-md-6">
+												<div class="mb-3">
+													<label for="editFunctions" class="form-label">Selecione
+														as Funções</label> <select
+														th:id="'multiSelectFunctionsEdit' + ${employee.id}"
+														class="form-select" name="functions" multiple>
+														<option th:each="func : ${functions}"
+															th:value="${func.id}" th:text="${func.name}"
+															th:selected="${employee.functions.contains(func)}"></option>
+													</select>
 												</div>
-
-												<div class="col-md-6">
-													<div class="mb-3">
-														<label for="newPaymentMethod" class="form-label">Selecione
-															o Método de Pagamento</label> <select class="form-select"
-															name="paymentMethod" required>
-															<option th:each="paymentMethod : ${paymentMethods}"
-																th:value="${paymentMethod.id}"
-																th:text="${paymentMethod.name}"
-																th:selected="${employee.paymentMethod != null ? employee.paymentMethod.name.equals(paymentMethod.name) : false}">
-															</option>
-														</select>
-													</div>
+												<div class="mb-3">
+													<label for="editCustomers" class="form-label">Selecione
+														os Clientes</label> <select
+														th:id="'multiSelectCustomersEdit' + ${employee.id}"
+														class="form-select" name="customers" multiple>
+														<option th:each="customer : ${customers}"
+															th:value="${customer.id}"
+															th:text="${customer.registeredName}"
+															th:selected="${employee.customers.contains(customer)}"></option>
+													</select>
+												</div>
+												<div class="mb-3">
+													<label for="editApurationTypes" class="form-label">Selecione
+														os Tipos de Apuração</label> <select
+														th:id="'multiSelectApurationTypesEdit' + ${employee.id}"
+														class="form-select" name="apurationTypes" multiple>
+														<option th:each="apurationType : ${apurationTypes}"
+															th:value="${apurationType.id}"
+															th:text="${apurationType.name}"
+															th:selected="${employee.apurationTypes.contains(apurationType)}"></option>
+													</select>
 												</div>
 											</div>
+										</div>
 
-											<div class="modal-footer d-flex justify-content-end">
-												<button type="button" class="btn btn-secondary"
-													data-bs-dismiss="modal">Cancelar</button>
-												<button type="submit" class="btn btn-primary">Salvar</button>
-											</div>
+										<div class="modal-footer d-flex justify-content-end">
+											<button type="button" class="btn btn-secondary"
+												data-bs-dismiss="modal">Cancelar</button>
+											<button type="submit" class="btn btn-primary">Salvar</button>
+										</div>
 
-											<input type="hidden" th:name="${_csrf.parameterName}"
-												th:value="${_csrf.token}" />
-										</form>
-									</div>
+										<input type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" />
+									</form>
 								</div>
 							</div>
 						</div>
-
 					</div>
+
 
 					<div th:each="employee : ${employees}">
 						<div class="modal fade"
@@ -533,13 +496,20 @@
 	</div>
 
 
-	<script th:src="@{/js/search.js}"></script>
-	<script th:src="@{/js/applyEmployeeFilters.js}"></script>
-	<script th:src="@{/js/resetEmployeeFilter.js}"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+		integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
+	<script th:src="@{/js/search.js}"></script>
+	<script th:src="@{/js/applyEmployeeFilters.js}"></script>
+	<script th:src="@{/js/resetEmployeeFilter.js}"></script>
+	<script th:src="@{/js/multipleSelectEmployeePage.js}"></script>
+
 </body>
 </html>
 

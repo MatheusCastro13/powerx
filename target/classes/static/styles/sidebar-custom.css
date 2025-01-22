@@ -34,3 +34,22 @@
 	position: sticky !important;
 	margin: 25px 15px;
 }
+
+.sidebar-wrapped {
+	position: fixed;
+	top: 60px;
+	left: 0;
+	width: 16.6667%;
+	height: calc(100vh - 60px);
+	overflow-y: auto;
+	background-color: #000000;
+	padding: 10px;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.content-main {
+	margin-left: 16.6667%;
+	padding: 20px;
+	min-height: 100vh;
+}

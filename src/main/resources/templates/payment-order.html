@@ -21,9 +21,11 @@
 
 	<div class="container-fluid" style="margin-top: 60px">
 		<div class="row">
-			<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+			<div class="col-md-2 d-none d-md-block sidebar-wrapper"
+				th:replace="~{fragments/sidebar :: sidebar}"></div>
+				
 			<div style="display: flex; flex-direction: column; margin-top: 10px;"
-				class="col-md-10">
+				class="col-md-10 offset-md-2 content-main">
 
 				<div class="col-md-10 fill-container">
 					<div th:if="${error}">

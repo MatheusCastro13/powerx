@@ -482,7 +482,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
     }
 	
 	function downloadLastReport() {
-	        const url = `/reports/sales/last`;
+	        const url = `/reports/last`;
 
 	        fetch(url, {
 	            method: 'GET',
