@@ -45,50 +45,56 @@ public class PartnerGroupService {
 		
 	}
 	
-	public void update(Group groupToUpdate) {
-		Group group = groupRepository.findById(groupToUpdate.getId())
-				.orElseThrow( ()-> new EntityNotFoundException("Grupo não encontrado"));
-		
-		group.setName(groupToUpdate.getName());
-		
-		List<Customer> currenteCustomers = group.getCustomers();
-		List<Customer> customersToUpdate = groupToUpdate.getCustomers();
-		
-		for(Customer c : currenteCustomers) {
-			c.setGroup(null);
-			customerService.save(c);
-		}
-		
-		group.getCustomers().clear();
-		groupRepository.save(group);
-		
-		for(Customer c : customersToUpdate) {
-			group.addCustomer(c);
-		}
-		
-		groupRepository.save(group);
-		
-		List<Product> currenteProducts = group.getProducts();
-		List<Product> productsToUpdate = groupToUpdate.getProducts();
-		
-		for(Product p : currenteProducts) {
-			p.removeGroup(group);
-			productService.save(p);
-		}
-		
-		group.getProducts().clear();
-		groupRepository.save(group);
-		
-		for(Product p : productsToUpdate) {
-			group.addProduct(p);
-		}
-		
-		groupRepository.save(group);
+	public void update(Group groupToUpdate) { 
+	    Group existingGroup = groupRepository.findById(groupToUpdate.getId())
+	            .orElseThrow(() -> new EntityNotFoundException("Grupo não encontrado"));
+
+	    existingGroup.setName(groupToUpdate.getName());
+
+	    updateCustomers(existingGroup, groupToUpdate.getCustomers());
+
+	    updateProducts(existingGroup, groupToUpdate.getProducts());
+
+	    groupRepository.save(existingGroup);
 	}
+
+	private void updateCustomers(Group existingGroup, List<Customer> updatedCustomers) {
+	    List<Customer> currentCustomers = existingGroup.getCustomers();
+	    for (Customer customer : currentCustomers) {
+	        customer.setGroup(null);
+	        customerService.save(customer);
+	    }
+	    currentCustomers.clear();
+
+	    if (updatedCustomers != null) {
+	        for (Customer customer : updatedCustomers) {
+	            existingGroup.addCustomer(customer);
+	            customerService.save(customer);
+	        }
+	    }
+	}
+
+
+	private void updateProducts(Group existingGroup, List<Product> updatedProducts) {
+	    List<Product> currentProducts = existingGroup.getProducts();
+	    for (Product product : currentProducts) {
+	        product.removeGroup(existingGroup);
+	        productService.save(product);
+	    }
+	    currentProducts.clear();
+
+	    for (Product product : updatedProducts) {
+	        existingGroup.addProduct(product);
+	        productService.save(product);
+	    }
+	}
+
 
 	public Page<Group> findAll(Pageable pageable) {
 		return groupRepository.findAll(pageable);
 	}
+	
+
 
 }
 

@@ -61,6 +61,7 @@ public class CustomerService {
 	
 	@Transactional
 	public void save(Customer customer, Long userId, Long groupId, Long industryId, Long flagId, Long mechanicApurationId, List<Long> employees) {
+		
 		User user = userRepository.findById(userId)
 		        .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
 		customer.setUser(user);

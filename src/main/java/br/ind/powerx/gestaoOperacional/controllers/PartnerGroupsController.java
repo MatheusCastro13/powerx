@@ -61,13 +61,13 @@ public class PartnerGroupsController {
 	public String save(@ModelAttribute Group group, Model model) {
 		groupService.save(group);
 		
-		return "partner-groups";
+		return "redirect:/partner-groups";
 	}
 	
 	@PostMapping("/update/{id}")
 	public String update(@ModelAttribute Group group, Model model) {
 		groupService.update(group);
 		
-		return "partner-groups";
+		return "redirect:/partner-groups";
 	}
 }

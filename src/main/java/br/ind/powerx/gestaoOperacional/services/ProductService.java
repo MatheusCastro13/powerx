@@ -35,6 +35,10 @@ public class ProductService {
 	private FunctionService functionService;
 	
 	public void save(Product product) {
+		if(product.getUnysoftCode().isBlank() || product.getUnysoftCode().isEmpty() || product.getUnysoftCode().equals("")) {
+			product.setUnysoftCode(null);
+			System.out.println("QUERO GOZAR------------------------------------------------");
+		}
 		productRepository.save(product);
 	}
 	

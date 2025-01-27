@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +51,7 @@ public class ProductController {
             @RequestParam(defaultValue = "50") int size, 
             Model model) {
 		User user = authenticationService.getUserAuthenticated();
-		Page<Product> products = productService.findAll(PageRequest.of(page, size));
+		Page<Product> products = productService.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc("productCode"))));
 		List<Customer> customers = customerService.findAllByActiveTrue();
 		List<ApurationType> apurationTypes = apurationTypeService.findAll();
 		List<Function> functions = functionService.findAll();
@@ -70,14 +71,14 @@ public class ProductController {
 	public String save(@ModelAttribute Product product, Model model) {
 		productService.save(product);
 		
-		return "redirect:/adm?saved=true";
+		return "redirect:/products";
 	}
 	
 	@PostMapping("/update/{id}")
 	public String save(@PathVariable Long id,@ModelAttribute Product product) {
 		productService.save(product);
 		
-		return "products";
+		return "redirect:/products";
 	}
 	
 	@PostMapping("/incentiveValue/delete/{productId}/{incentiveValueId}")
@@ -97,7 +98,7 @@ public class ProductController {
 	        @RequestParam List<Double> nfsValue){
 		
 		productService.addIncentiveValue(id, customer, function, ccValue, nfsValue);
-		return "products";
+		return "redirect:/products";
 	}
 	
 }

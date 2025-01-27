@@ -46,14 +46,14 @@ public class PaymentMethodController {
 	public String save(@ModelAttribute PaymentMethodDTO method) {
 		methodService.save(method);
 		
-		return "payments";
+		return "redirect:/payments";
 	}
 	
 	@PostMapping("/update/{id}")
 	public String update(@PathVariable Long id, @ModelAttribute PaymentMethod method) {
 		methodService.update(id, method);
 		
-		return "payments";
+		return "redirect:/payments";
 	}
 	
 	

@@ -46,13 +46,13 @@ public class FlagController {
 	@PostMapping("/save")
 	public String saveFlag(@ModelAttribute FlagDTO flagDTO, Model model) {
 		flagService.save(flagDTO);
-		return "flags";
+		return "redirect:/flags";
 	}
 	
 	@PostMapping("/update/{id}")
 	public String updateFlag(@PathVariable Long id, @ModelAttribute Flag flag) {
 		flagService.update(id, flag);
-		return "flags";
+		return "redirect:/flags";
 	}
 	
 	

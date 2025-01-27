@@ -1,6 +1,7 @@
 package br.ind.powerx.gestaoOperacional.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,7 +53,9 @@ public class PaymentOrderController {
 		State[] states = {State.SP2, State.SP3, State.RJ, State.PB, State.PE, State.PA, State.GO};
 		User user = authenticationService.getUserAuthenticated();
 		
-		List<ApurationType> apurationTypes = apurationTypeRepository.findAll();
+		List<ApurationType> apurationTypes = apurationTypeRepository.findAll().stream()
+				.filter(m -> m.getName().equalsIgnoreCase("CONTA CORRENTE"))
+				.collect(Collectors.toList());
 		
 		model.addAttribute("user", user);
 		model.addAttribute("states", states);

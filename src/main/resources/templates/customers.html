@@ -129,7 +129,7 @@
 												<div class="mb-3">
 													<label for="newUnySoftCode" class="form-label">Código
 														Unysoft</label> <input type="text" class="form-control"
-														name="unysoftCode" required>
+														name="unysoftCode">
 												</div>
 												<div class="mb-3">
 													<label for="newCnpj" class="form-label">CNPJ</label> <input
@@ -169,8 +169,7 @@
 												</div>
 												<div class="mb-3">
 													<label for="newFlag" class="form-label">Selecione a
-														Marca/Bandeira</label> <select class="form-select" name="flagId"
-														required>
+														Marca/Bandeira</label> <select class="form-select" name="flagId">
 														<option th:each="flag : ${flags}" th:value="${flag.id}"
 															th:text="${flag.name}"></option>
 													</select>
@@ -469,8 +468,8 @@
 												<tr th:each="employee : ${customer.employees}">
 													<td th:text="${employee.cpf}"></td>
 													<td th:text="${employee.name}"></td>
-													<td th:each="function : ${employee.functions}"><span
-														th:text="${function.name} "></span></td>
+													<td><span th:each="func, iterStat : ${employee.functions}"
+														th:text="${func.name + (iterStat.last ? '' : ', ')}"></span></td>
 												</tr>
 											</tbody>
 										</table>

@@ -120,7 +120,7 @@
 												<div class="mb-3">
 													<label for="newUnysoftCode" class="form-label">Código
 														Unysoft</label> <input type="text" class="form-control"
-														name="unysoftCode" required>
+														name="unysoftCode">
 												</div>
 												<div class="mb-3">
 													<label for="newUsername" class="form-label">Nome</label> <input
@@ -132,13 +132,12 @@
 												</div>
 												<div class="mb-3">
 													<label for="newBirtDay" class="form-label">Data de
-														Nascimento</label> <input type="text" class="form-control"
+														Nascimento</label> <input type="date" class="form-control"
 														name="birthday" required>
 												</div>
 												<div class="mb-3">
 													<label for="newAddress" class="form-label">Endereço</label>
-													<input type="text" class="form-control" name="address"
-														required>
+													<input type="text" class="form-control" name="address">
 												</div>
 											</div>
 
@@ -155,7 +154,7 @@
 												<div class="mb-3">
 													<label for="newStartOfActivities" class="form-label">Data
 														de Início das Atividades</label> <input type="date"
-														class="form-control" name="startOfActivities" required>
+														class="form-control" name="startOfActivities">
 												</div>
 												<div class="mb-3">
 													<label for="newPosition" class="form-label">Selecione
@@ -195,9 +194,13 @@
 											</div>
 											<div class="col-md-6">
 												<div class="mb-3">
+													<label for="newPhone" class="form-label">Telefone</label> <input
+														type="tel" class="form-control" name="phone" required>
+												</div>
+												<div class="mb-3">
 													<label for="newCustomers" class="form-label">Selecione
-														os Clientes</label> <select id="multiSelectNew" class="form-select"
-														name="customers" multiple>
+														os Clientes</label> <select id="multiSelectNew"
+														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${availableCustomers}"
 															th:value="${customer.id}"
 															th:text="${customer.registeredName}"></option>
@@ -253,17 +256,23 @@
 												<div class="mb-3">
 													<label for="editCpf" class="form-label">CPF</label> <input
 														type="text" class="form-control" th:value="${user.cpf}"
-														name="cpf">
+														name="cpf" required>
 												</div>
 												<div class="mb-3">
 													<label for="editBirthday" class="form-label">Data
 														de Nascimento</label> <input type="date" class="form-control"
-														th:value="${user.birthday}" name="birthday">
+														th:value="${user.birthday}" name="birthday" required>
 												</div>
 												<div class="mb-3">
 													<label for="editAddress" class="form-label">Endereço</label>
 													<input type="text" class="form-control"
 														th:value="${user.address}" name="address">
+												</div>
+
+												<div class="mb-3">
+													<label for="editPhone" class="form-label">Telefone</label>
+													<input type="tel" class="form-control"
+														th:value="${user.phone}" name="phone" required>
 												</div>
 											</div>
 
@@ -389,6 +398,9 @@
 											</div>
 
 											<div class="col-md-6">
+												<p>
+													<Strong>Telefone: </Strong><span th:text="${user.phone}"></span>
+												</p>
 												<p>
 													<Strong>Data de cadastro: </Strong><span
 														th:text="${user.creationDate}"></span>

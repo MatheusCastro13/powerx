@@ -46,13 +46,13 @@ public class IndustryController {
 	@PostMapping("/save")
 	public String saveIndustry(@ModelAttribute IndustryDTO industry) {
 		industryService.save(industry);
-		return "industry";
+		return "redirect:/industry";
 	}
 	
 	@PostMapping("/update/{id}")
 	public String updateIndustry(@PathVariable Long id,@ModelAttribute Industry industry) {
 		industryService.update(id, industry);
-		return "industry";
+		return "redirect:/industry";
 	}
 }
 

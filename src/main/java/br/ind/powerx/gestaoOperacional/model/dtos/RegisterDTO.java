@@ -12,6 +12,8 @@ public record RegisterDTO(
 		@NotBlank
 		String email, 
 		@NotBlank
+		String phone, 
+		@NotBlank
 		String password, 
 		@NotBlank
 		String role,

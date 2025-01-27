@@ -154,7 +154,7 @@
 														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${customers}"
 															th:value="${customer.id}"
-															th:text="${customer.registeredName}"></option>
+															th:text="${customer.fantasyName}"></option>
 													</select>
 												</div>
 												<div class="mb-3">
@@ -165,6 +165,15 @@
 														<option th:each="apurationType : ${apurationTypes}"
 															th:value="${apurationType.id}"
 															th:text="${apurationType.name}"></option>
+													</select>
+												</div>
+												<div class="mb-3">
+													<label for="newPaymentMethod" class="form-label">Selecione
+														o método de Pagamento</label> <select class="form-select"
+														name="paymentMethod" required>
+														<option th:each="paymentMethod : ${paymentMethods}"
+															th:value="${paymentMethod.id}"
+															th:text="${paymentMethod.name}"></option>
 													</select>
 												</div>
 											</div>
@@ -228,6 +237,11 @@
 													<input type="text" class="form-control"
 														th:value="${employee.phone}" name="phone">
 												</div>
+												<div class="mb-3">
+													<label for="editBirthdate" class="form-label">Data de Nascimento</label>
+													<input type="date" class="form-control"
+														th:value="${employee.birthDate}" name="birthDate">
+												</div>
 											</div>
 
 											<div class="col-md-6">
@@ -248,7 +262,7 @@
 														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${customers}"
 															th:value="${customer.id}"
-															th:text="${customer.registeredName}"
+															th:text="${customer.fantasyName}"
 															th:selected="${employee.customers.contains(customer)}"></option>
 													</select>
 												</div>
@@ -256,11 +270,21 @@
 													<label for="editApurationTypes" class="form-label">Selecione
 														os Tipos de Apuração</label> <select
 														th:id="'multiSelectApurationTypesEdit' + ${employee.id}"
-														class="form-select" name="apurationTypes" multiple>
+														class="form-select" name="apurationTypes" multiple required>
 														<option th:each="apurationType : ${apurationTypes}"
 															th:value="${apurationType.id}"
 															th:text="${apurationType.name}"
 															th:selected="${employee.apurationTypes.contains(apurationType)}"></option>
+													</select>
+												</div>
+												<div class="mb-3">
+													<label for="editPaymentMethods" class="form-label">Selecione
+														o Método de pagamento</label> <select
+														class="form-select" name="paymentMethod" required>
+														<option th:each="paymentMethod : ${paymentMethods}"
+															th:value="${paymentMethod.id}"
+															th:text="${paymentMethod.name}"
+															th:selected="${employee.paymentMethod?.id.equals(paymentMethod.id)}"></option>
 													</select>
 												</div>
 											</div>
@@ -324,7 +348,7 @@
 												<p>
 													Clientes: <span
 														th:each="customer, iterStat : ${employee.customers}"
-														th:text="${customer.registeredName + (iterStat.last ? '' : ', ')}"></span>
+														th:text="${customer.fantasyName + (iterStat.last ? '' : ', ')}"></span>
 												</p>
 
 												<p>

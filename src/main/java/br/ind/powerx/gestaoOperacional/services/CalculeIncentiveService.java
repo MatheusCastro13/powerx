@@ -20,6 +20,7 @@ import br.ind.powerx.gestaoOperacional.model.Product;
 import br.ind.powerx.gestaoOperacional.model.Sale;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.repositories.ApurationTypeRepository;
+import br.ind.powerx.gestaoOperacional.repositories.FunctionRepository;
 import br.ind.powerx.gestaoOperacional.repositories.IncentiveRepository;
 import br.ind.powerx.gestaoOperacional.repositories.IncentiveValueRepository;
 import br.ind.powerx.gestaoOperacional.repositories.SaleRepository;
@@ -28,20 +29,29 @@ import br.ind.powerx.gestaoOperacional.repositories.SaleRepository;
 @Service
 public class CalculeIncentiveService {
 	
-	@Autowired
-	private SaleRepository saleRepository;
+	private final SaleRepository saleRepository;
 	
-	@Autowired
-	private IncentiveRepository incentiveRepository;
+	private final IncentiveRepository incentiveRepository;
 	
-	@Autowired
-	private IncentiveValueRepository incentiveValueRepository;
+	private final IncentiveValueRepository incentiveValueRepository;
 	
-	@Autowired
-	private ApurationTypeRepository apurationTypeRepository;
+	private final ApurationTypeRepository apurationTypeRepository;
 	
+    private final AuthenticationService authenticationService;
+	
+	private final FunctionRepository functionRepository;
+
 	@Autowired
-    private AuthenticationService authenticationService;
+	public CalculeIncentiveService(SaleRepository saleRepository, IncentiveRepository incentiveRepository, 
+			IncentiveValueRepository incentiveValueRepository, ApurationTypeRepository apurationTypeRepository, 
+			AuthenticationService authenticationService, FunctionRepository functionRepository) {
+		this.saleRepository = saleRepository;
+		this.incentiveRepository = incentiveRepository;
+		this.incentiveValueRepository = incentiveValueRepository;
+		this.apurationTypeRepository = apurationTypeRepository;
+		this.authenticationService = authenticationService;
+		this.functionRepository = functionRepository;
+	}
 	
 
 	public List<Incentive> calculateIncentives(List<Sale> sales) {
@@ -169,8 +179,11 @@ public class CalculeIncentiveService {
 		Integer documentNumber = sales.get(0).getDocumentNumber(); 
 		
 	    List<Incentive> incentives = new ArrayList<>();
-
-	    List<String> roles = List.of("Chefe de Oficina", "Gerente de Pós Venda", "Diretor de Pós venda", "Gerente de Peças", "Diretor de Pós Venda do Grupo");
+	    
+	    List<String> roles = functionRepository.findAll().stream()
+	    		.filter(function -> !function.getName().equalsIgnoreCase("Mecânico") || !function.getName().equalsIgnoreCase("Consultor Técnico"))
+	    		.map(function -> function.getName())
+	    		.collect(Collectors.toList());
 	    
 	    List<Employee> relevantEmployees = customer.getEmployees().stream()
 	            .filter(emp -> emp.getFunctions().stream().anyMatch(func -> roles.contains(func.getName())))

@@ -39,6 +39,7 @@ public class UserService {
 		user.setId(null);
 		user.setName(registerDTO.name());
 		user.setEmail(registerDTO.email());
+		user.setPhone(registerDTO.phone());
 		user.setPasswordHash(encryptedPassword);
 		user.setRole(registerDTO.role());
 		user.setPosition(registerDTO.position());
@@ -60,6 +61,7 @@ public class UserService {
 		user.setBirthday(userToSave.getBirthday());
 		user.setAddress(userToSave.getAddress());
 		user.setEmail(userToSave.getEmail());
+		user.setPhone(userToSave.getPhone());
 		user.setPasswordHash(encryptedPassword);
 		user.setRole(userToSave.getRole());
 		user.setPosition(userToSave.getPosition());
@@ -114,6 +116,7 @@ public class UserService {
 		user.setAddress(dto.address());
 		user.setBirthday(dto.birthday());
 		user.setEmail(dto.email());
+		user.setPhone(dto.phone());
 		user.setRole(dto.role());
 		user.setPosition(dto.position());
 		user.setState(dto.state());

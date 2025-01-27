@@ -38,7 +38,7 @@ public class SecurityConfigurations {
 				.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.GET, "/contacts").hasAnyRole("ADMIN", "USER")
 				.requestMatchers(HttpMethod.GET, "/incentives/*").hasAnyRole("ADMIN", "USER")
-				.requestMatchers(HttpMethod.POST, "/customers/*/employees").hasAnyRole("ADMIN", "USER")
+				.requestMatchers(HttpMethod.GET, "/customers/*/employees").hasAnyRole("ADMIN", "USER")
 				.requestMatchers(HttpMethod.POST, "/sale/calcule").hasAnyRole("ADMIN", "USER")
 				.requestMatchers(HttpMethod.GET, "/reports/sale/*").hasAnyRole("ADMIN", "USER")
 				.requestMatchers(HttpMethod.GET, "/reports/last").hasAnyRole("ADMIN", "USER")
@@ -66,7 +66,7 @@ public class SecurityConfigurations {
 				.requestMatchers(HttpMethod.GET, "/table-prices").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/table-prices").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-				.requestMatchers(HttpMethod.POST, "/users/**").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN")
 				.anyRequest().authenticated())
 

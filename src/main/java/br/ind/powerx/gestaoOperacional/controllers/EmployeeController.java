@@ -80,7 +80,7 @@ public class EmployeeController {
 		employee.setActive(true);
 		employeeService.save(employee, functions, customers, paymentMethod, apurationTypes);
 
-		return "employees";
+		return "redirect:/employees";
 	}
 
 	@PostMapping("/update/{id}")
@@ -91,7 +91,7 @@ public class EmployeeController {
 
 		employeeService.update(id, employee, functions, customers, paymentMethod, apurationTypes);
 
-		return "employees";
+		return "redirect:/employees";
 	}
 
 	@PostMapping("/filter")

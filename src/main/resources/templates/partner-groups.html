@@ -127,7 +127,7 @@
 													class="form-select" name="customers" multiple>
 													<option th:each="customer : ${availableCustomers}"
 														th:value="${customer.id}"
-														th:text="${customer.registeredName}"></option>
+														th:text="${customer.fantasyName}"></option>
 												</select>
 											</div>
 											<div class="mb-3">
@@ -185,10 +185,10 @@
 													name="customers" multiple>
 													<option th:each="customer : ${group.customers}"
 														th:value="${customer.id}"
-														th:text="${customer.registeredName}" selected></option>
+														th:text="${customer.fantasyName}" selected></option>
 													<option th:each="customer : ${availableCustomers}"
 														th:value="${customer.id}"
-														th:text="${customer.registeredName}"></option>
+														th:text="${customer.fantasyName}"></option>
 												</select>
 											</div>
 											<input type="hidden" th:name="${_csrf.parameterName}"
@@ -267,7 +267,7 @@
 													<tr th:each="customer : ${group.customers}">
 														<td th:text="${customer.id}"></td>
 														<td th:text="${customer.cnpj}"></td>
-														<td th:text="${customer.registeredName}"></td>
+														<td th:text="${customer.fantasyName}"></td>
 													</tr>
 												</tbody>
 											</table>

@@ -61,7 +61,7 @@
 
 								<tr th:each="product : ${products}">
 									<td th:text="${product.productCode}"></td>
-									<td th:text="${product.productName}"></td>
+									<td th:text="${product.productName}" style="width: 50%"></td>
 									<td>
 										<button type="button" class="btn btn-warning"
 											data-bs-toggle="modal"
@@ -116,7 +116,7 @@
 									<div class="mb-3">
 										<label for="newUnysoftCode" class="form-label">Código
 											Unysoft</label> <input type="text" class="form-control"
-											name="unysoftCode" required>
+											name="unysoftCode">
 									</div>
 									<div class="mb-3">
 										<label for="newCode" class="form-label">Código Produto</label>
@@ -164,8 +164,7 @@
 										<div class="mb-3">
 											<label for="editCode" class="form-label">Código
 												Unysoft</label> <input type="text" class="form-control"
-												th:value="${product.unysoftCode}" name="unysoftCode"
-												required>
+												th:value="${product.unysoftCode}" name="unysoftCode">
 										</div>
 										<div class="mb-3">
 											<label for="editCode" class="form-label">Código
