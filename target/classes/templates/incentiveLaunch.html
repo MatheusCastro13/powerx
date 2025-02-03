@@ -54,15 +54,17 @@
 									<thead>
 										<tr>
 											<th scope="col">N° do Documento</th>
+											<th scope="col">Cliente</th>
 											<th scope="col">Detalhes</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="documentNumber : ${documentNumbers}">
-											<td th:text="${documentNumber}"></td>
+										<tr th:each="entry : ${documentNumbers}">
+											<td th:text="${entry.key}"></td>
+											<td th:text="${entry.value}"></td>
 											<td>
 												<button type="button" class="btn btn-secondary"
-													th:data-document-number="${documentNumber}"
+													th:data-document-number="${entry.key}"
 													onclick="loadDocumentDetails(this)">Detalhes</button>
 											</td>
 										</tr>
@@ -101,16 +103,15 @@
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
-								<div id="header-infos" class="mb-3"></div>
+								<div id="header-infos" class="mb-3" style="height: 25%"></div>
 								<div class="modal-body">
 									<h3>Vendas:</h3>
 									<div id="salesContainer"></div>
 
 									<h3>Incentivos:</h3>
-									<table class="table table-sm table-bordered">
+									<table class="table table-sm table-bordered table-striped" style="width: 65%">
 										<thead>
 											<tr>
-												<th>Região</th>
 												<th>Tipo</th>
 												<th>CPF</th>
 												<th>Nome</th>

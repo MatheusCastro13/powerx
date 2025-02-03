@@ -117,40 +117,40 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newCpf" class="form-label">Cpf</label> <input
+													<label for="newCpf" class="form-label"><Strong>Cpf</Strong></label> <input
 														type="text" class="form-control" name="cpf" required>
 												</div>
 												<div class="mb-3">
-													<label for="newName" class="form-label">Nome</label> <input
+													<label for="newName" class="form-label"><Strong>Nome</Strong></label> <input
 														type="text" class="form-control" name="name" required>
 												</div>
 												<div class="mb-3">
-													<label for="newEmail" class="form-label">Email</label> <input
+													<label for="newEmail" class="form-label"><Strong>Email</Strong></label> <input
 														type="email" class="form-control" name="email">
 												</div>
 												<div class="mb-3">
-													<label for="newPhone" class="form-label">Telefone</label> <input
+													<label for="newPhone" class="form-label"><Strong>Telefone</Strong></label> <input
 														type="text" class="form-control" name="phone">
 												</div>
 											</div>
 
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newBirthDate" class="form-label">Data
-														de Nascimento</label> <input type="date" class="form-control"
+													<label for="newBirthDate" class="form-label"><Strong>Data
+														de Nascimento</Strong></label> <input type="date" class="form-control"
 														name="birthDate">
 												</div>
 												<div class="mb-3">
-													<label for="newFunctions" class="form-label">Selecione
-														as Funções</label> <select id="multiSelectFunctionsNew"
+													<label for="newFunctions" class="form-label"><Strong>Selecione
+														as Funções</Strong></label> <select id="multiSelectFunctionsNew"
 														class="form-select" name="functions" multiple>
 														<option th:each="func : ${functions}"
 															th:value="${func.id}" th:text="${func.name}"></option>
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="newCustomers" class="form-label">Selecione
-														os Clientes</label> <select id="multiSelectCustomersNew"
+													<label for="newCustomers" class="form-label"><Strong>Selecione
+														os Clientes</Strong></label> <select id="multiSelectCustomersNew"
 														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${customers}"
 															th:value="${customer.id}"
@@ -158,8 +158,8 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="newApurationTypes" class="form-label">Selecione
-														os Tipos de Apuração</label> <select
+													<label for="newApurationTypes" class="form-label"><Strong>Selecione
+														os Tipos de Apuração</Strong></label> <select
 														id="multiSelectApurationTypesNew" class="form-select"
 														name="apurationTypes" multiple>
 														<option th:each="apurationType : ${apurationTypes}"
@@ -168,8 +168,8 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="newPaymentMethod" class="form-label">Selecione
-														o método de Pagamento</label> <select class="form-select"
+													<label for="newPaymentMethod" class="form-label"><Strong>Selecione
+														o método de Pagamento</Strong></label> <select class="form-select"
 														name="paymentMethod" required>
 														<option th:each="paymentMethod : ${paymentMethods}"
 															th:value="${paymentMethod.id}"
@@ -218,27 +218,27 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="editCpf" class="form-label">Cpf</label> <input
+													<label for="editCpf" class="form-label"><Strong>Cpf</Strong></label> <input
 														type="text" class="form-control"
 														th:value="${employee.cpf}" name="cpf" required>
 												</div>
 												<div class="mb-3">
-													<label for="editName" class="form-label">Nome</label> <input
+													<label for="editName" class="form-label"><Strong>Nome</Strong></label> <input
 														type="text" class="form-control"
 														th:value="${employee.name}" name="name" required>
 												</div>
 												<div class="mb-3">
-													<label for="editEmail" class="form-label">Email</label> <input
+													<label for="editEmail" class="form-label"><Strong>Email</Strong></label> <input
 														type="email" class="form-control"
 														th:value="${employee.email}" name="email">
 												</div>
 												<div class="mb-3">
-													<label for="editPhone" class="form-label">Telefone</label>
+													<label for="editPhone" class="form-label"><Strong>Telefone</Strong></label>
 													<input type="text" class="form-control"
 														th:value="${employee.phone}" name="phone">
 												</div>
 												<div class="mb-3">
-													<label for="editBirthdate" class="form-label">Data de Nascimento</label>
+													<label for="editBirthdate" class="form-label"><Strong>Data de Nascimento</Strong></label>
 													<input type="date" class="form-control"
 														th:value="${employee.birthDate}" name="birthDate">
 												</div>
@@ -246,8 +246,8 @@
 
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="editFunctions" class="form-label">Selecione
-														as Funções</label> <select
+													<label for="editFunctions" class="form-label"><Strong>Selecione
+														as Funções</Strong></label> <select
 														th:id="'multiSelectFunctionsEdit' + ${employee.id}"
 														class="form-select" name="functions" multiple>
 														<option th:each="func : ${functions}"
@@ -256,8 +256,8 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="editCustomers" class="form-label">Selecione
-														os Clientes</label> <select
+													<label for="editCustomers" class="form-label"><Strong>Selecione
+														os Clientes</Strong></label> <select
 														th:id="'multiSelectCustomersEdit' + ${employee.id}"
 														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${customers}"
@@ -267,8 +267,8 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="editApurationTypes" class="form-label">Selecione
-														os Tipos de Apuração</label> <select
+													<label for="editApurationTypes" class="form-label"><Strong>Selecione
+														os Tipos de Apuração</Strong></label> <select
 														th:id="'multiSelectApurationTypesEdit' + ${employee.id}"
 														class="form-select" name="apurationTypes" multiple required>
 														<option th:each="apurationType : ${apurationTypes}"
@@ -278,8 +278,8 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="editPaymentMethods" class="form-label">Selecione
-														o Método de pagamento</label> <select
+													<label for="editPaymentMethods" class="form-label"><Strong>Selecione
+														o Método de pagamento</Strong></label> <select
 														class="form-select" name="paymentMethod" required>
 														<option th:each="paymentMethod : ${paymentMethods}"
 															th:value="${paymentMethod.id}"
@@ -323,41 +323,41 @@
 										<div class="row">
 											<div class="col-md-6">
 												<p>
-													CPF: <span th:text="${employee.cpf}"></span>
+													<Strong>CPF: </Strong><span th:text="${employee.cpf}"></span>
 												</p>
 												<p>
-													Nome: <span th:text="${employee.name}"></span>
+													<Strong>Nome: </Strong><span th:text="${employee.name}"></span>
 												</p>
 												<p>
-													Email: <span th:text="${employee.email}"></span>
+													<Strong>Email: </Strong><span th:text="${employee.email}"></span>
 												</p>
 												<p>
-													Telefone: <span th:text="${employee.phone}"></span>
+													<Strong>Telefone: </Strong><span th:text="${employee.phone}"></span>
 												</p>
 												<p>
-													Data de Nascimento: <span th:text="${employee.birthDate}"></span>
+													<Strong>Data de Nascimento: </Strong><span th:text="${employee.birthDate}"></span>
 												</p>
 											</div>
 											<div class="col-md-6">
 												<p>
-													Funções: <span
+													<Strong>Funções: </Strong><span
 														th:each="func, iterStat : ${employee.functions}"
 														th:text="${func.name + (iterStat.last ? '' : ', ')}"></span>
 												</p>
 
 												<p>
-													Clientes: <span
+													<Strong>Clientes: </Strong><span
 														th:each="customer, iterStat : ${employee.customers}"
 														th:text="${customer.fantasyName + (iterStat.last ? '' : ', ')}"></span>
 												</p>
 
 												<p>
-													Tipo de Apuração: <span
+													<Strong>Tipo de Apuração: </Strong><span
 														th:each="apurationType, iterStat : ${employee.apurationTypes}"
 														th:text="${apurationType.name + (iterStat.last ? '' : ', ')}"></span>
 												</p>
 												<p>
-													Método de Pagamento: <span
+													<Strong>Método de Pagamento: </Strong><span
 														th:text="${employee.paymentMethod?.name}"></span>
 												</p>
 											</div>

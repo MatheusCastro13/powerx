@@ -3,6 +3,7 @@ package br.ind.powerx.gestaoOperacional.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class FlagController {
             @RequestParam(defaultValue = "50") int size, 
             Model model) {
 		User user = authenticationService.getUserAuthenticated();
-		Page<Flag> flags = flagService.findAll(PageRequest.of(page, size));
+		Page<Flag> flags = flagService.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc("name"))));
 		
 		model.addAttribute("flags", flags.getContent());
 	    model.addAttribute("currentPage", page);

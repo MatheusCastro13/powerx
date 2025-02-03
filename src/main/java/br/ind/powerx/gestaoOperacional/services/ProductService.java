@@ -35,9 +35,11 @@ public class ProductService {
 	private FunctionService functionService;
 	
 	public void save(Product product) {
-		if(product.getUnysoftCode().isBlank() || product.getUnysoftCode().isEmpty() || product.getUnysoftCode().equals("")) {
-			product.setUnysoftCode(null);
-			System.out.println("QUERO GOZAR------------------------------------------------");
+		if(product.getUnysoftCode() != null) {
+			if(product.getUnysoftCode().isBlank() || product.getUnysoftCode().isEmpty() || product.getUnysoftCode().equals("")) {
+				product.setUnysoftCode(null);
+				System.out.println("QUERO GOZAR------------------------------------------------");
+			}
 		}
 		productRepository.save(product);
 	}
@@ -68,6 +70,8 @@ public class ProductService {
 			
 			BigDecimal nfsValue = incentiveValueDTO.get(i).nfsValue();
 			
+			BigDecimal overValue = incentiveValueDTO.get(i).overValue();
+			
 			IncentiveValue incentiveValue = new IncentiveValue();
 			incentiveValue.setCustomer(customer);
 			incentiveValue.setFunction(function);
@@ -75,6 +79,7 @@ public class ProductService {
 			incentiveValue.setProduct(product);
 			incentiveValue.setCcValue(ccValue);
 			incentiveValue.setCcValue(nfsValue);
+			incentiveValue.setOverValue(overValue);
 
 			incentiveValues.add(incentiveValue);
 		}
@@ -89,29 +94,29 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void addIncentiveValue(Long id, List<Long> customers, List<Long> functions, List<Double> ccValues, List<Double> nfsValues) {		
+	public void addIncentiveValue(Long id, List<Long> customers, List<Long> functions, List<Double> ccValues, List<Double> nfsValues, 
+			List<Double> overValues) {		
 	    Product product = productRepository.findById(id)
 	            .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
 
-	    List<IncentiveValue> currentValues = valueService.findAllByProductId(product.getId());
+        Long customerId = customers.get(0);
+        
+	    Customer customer = customerService.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
+
+	    List<IncentiveValue> currentValues = valueService.findAllByProductAndCustomer(product.getId(), customer.getId());
 
 	    currentValues.forEach(v -> {
 	        product.removeIncentiveValue(v);
 	        valueService.delete(v);
 	    });
 
-	    if (customers.size() != functions.size() || customers.size() != ccValues.size() || customers.size() != nfsValues.size()) {
-	        throw new RuntimeException("Listas de tamanho diferente");
-	    }
 
-	    for (int i = 0; i < customers.size(); i++) {
-	        Long customerId = customers.get(i);
+	    for (int i = 0; i < functions.size(); i++) {
 	        Long functionId = functions.get(i);
 	        Double ccValueD = ccValues.get(i);
 	        Double nfsValueD = nfsValues.get(i);
-
-	        Customer customer = customerService.findById(customerId)
-	                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
+	        Double overValueD = overValues.get(i);
 
 	        Function function = functionService.findById(functionId)
 	                .orElseThrow(() -> new EntityNotFoundException("Função não encontrada"));
@@ -120,8 +125,10 @@ public class ProductService {
 	        BigDecimal ccValue = new BigDecimal(ccValueD);
 	        
 	        BigDecimal nfsValue = new BigDecimal(nfsValueD);
+	        
+	        BigDecimal overValue = new BigDecimal(overValueD);
 
-	        IncentiveValue incentive = new IncentiveValue(null, customer, function, product, ccValue, nfsValue);
+	        IncentiveValue incentive = new IncentiveValue(null, customer, function, product, ccValue, nfsValue, overValue);
 	        valueService.save(incentive);
 	        product.addIncentiveValue(incentive);
 	    }
@@ -149,6 +156,11 @@ public class ProductService {
 
 	public Page<Product> findAll(Pageable pageable) {
 		return productRepository.findAll(pageable);
+	}
+
+	public Product findById(Long productId) {
+		return productRepository.findById(productId)
+				.orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
 	}
 
 	

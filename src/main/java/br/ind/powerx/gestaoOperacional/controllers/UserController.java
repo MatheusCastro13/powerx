@@ -2,6 +2,7 @@ package br.ind.powerx.gestaoOperacional.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import br.ind.powerx.gestaoOperacional.model.enums.Position;
 import br.ind.powerx.gestaoOperacional.model.enums.State;
 import br.ind.powerx.gestaoOperacional.services.AuthenticationService;
 import br.ind.powerx.gestaoOperacional.services.CustomerService;
+import br.ind.powerx.gestaoOperacional.services.DocumentService;
 import br.ind.powerx.gestaoOperacional.services.UserService;
 
 @Controller
@@ -36,12 +38,15 @@ public class UserController {
 	
 	private final AuthenticationService authenticationService;
 	
+	private final DocumentService documentService;
+	
 	@Autowired
 	public UserController(UserService userService, CustomerService customerService,
-			AuthenticationService authenticationService) {
+			AuthenticationService authenticationService, DocumentService documentService) {
 		this.userService = userService;
 		this.customerService = customerService;
 		this.authenticationService = authenticationService;
+		this.documentService = documentService;
 	}
 	
 	@GetMapping
@@ -126,7 +131,17 @@ public class UserController {
 		return "fragments/filteredUsers :: filtered-users";
     }
 	
-	
+	@GetMapping("/incentives/{id}")
+	public String getUserincentives(@PathVariable Long id, Model model) {
+		User user = userService.findById(id);
+		List<Integer> documentNumbersByUser = documentService.findAllDocumentNumbersByUser(user);
+		
+		Map<Integer, String> documentCustomer = documentService.getCustomersByDocument(documentNumbersByUser);
+		
+		model.addAttribute("documentNumbers", documentCustomer);
+		
+		return "fragments/incentivesByUser :: incentivesByUser";
+	}
 
 }
 

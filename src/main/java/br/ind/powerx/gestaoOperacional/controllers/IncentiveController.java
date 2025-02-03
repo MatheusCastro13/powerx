@@ -53,12 +53,14 @@ public class IncentiveController {
 	        List<Customer> customers = customerRepository.findAll();
 	        List<Integer> documentNumbers = documentService.findAllDocumentNumbers();
 	        
+	        Map<Integer, String> documentCustomer = documentService.getCustomersByDocument(documentNumbers);
+	        
 	        model.addAttribute("user", user);
 	        model.addAttribute("incentives", incentivesPage.getContent());
 	        model.addAttribute("currentPage", page);
 		    model.addAttribute("totalPages", incentivesPage.getTotalPages());
 	        model.addAttribute("customers", customers);
-	        model.addAttribute("documentNumbers", documentNumbers);
+	        model.addAttribute("documentNumbers", documentCustomer);
 	        
 	        return "incentiveLaunch";
 	    } else {
@@ -66,12 +68,14 @@ public class IncentiveController {
 	        List<Customer> customers = user.getCustomers();
 	        List<Integer> documentNumbers = documentService.findAllDocumentNumbersByUser(user);
 	        
+	        Map<Integer, String> documentCustomer = documentService.getCustomersByDocument(documentNumbers);
+	        
 	        model.addAttribute("user", user);
 	        model.addAttribute("incentivesPage", incentivesPage.getContent());
 	        model.addAttribute("customers", customers);
 	        model.addAttribute("currentPage", page);
 		    model.addAttribute("totalPages", incentivesPage.getTotalPages());
-	        model.addAttribute("documentNumbers", documentNumbers);
+	        model.addAttribute("documentNumbers", documentCustomer);
 	        
 	        return "incentives";
 	    }
@@ -84,6 +88,7 @@ public class IncentiveController {
         Map<String, Object> details = documentService.getDocumentDetails(documentNumber);
         return ResponseEntity.ok(details);
     }
+	
 	
 }
 

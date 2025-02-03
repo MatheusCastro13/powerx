@@ -145,12 +145,12 @@ public class CustomerService {
 	
 	
 	public List<Customer> findAllByActiveTrue(){
-		return customerRepository.findAllByActiveTrue();
+		return customerRepository.findAllByActiveTrueOrderByFantasyNameAsc();
 	}
 
 
 	public List<Customer> findAllByUserIdNull() {
-		return customerRepository.findAllByUserIdNull();
+		return customerRepository.findAllByUserIdNullOrderByFantasyNameAsc();
 	}
 
 
@@ -160,7 +160,7 @@ public class CustomerService {
 
 
 	public List<Customer> findAllByGroupIdNull() {
-		return customerRepository.findAllByGroupIdNull();
+		return customerRepository.findAllByGroupIdNullOrderByFantasyNameAsc();
 	}
 
 	public Optional<Customer> findById(Long cutomerId) {

@@ -22,5 +22,9 @@ public class ApurationTypeService {
 	public Optional<ApurationType> findById(Long apurationTypeId) {
 		return apurationTypeRepository.findById(apurationTypeId);
 	}
+	
+	public ApurationType findByName(String apurationTypeName) {
+		return apurationTypeRepository.findByName(apurationTypeName);
+	}
 
 }

@@ -56,6 +56,10 @@ public class IncentiveValue {
     @Column(name = "nfs_value", nullable = false, precision = 10, scale = 2)
 	private BigDecimal nfsValue;
 	
+    @DecimalMin("0.0")
+    @Column(name = "over_value", precision = 10, scale = 2)
+	private BigDecimal overValue;
+	
 	@Override
 	public String toString() {
 		return "\nValor do Incentivo para: \n" +

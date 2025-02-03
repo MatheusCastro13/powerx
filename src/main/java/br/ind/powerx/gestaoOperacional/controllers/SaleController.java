@@ -68,8 +68,10 @@ public class SaleController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
+        	e.printStackTrace();
+        	System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao processar as vendas. Tente novamente.");
+                    .body("Erro ao processar as vendas. Tente novamente." + e.getMessage() + e.getStackTrace());
         }
     }
 

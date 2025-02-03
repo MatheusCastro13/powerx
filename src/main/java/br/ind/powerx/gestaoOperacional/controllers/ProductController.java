@@ -95,11 +95,13 @@ public class ProductController {
 	        @RequestParam List<Long> customer,
 	        @RequestParam List<Long> function,
 	        @RequestParam List<Double> ccValue, 
-	        @RequestParam List<Double> nfsValue){
+	        @RequestParam List<Double> nfsValue,
+	        @RequestParam(required = false) List<Double> overValue){
 		
-		productService.addIncentiveValue(id, customer, function, ccValue, nfsValue);
+		productService.addIncentiveValue(id, customer, function, ccValue, nfsValue, overValue);
 		return "redirect:/products";
 	}
+	
 	
 }
 

@@ -18,31 +18,35 @@ function removeIncentiveValue(productId, incentiveId) {
 }
 
 function addIncentiveRow(productId) {
-    const tableBody = document.querySelector(`#tableBody-${productId}`);
+    let tableBody = document.querySelector(`#tableBody-${productId}`);
+
+    if (!tableBody) {
+        const table = document.querySelector(`#incentiveValueArea-${productId} table`);
+        if (!table) {
+            console.error(`Tabela não encontrada para o produto ${productId}`);
+            return;
+        }
+        tableBody = document.createElement("tbody");
+        tableBody.id = `tableBody-${productId}`;
+        table.appendChild(tableBody);
+    }
 
     const newRow = document.createElement('tr');
-
     const tempId = `temp-${Date.now()}`;
-
     newRow.id = `row-${tempId}`;
 
-    const customerSelectTemplate = document.querySelector("#customerOptionsTemplate");
     const functionSelectTemplate = document.querySelector("#functionOptionsTemplate");
 
-    const customerSelect = customerSelectTemplate.cloneNode(true);
-    customerSelect.id = "";
-    customerSelect.name = "customer";
+    if (!functionSelectTemplate) {
+        console.error("Template de funções não encontrado.");
+        return;
+    }
 
     const functionSelect = functionSelectTemplate.cloneNode(true);
     functionSelect.id = "";
     functionSelect.name = "function";
 
     newRow.innerHTML = `
-        <td>
-            <div class="col">
-                ${customerSelect.outerHTML}
-            </div>
-        </td>
         <td>
             <div class="col">
                 ${functionSelect.outerHTML}
@@ -58,6 +62,11 @@ function addIncentiveRow(productId) {
                 <input type="number" class="form-control" name="nfsValue" placeholder="NF Serviço" step="any" required>
             </div>
         </td>
+		<td>
+			<div class="col">
+		    	<input type="number" class="form-control" name="overValue" placeholder="Over" step="any" required>
+		    </div>
+        </td>
         <td>
             <div class="col">
                 <button type="button" class="btn btn-danger" onclick="removeRow('${tempId}')">
@@ -69,6 +78,7 @@ function addIncentiveRow(productId) {
 
     tableBody.appendChild(newRow);
 }
+
 
 function removeRow(rowId) {
     const row = document.querySelector(`#row-${rowId}`);

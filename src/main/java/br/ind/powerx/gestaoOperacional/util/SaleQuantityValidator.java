@@ -68,6 +68,11 @@ public class SaleQuantityValidator {
                                      .anyMatch(f -> f.getName().equalsIgnoreCase(functionName)))
             .flatMap(sale -> sale.products().stream())
             .forEach(product -> totalPerProduct.merge(product.productId(), product.quantity(), Integer::sum));
+        
+        for (Map.Entry<Long, Integer> entry : totalPerProduct.entrySet()) {
+        	System.out.println("\n \n \n \n \n \n \n \n \n \n \n AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        	System.out.println("Total do produto: " + entry.getKey() + " para " + functionName + ": "  + entry.getValue());
+        }
 
         return totalPerProduct;
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +60,7 @@ public class EmployeeController {
 		List<Customer> customers = customerRepository.findAll();
 		List<ApurationType> apurationTypes = apurationTypeRepository.findAll();
 		List<PaymentMethod> paymentMethods = paymentMethodRepository.findAll();
-		Page<Employee> employeesPage = employeeService.findAll(PageRequest.of(page, size));
+		Page<Employee> employeesPage = employeeService.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc("name"))));
 
 		model.addAttribute("employees", employeesPage.getContent());
 		model.addAttribute("currentPage", page);

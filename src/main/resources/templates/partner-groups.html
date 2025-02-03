@@ -110,20 +110,20 @@
 
 										<form th:action="@{/partner-groups/save}" method="post">
 											<div class="mb-3">
-												<label for="newGroupname" class="form-label">Nome</label> <input
+												<label for="newGroupname" class="form-label"><strong>Nome</strong></label> <input
 													type="text" class="form-control" name="name" required>
 											</div>
 											<div class="mb-3">
-												<label for="editProducts" class="form-label">Selecione
-													os Produtos</label> <select id="multiSelectNewProduct"
+												<label for="editProducts" class="form-label"><strong>Selecione
+													os Produtos</strong></label> <select id="multiSelectNewProduct"
 													class="form-select" name="products" multiple>
 													<option th:each="product : ${products}"
-														th:value="${product.id}" th:text="${product.productName}"></option>
+														th:value="${product.id}" th:text="${product.productCode + '  ' + product.productName}"></option>
 												</select>
 											</div>
 											<div class="mb-3">
-												<label for="editCustomers" class="form-label">Selecione
-													os Clientes</label> <select id="multiSelectNewCustomer"
+												<label for="editCustomers" class="form-label"><strong>Selecione
+													os Clientes</strong></label> <select id="multiSelectNewCustomer"
 													class="form-select" name="customers" multiple>
 													<option th:each="customer : ${availableCustomers}"
 														th:value="${customer.id}"
@@ -164,23 +164,23 @@
 											<input type="hidden" name="id" th:value="${group.id}"
 												required>
 											<div class="mb-3">
-												<label for="editName" class="form-label">Nome</label> <input
+												<label for="editName" class="form-label"><strong>Nome</strong></label> <input
 													type="text" class="form-control" th:value="${group.name}"
 													name="name" required>
 											</div>
 											<div class="mb-3">
-												<label for="editProducts" class="form-label">Selecione
-													os Produtos</label> <select
+												<label for="editProducts" class="form-label"><strong>Selecione
+													os Produtos</strong></label> <select
 													class="form-select multiSelectEditProduct" name="products"
 													multiple>
 													<option th:each="product : ${products}"
-														th:value="${product.id}" th:text="${product.productName}"
+														th:value="${product.id}" th:text="${product.productCode + '  ' + product.productName}"
 														th:selected="${group.products.contains(product)}"></option>
 												</select>
 											</div>
 											<div class="mb-3">
-												<label for="editProducts" class="form-label">Selecione
-													os Clientes</label> <select
+												<label for="editProducts" class="form-label"><strong>Selecione
+													os Clientes</strong></label> <select
 													class="form-select multiSelectEditCustomer"
 													name="customers" multiple>
 													<option th:each="customer : ${group.customers}"

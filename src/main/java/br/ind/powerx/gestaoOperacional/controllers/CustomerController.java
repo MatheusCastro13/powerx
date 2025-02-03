@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -88,7 +89,7 @@ public class CustomerController {
             @RequestParam(defaultValue = "50") int size, 
             Model model) {
 		User user = authenticationService.getUserAuthenticated();
-		Page<Customer> customers = customerService.findAll(PageRequest.of(page, size));
+		Page<Customer> customers = customerService.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc("fantasyName"))));
 		List<Employee> employees = employeeService.findAllByActiveTrue();
 		List<Group> groups = groupService.findAll();
 		List<MechanicApuration> mechanicApurations = mechanicApurationService.findAll();

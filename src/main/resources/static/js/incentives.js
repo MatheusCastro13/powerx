@@ -62,7 +62,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	    section.appendChild(employeeSelect);
 
 	    const productTable = document.createElement("table");
-	    productTable.classList.add("table", "table-bordered", "mb-3", "table-sm");
+	    productTable.classList.add("table", "table-bordered", "mb-3", "table-sm", "table-striped");
 	    productTable.setAttribute("id", `${dynamicSectionId}ProductsTable`);
 	    productTable.style.width = "65%";
 	    productTable.style.fontSize = "0.875rem";
@@ -135,6 +135,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	            saleDetails.products.push({
 	                productId: productId,
 	                productName: products.find(p => p.id == productId).productName,
+					productCode: products.find(p => p.id == productId).productCode,
 	                quantity: quantity
 	            });
 	            totalProductsSold += quantity;
@@ -201,7 +202,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${product.productId}</td>
-                <td>${product.productName}</td>
+                <td>${product.productCode}</td>
                 <td><input type="number" class="form-control" value="${product.quantity}" min="0" data-product-id="${product.productId}"></td>
             `;
             tableBody.appendChild(row);
@@ -306,11 +307,11 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
         const tableBody = document.getElementById('incentivesCalculatedTableBody');
         tableBody.innerHTML = '';
 
-        console.log(typeof dtoList);
-        console.log(Array.isArray(dtoList));
-        console.log(dtoList);
+		const ccList = dtoList.filter(i => i.apurationType?.trim().toLowerCase() === "conta corrente");
+		
+		const nfsList = dtoList.filter(i => i.apurationType?.trim().toLowerCase() === "nf serviço");
         
-        dtoList.forEach(incentive => {
+        ccList.forEach(incentive => {
             const row = document.createElement('tr');
 
             row.innerHTML = `
@@ -328,6 +329,25 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 
             tableBody.appendChild(row);
         });
+		
+		nfsList.forEach(incentive => {
+		            const row = document.createElement('tr');
+
+		            row.innerHTML = `
+		                <td class="small">${incentive.referenceDate ? formatDate(incentive.referenceDate) : ''}</td>
+		                <td class="small">${incentive.state || ''}</td>
+		                <td class="small">${incentive.apurationType || ''}</td>
+		                <td class="small">${incentive.paymentMethod || ''}</td>
+		                <td class="small">${incentive.cpf || ''}</td>
+		                <td class="small">${incentive.employeeName || ''}</td>
+		                <td class="small">${Number(incentive.incentiveValue).toFixed(2)}</td> <!-- Formata com 2 casas decimais -->
+		                <td class="small">${incentive.functionName || ''}</td>
+		                <td class="small">${incentive.customerName || ''}</td>
+		                <td class="small">${incentive.customerCnpj || ''}</td>
+		            `;
+
+		            tableBody.appendChild(row);
+		        });
     }
 
 
@@ -355,7 +375,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 
             const data = await response.json();
 
-            populateModal(data.sales, data.incentives, data.fantasyName, data.cnpj, data.method, data.date);
+            populateModal(data.sales, data.incentives, data.fantasyName, data.cnpj, data.method, data.date, data.state);
 
             const modal = new bootstrap.Modal(document.getElementById('documentModal'));
             modal.show();
@@ -371,7 +391,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
         }
     }
 
-	function populateModal(sales, incentives, fantasyName, cnpj, method, date) {
+	function populateModal(sales, incentives, fantasyName, cnpj, method, date, state) {
 	    const headerInfos = document.getElementById('header-infos');
 	    const incentivesTableBody = document.getElementById('incentivesTableBody');
 	    const salesContainer = document.getElementById('salesContainer');
@@ -381,18 +401,27 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	    salesContainer.innerHTML = '';
 
 	    headerInfos.innerHTML = `
-	        <div>
-	            <strong>Nome Fantasia:</strong> ${fantasyName || ''}
-	        </div>
-	        <div>
-	            <strong>CNPJ:</strong> ${cnpj || ''}
-	        </div>
-	        <div>
-	            <strong>Método de Pagamento:</strong> ${method || ''}
-	        </div>
-	        <div>
-	            <strong>Data:</strong> ${date ? formatDate(date) : ''}
-	        </div>
+	        <div class="row">
+				<div class="col-md-3">
+					<div>
+						<strong>Nome Fantasia:</strong> ${fantasyName || ''}
+					</div>
+				 	<div>
+			            <strong>CNPJ:</strong> ${cnpj || ''}
+			    	</div>
+					<div>
+						<strong>Região:</strong> ${state || ''}
+					</div>	
+				</div>
+				<div class="col-md-3">
+			        <div>
+			            <strong>Método de Pagamento:</strong> ${method || ''}
+			        </div>
+			        <div>
+			            <strong>Data:</strong> ${date ? formatDate(date) : ''}
+			        </div>
+				</div>	
+			</div>
 	    `;
 
 	    const salesGroupedByEmployee = sales.reduce((acc, sale) => {
@@ -409,7 +438,8 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	        salesContainer.appendChild(title);
 
 	        const table = document.createElement('table');
-	        table.className = 'table table-bordered mt-2';
+			table.style = "width: 60%";
+	        table.className = 'table table-bordered table-striped table-sm mt-2';
 	        table.innerHTML = `
 	            <thead>
 	                <tr>
@@ -421,9 +451,9 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	            <tbody>
 	                ${employeeSales.map(sale => `
 	                    <tr>
-	                        <td>${sale.productCode || ''}</td>
-	                        <td>${sale.productName || ''}</td>
-	                        <td>${sale.quantity || ''}</td>
+	                        <td class="small">${sale.productCode || ''}</td>
+	                        <td class="small">${sale.productName || ''}</td>
+	                        <td class="small">${sale.quantity || ''}</td>
 	                    </tr>
 	                `).join('')}
 	            </tbody>
@@ -431,10 +461,12 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	        salesContainer.appendChild(table);
 	    }
 
-	    incentives.forEach(incentive => {
+		const ccIncentives = incentives.filter(i => i.apurationType?.trim().toLowerCase() === "conta corrente");
+		const nfsIncentives = incentives.filter(i => i.apurationType?.trim().toLowerCase() === "nf serviço");
+		
+	    ccIncentives.forEach(incentive => {
 	        const row = `
 	            <tr>
-	                <td class="small">${incentive.state || ''}</td>
 	                <td class="small">${incentive.apurationType || ''}</td>
 	                <td class="small">${incentive.cpf || ''}</td>
 	                <td class="small">${incentive.employeeName || ''}</td>
@@ -443,6 +475,18 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	            </tr>`;
 	        incentivesTableBody.innerHTML += row;
 	    });
+		
+		nfsIncentives.forEach(incentive => {
+			        const row = `
+			            <tr>
+			                <td class="small">${incentive.apurationType || ''}</td>
+			                <td class="small">${incentive.cpf || ''}</td>
+			                <td class="small">${incentive.employeeName || ''}</td>
+			                <td class="small">${Number(incentive.incentiveValue).toFixed(2)}</td>
+			                <td class="small">${incentive.functionName || ''}</td>
+			            </tr>`;
+			        incentivesTableBody.innerHTML += row;
+			    });
 	}
 
 

@@ -71,7 +71,7 @@ public class CalculeIncentiveService {
 	    
 	    incentives.addAll(calculateIncentivesForRoles(customer, sales, apurationTypes, user));
 
-	    List<Incentive> incentivesComapcted = compactIncentives(incentives);
+	    List<Incentive> incentivesComapcted = compactIncentives(incentives, apurationTypes);
 	    
 	    saleRepository.saveAll(sales);
 	    incentiveRepository.saveAll(incentivesComapcted);
@@ -290,19 +290,19 @@ public class CalculeIncentiveService {
 	    List<Incentive> incentives = new ArrayList<>();
 
 	    if (ccValue.compareTo(BigDecimal.ZERO) > 0) {
-	        incentives.add(new Incentive(null, LocalDate.now(), user.getState(), employee.getPaymentMethod(), apurationTypes.get("Conta Corrente"),
+	        incentives.add(new Incentive(null, LocalDate.now().minusMonths(1), user.getState(), employee.getPaymentMethod(), apurationTypes.get("Conta Corrente"),
 	                employee, employee.getCpf(), ccValue, function, customer, saleOrdem, user));
 	    }
 
 	    if (nfsValue.compareTo(BigDecimal.ZERO) > 0) {
-	        incentives.add(new Incentive(null, LocalDate.now(), user.getState(), employee.getPaymentMethod(), apurationTypes.get("NF Serviço"),
+	        incentives.add(new Incentive(null, LocalDate.now().minusMonths(1), user.getState(), employee.getPaymentMethod(), apurationTypes.get("NF Serviço"),
 	                employee, employee.getCpf(), nfsValue, function, customer, saleOrdem, user));
 	    }
 	    
 	    return incentives;
 	}
 
-	public List<Incentive> compactIncentives(List<Incentive> incentives) {
+	public List<Incentive> compactIncentives(List<Incentive> incentives, Map<String, ApurationType> apurationTypes) {
 	    Map<String, Map<String, BigDecimal>> groupedIncentives = incentives.stream()
 	        .collect(Collectors.groupingBy(
 	            incentive -> incentive.getEmployee().getName(),
@@ -329,7 +329,9 @@ public class CalculeIncentiveService {
 	        if (reference != null) {
 	            for (Map.Entry<String, BigDecimal> apurationEntry : apurationTotals.entrySet()) {
 	                BigDecimal totalValue = apurationEntry.getValue();
-
+	                String currentApurationKey = apurationEntry.getKey();
+	                System.out.println("Qual é a apuração " + currentApurationKey);
+	                
 	                Incentive compactedIncentive = new Incentive();
 	                compactedIncentive.setState(reference.getState());
 	                compactedIncentive.setPaymentMethod(reference.getPaymentMethod());
@@ -340,7 +342,7 @@ public class CalculeIncentiveService {
 	                compactedIncentive.setCpf(reference.getCpf());
 	                compactedIncentive.setReferenceDate(reference.getReferenceDate());
 	                compactedIncentive.setCustomer(reference.getCustomer());
-	                compactedIncentive.setApurationType(reference.getApurationType());
+	                compactedIncentive.setApurationType(apurationTypes.get(apurationEntry.getKey()));
 	                compactedIncentive.setIncentiveValue(totalValue);
 
 	                compactedList.add(compactedIncentive);

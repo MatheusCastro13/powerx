@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Valor dos incentivos</title>
+</head>
+<body>
+	<div th:fragment="incentivesByUser (documentNumbers)">
+		<table class="table table-striped" id="tableBody">
+			<thead>
+				<tr>
+					<th scope="col">N° do Documento</th>
+					<th scope="col">Cliente</th>
+					<th scope="col">Detalhes</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="entry : ${documentNumbers}">
+					<td th:text="${entry.key}"></td>
+					<td th:text="${entry.value}"></td>
+					<td>
+						<button type="button" class="btn btn-secondary"
+							th:data-document-number="${entry.key}"
+							onclick="loadUserIncentivesDocumentDetails(this)">Detalhes</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

@@ -13,6 +13,7 @@
 <link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
 <link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
 <link rel="stylesheet" th:href="@{/styles/multiple-select.css}">
+<link rel="stylesheet" th:href="@{/styles/sales-details-header.css}">
 <link rel="icon" th:href="@{/images/powerx-icon.png}"
 	type="image/x-icon">
 <title>Usuários</title>
@@ -118,47 +119,49 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newUnysoftCode" class="form-label">Código
-														Unysoft</label> <input type="text" class="form-control"
+													<label for="newUnysoftCode" class="form-label"><strong>Código
+															Unysoft</strong></label> <input type="text" class="form-control"
 														name="unysoftCode">
 												</div>
 												<div class="mb-3">
-													<label for="newUsername" class="form-label">Nome</label> <input
-														type="text" class="form-control" name="name" required>
+													<label for="newUsername" class="form-label"><strong>Nome</strong></label>
+													<input type="text" class="form-control" name="name"
+														required>
 												</div>
 												<div class="mb-3">
-													<label for="newCpf" class="form-label">CPF</label> <input
-														type="text" class="form-control" name="cpf" required>
+													<label for="newCpf" class="form-label"><strong>CPF</strong></label>
+													<input type="text" class="form-control" name="cpf" required>
 												</div>
 												<div class="mb-3">
-													<label for="newBirtDay" class="form-label">Data de
-														Nascimento</label> <input type="date" class="form-control"
+													<label for="newBirtDay" class="form-label"><strong>Data
+															de Nascimento</strong></label> <input type="date" class="form-control"
 														name="birthday" required>
 												</div>
 												<div class="mb-3">
-													<label for="newAddress" class="form-label">Endereço</label>
+													<label for="newAddress" class="form-label"><strong>Endereço</strong></label>
 													<input type="text" class="form-control" name="address">
 												</div>
 											</div>
 
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newEmail" class="form-label">Email</label> <input
-														type="email" class="form-control" name="email" required>
-												</div>
-												<div class="mb-3">
-													<label for="newPassword" class="form-label">Senha</label> <input
-														type="password" class="form-control" name="passwordHash"
+													<label for="newEmail" class="form-label"><strong>Email</strong></label>
+													<input type="email" class="form-control" name="email"
 														required>
 												</div>
 												<div class="mb-3">
-													<label for="newStartOfActivities" class="form-label">Data
-														de Início das Atividades</label> <input type="date"
+													<label for="newPassword" class="form-label"><strong>Senha</strong></label>
+													<input type="password" class="form-control"
+														name="passwordHash" required>
+												</div>
+												<div class="mb-3">
+													<label for="newStartOfActivities" class="form-label"><strong>Data
+															de Início das Atividades</strong></label> <input type="date"
 														class="form-control" name="startOfActivities">
 												</div>
 												<div class="mb-3">
-													<label for="newPosition" class="form-label">Selecione
-														um Cargo</label> <select class="form-select" name="position"
+													<label for="newPosition" class="form-label"><strong>Selecione
+															um Cargo</strong></label> <select class="form-select" name="position"
 														required>
 														<option value="" disabled selected>Cargos</option>
 														<option th:each="position : ${positions}"
@@ -173,8 +176,8 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newState" class="form-label">Selecione
-														um Estado</label> <select class="form-select" name="state"
+													<label for="newState" class="form-label"><strong>Selecione
+															um Estado</strong></label> <select class="form-select" name="state"
 														required>
 														<option value="" disabled selected>Estados</option>
 														<option th:each="state : ${states}"
@@ -182,9 +185,9 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="newRole" class="form-label">Selecione
-														um Tipo de Usuário</label> <select class="form-select" name="role"
-														required>
+													<label for="newRole" class="form-label"><strong>Selecione
+															um Tipo de Usuário</strong></label> <select class="form-select"
+														name="role" required>
 														<option value="" disabled selected>Tipos</option>
 														<option value="ROLE_ADMIN">Admin</option>
 														<option value="ROLE_READER">Reader</option>
@@ -194,16 +197,17 @@
 											</div>
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newPhone" class="form-label">Telefone</label> <input
-														type="tel" class="form-control" name="phone" required>
+													<label for="newPhone" class="form-label"><strong>Telefone</strong></label>
+													<input type="tel" class="form-control" name="phone"
+														required>
 												</div>
 												<div class="mb-3">
-													<label for="newCustomers" class="form-label">Selecione
-														os Clientes</label> <select id="multiSelectNew"
+													<label for="newCustomers" class="form-label"><strong>Selecione
+															os Clientes</strong></label> <select id="multiSelectNew"
 														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${availableCustomers}"
 															th:value="${customer.id}"
-															th:text="${customer.registeredName}"></option>
+															th:text="${customer.fantasyName}"></option>
 													</select>
 												</div>
 											</div>
@@ -244,33 +248,33 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="editUnysoftCode" class="form-label">Código
-														Unysoft</label> <input type="text" class="form-control"
+													<label for="editUnysoftCode" class="form-label"><strong>Código
+															Unysoft</strong></label> <input type="text" class="form-control"
 														th:value="${user.unysoftCode}" name="unysoftCode">
 												</div>
 												<div class="mb-3">
-													<label for="editUsername" class="form-label">Nome</label> <input
-														type="text" class="form-control" th:value="${user.name}"
-														name="name" required>
+													<label for="editUsername" class="form-label"><strong>Nome</strong></label>
+													<input type="text" class="form-control"
+														th:value="${user.name}" name="name" required>
 												</div>
 												<div class="mb-3">
-													<label for="editCpf" class="form-label">CPF</label> <input
-														type="text" class="form-control" th:value="${user.cpf}"
-														name="cpf" required>
+													<label for="editCpf" class="form-label"><strong>CPF</strong></label>
+													<input type="text" class="form-control"
+														th:value="${user.cpf}" name="cpf" required>
 												</div>
 												<div class="mb-3">
-													<label for="editBirthday" class="form-label">Data
-														de Nascimento</label> <input type="date" class="form-control"
+													<label for="editBirthday" class="form-label"><strong>Data
+															de Nascimento</strong></label> <input type="date" class="form-control"
 														th:value="${user.birthday}" name="birthday" required>
 												</div>
 												<div class="mb-3">
-													<label for="editAddress" class="form-label">Endereço</label>
+													<label for="editAddress" class="form-label"><strong>Endereço</strong></label>
 													<input type="text" class="form-control"
 														th:value="${user.address}" name="address">
 												</div>
 
 												<div class="mb-3">
-													<label for="editPhone" class="form-label">Telefone</label>
+													<label for="editPhone" class="form-label"><strong>Telefone</strong></label>
 													<input type="tel" class="form-control"
 														th:value="${user.phone}" name="phone" required>
 												</div>
@@ -278,13 +282,13 @@
 
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="editEmail" class="form-label">Email</label> <input
-														type="email" class="form-control" th:value="${user.email}"
-														name="email" required>
+													<label for="editEmail" class="form-label"><strong>Email</strong></label>
+													<input type="email" class="form-control"
+														th:value="${user.email}" name="email" required>
 												</div>
 												<div class="mb-3">
-													<label for="editPosition" class="form-label">Selecione
-														um Cargo</label> <select class="form-select" name="position"
+													<label for="editPosition" class="form-label"><strong>Selecione
+															um Cargo</strong></label> <select class="form-select" name="position"
 														required>
 														<option value="" disabled selected>Cargos</option>
 														<option th:each="position : ${positions}"
@@ -294,8 +298,8 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="editState" class="form-label">Selecione
-														um Estado</label> <select class="form-select" name="state"
+													<label for="editState" class="form-label"><strong>Selecione
+															um Estado</strong></label> <select class="form-select" name="state"
 														required>
 														<option value="" disabled selected>Estados</option>
 														<option th:each="state : ${states}"
@@ -304,9 +308,9 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="editRole" class="form-label">Selecione
-														um Tipo de Usuário</label> <select class="form-select" name="role"
-														required>
+													<label for="editRole" class="form-label"><strong>Selecione
+															um Tipo de Usuário</strong></label> <select class="form-select"
+														name="role" required>
 														<option value="" disabled selected>Tipos</option>
 														<option value="ROLE_ADMIN">Admin</option>
 														<option value="ROLE_READER">Reader</option>
@@ -314,15 +318,15 @@
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="editCustomers" class="form-label">Selecione
-														os Clientes</label> <select id="multiSelectEdit"
+													<label for="editCustomers" class="form-label"><strong>Selecione
+															os Clientes</strong></label> <select id="multiSelectEdit"
 														class="form-select" name="customers" multiple>
 														<option th:each="customer : ${availableCustomers}"
 															th:value="${customer.id}"
-															th:text="${customer.registeredName}"></option>
+															th:text="${customer.fantasyName}"></option>
 														<option th:each="customer : ${user.customers}"
 															th:value="${customer.id}"
-															th:text="${customer.registeredName}" selected></option>
+															th:text="${customer.fantasyName}" selected></option>
 													</select>
 												</div>
 											</div>
@@ -428,8 +432,8 @@
 														th:data-bs-target="'#showCustomersModal' + ${user.id}"
 														data-bs-toggle="modal">Clientes</button>
 													<button class="btn btn-primary w-100"
-														th:data-bs-target="'#showIncentivesModal' + ${user.id}"
-														data-bs-toggle="modal">Incentivos</button>
+														th:data-user-id="${user.id}"
+														onclick="findUserDocumentNumbers(this)">Incentivos</button>
 												</div>
 											</div>
 										</div>
@@ -479,48 +483,69 @@
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="modal fade" th:id="'showIncentivesModal' + ${user.id}"
-							tabindex="-1"
-							th:aria-labelledby="'showIncentivesModalLabel' + ${user.id}"
-							aria-hidden="true">
-							<div
-								class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h1 class="modal-title fs-5"
-											th:id="'showIncentivesModalLabel' + ${user.id}">Incentivos</h1>
-										<button type="button" class="btn-close"
-											data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<table class="table mt-3" id="tableBody">
-											<thead>
-												<tr>
-													<th>ID</th>
-													<th>Data</th>
-													<th>Valor</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="incentive : ${user.incentives}">
-													<td th:text="${incentive.id}"></td>
-													<td th:text="${incentive.referenceDate}"></td>
-													<td th:text="${incentive.incentiveValue}"></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-									<div class="modal-footer">
-										<button class="btn btn-primary"
-											th:data-bs-target="'#detailsUserModal' + ${user.id}"
-											data-bs-toggle="modal">Voltar</button>
-									</div>
+					<div class="modal fade" id="showIncentivesModal"
+						tabindex="-1"
+						aria-labelledby="showIncentivesModalLabel"
+						aria-hidden="true">
+						<div
+							class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5"
+										id="showIncentivesModalLabel">Incentivos</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div id="incentivesByUserArea"></div>
+								<div class="modal-footer">
+									<button class="btn btn-primary"
+										th:data-bs-target="'#detailsUserModal' + ${user.id}"
+										data-bs-toggle="modal">Voltar</button>
 								</div>
 							</div>
 						</div>
 					</div>
+					
+					<div class="modal fade" id="documentModal" tabindex="-1"
+						aria-labelledby="documentModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="documentModalLabel">Detalhes
+										do Documento</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div id="header-infos" class="mb-3" style="height: 25%"></div>
+								<div class="modal-body">
+									<h3>Vendas:</h3>
+									<div id="salesContainer"></div>
 
+									<h3>Incentivos:</h3>
+									<table class="table table-sm table-bordered table-striped" style="width: 60%">
+										<thead>
+											<tr>
+												<th>Tipo</th>
+												<th>CPF</th>
+												<th>Nome</th>
+												<th>Total</th>
+												<th>Função</th>
+											</tr>
+										</thead>
+										<tbody id="incentivesTableBody"></tbody>
+									</table>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Fechar</button>
+									<button type="button" class="btn btn-primary"
+										id="downloadReport">Baixar</button>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					<div class="modal fade" id="filterModal" tabindex="-1"
 						aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -588,6 +613,7 @@
 	<script th:src="@{/js/applyUserFilters.js}"></script>
 	<script th:src="@{/js/resetUserFilter.js}"></script>
 	<script th:src="@{/js/multipleSelectUserPage.js}"></script>
+	<script th:src="@{/js/incentivesByUser.js}"></script>
 </body>
 </html>
 

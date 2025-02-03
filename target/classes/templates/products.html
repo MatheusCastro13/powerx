@@ -12,7 +12,8 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" th:href="@{/styles/navbar-custom.css}">
 <link rel="stylesheet" th:href="@{/styles/sidebar-custom.css}">
-<link rel="icon" th:href="@{/images/powerx-icon.png}" type="image/x-icon">
+<link rel="icon" th:href="@{/images/powerx-icon.png}"
+	type="image/x-icon">
 <title>Produtos</title>
 </head>
 <body>
@@ -114,17 +115,17 @@
 
 								<form th:action="@{/products/save}" method="post">
 									<div class="mb-3">
-										<label for="newUnysoftCode" class="form-label">Código
-											Unysoft</label> <input type="text" class="form-control"
+										<label for="newUnysoftCode" class="form-label"><Strong>Código
+											Unysoft</Strong></label> <input type="text" class="form-control"
 											name="unysoftCode">
 									</div>
 									<div class="mb-3">
-										<label for="newCode" class="form-label">Código Produto</label>
+										<label for="newCode" class="form-label"><Strong>Código Produto</Strong></label>
 										<input type="text" class="form-control" name="productCode"
 											required>
 									</div>
 									<div class="mb-3">
-										<label for="newName" class="form-label">Descrição</label> <input
+										<label for="newName" class="form-label"><Strong>Descrição</Strong></label> <input
 											type="text" class="form-control" name="productName" required>
 									</div>
 									<div class="mb-3">
@@ -162,18 +163,18 @@
 										<input type="hidden" name="id" th:value="${product.id}"
 											required>
 										<div class="mb-3">
-											<label for="editCode" class="form-label">Código
-												Unysoft</label> <input type="text" class="form-control"
+											<label for="editCode" class="form-label"><Strong>Código
+												Unysoft</Strong></label> <input type="text" class="form-control"
 												th:value="${product.unysoftCode}" name="unysoftCode">
 										</div>
 										<div class="mb-3">
-											<label for="editCode" class="form-label">Código
-												Produto</label> <input type="text" class="form-control"
+											<label for="editCode" class="form-label"><Strong>Código
+												Produto</Strong></label> <input type="text" class="form-control"
 												th:value="${product.productCode}" name="productCode"
 												required>
 										</div>
 										<div class="mb-3">
-											<label for="editName" class="form-label">Descrição</label> <input
+											<label for="editName" class="form-label"><Strong>Descrição</Strong></label> <input
 												type="text" class="form-control"
 												th:value="${product.productName}" name="productName"
 												required>
@@ -208,64 +209,27 @@
 							<div class="modal-body">
 								<form th:action="@{/products/incentive/{id}(id=${product.id})}"
 									method="post">
-									<table class="table mt-5" id="tableBody">
-										<thead>
-											<tr>
-												<th>Cliente</th>
-												<th>função</th>
-												<th>Conta Corrente</th>
-												<th>NF Serviço</th>
-												<th>Remover</th>
-											</tr>
-										</thead>
-										<tbody th:id="'tableBody-' + ${product.id}">
-											<tr th:each="value : ${product.incentiveValues}"
-												th:id="'row-' + ${value.id}">
-												<td>
-													<div class="col">
-														<select class="form-select" name="customer" required>
-															<option th:value="${value.customer.id}"
-																th:text="${value.customer.registeredName}" selected></option>
-														</select>
-													</div>
-												</td>
-												<td>
-													<div class="col">
-														<select class="form-select" name="function" required>
-															<option th:value="${value.function.id}"
-																th:text="${value.function.name}" selected></option>
-														</select>
-													</div>
-												</td>
-												<td>
-													<div class="col">
-														<input type="number" class="form-control" name="ccValue"
-															placeholder="Valor" th:value="${value.ccValue}"
-															step="any" required>
-													</div>
-												</td>
-												<td>
-													<div class="col">
-														<input type="number" class="form-control" name="nfsValue"
-															placeholder="Valor" th:value="${value.nfsValue}"
-															step="any" required>
-													</div>
-												</td>
-												<td>
-													<div class="col">
-														<button type="button" class="btn btn-danger"
-															th:onclick="'removeIncentiveValue(' + ${product.id} + ',' + ${value.id} + ')'">
-															Remover</button>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
 
 									<div class="mb-3">
-										<button type="button" class="btn btn-secondary"
-											th:onclick="'addIncentiveRow(' + ${product.id} + ')'">Adicionar
-											Valores</button>
+										<label for="customerSelect">Selecione o Cliente</label> <select
+											class="form-select" name="customer"
+											th:id="'customerSelect-' + ${product.id}">
+											<option th:each="customer : ${customers}"
+												th:value="${customer.id}" th:text="${customer.fantasyName}">
+											</option>
+										</select>
+
+										<div class="mt-2">
+											<button class="btn btn-primary" type="button"
+												th:onclick="'findIncentiveValue(' + ${product.id} + ', document.getElementById(\'customerSelect-' + ${product.id} + '\').value)'">
+												Buscar Incentivo</button>
+										</div>
+
+									</div>
+
+									<div th:id="'incentiveValueArea-' + ${product.id}"></div>
+
+									<div class="modal-footer mb-3">
 										<button type="button" class="btn btn-secondary"
 											data-bs-dismiss="modal">Cancelar</button>
 										<button type="submit" class="btn btn-primary">Salvar</button>
@@ -298,13 +262,16 @@
 										<Strong>ID: </Strong><span th:text="${product.id}"></span>
 									</p>
 									<p>
-										<Strong>Código Unysoft: </Strong><span th:text="${product.unysoftCode}"></span>
+										<Strong>Código Unysoft: </Strong><span
+											th:text="${product.unysoftCode}"></span>
 									</p>
 									<p>
-										<Strong>Código: </Strong><span th:text="${product.productCode}"></span>
+										<Strong>Código: </Strong><span
+											th:text="${product.productCode}"></span>
 									</p>
 									<p>
-										<Strong>Descrição: </Strong><span th:text="${product.productName}"></span>
+										<Strong>Descrição: </Strong><span
+											th:text="${product.productName}"></span>
 									</p>
 									<button class="btn btn-primary"
 										th:data-bs-target="'#showIncentiveValueModal' + ${product.id}"
@@ -338,15 +305,17 @@
 												<th>função</th>
 												<th>Conta Corrente</th>
 												<th>NF Serviço</th>
+												<th>Over</th>
 												<th></th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr th:each="value : ${product.incentiveValues}">
-												<td th:text="${value.customer.registeredName}"></td>
+												<td th:text="${value.customer.fantasyName}"></td>
 												<td th:text="${value.function.name}"></td>
 												<td th:text="${value.ccValue}"></td>
 												<td th:text="${value.nfsValue}"></td>
+												<td th:text="${value.overValue}"></td>
 											</tr>
 										</tbody>
 									</table>
@@ -364,7 +333,7 @@
 				<div style="display: none;">
 					<select id="customerOptionsTemplate" class="form-select">
 						<option th:each="customer : ${customers}"
-							th:value="${customer.id}" th:text="${customer.registeredName}"></option>
+							th:value="${customer.id}" th:text="${customer.fantasyName}"></option>
 					</select> <select id="functionOptionsTemplate" class="form-select">
 						<option th:each="func : ${functions}" th:value="${func.id}"
 							th:text="${func.name}"></option>
@@ -377,6 +346,7 @@
 	</div>
 
 	<script th:src="@{/js/manageIncentiveValue2.js}"></script>
+	<script th:src="@{/js/incentiveValue.js}"></script>
 	<script th:src="@{/js/search.js}"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

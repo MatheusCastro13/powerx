@@ -11,16 +11,11 @@ import br.ind.powerx.gestaoOperacional.model.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 
-	List<Customer> findAllByActiveTrue();
+	List<Customer> findAllByActiveTrueOrderByFantasyNameAsc();
 
-	List<Customer> findAllByUserIdNull();
+	List<Customer> findAllByUserIdNullOrderByFantasyNameAsc();
 
-	List<Customer> findAllByGroupIdNull();
+	List<Customer> findAllByGroupIdNullOrderByFantasyNameAsc();
 
-	List<Customer> findByUserIdIn(List<Long> users);
-
-	List<Customer> findByGroupIdIn(List<Long> groups);
-
-	List<Customer> findByUserIdInAndGroupIdIn(List<Long> users, List<Long> groups);
 
 }

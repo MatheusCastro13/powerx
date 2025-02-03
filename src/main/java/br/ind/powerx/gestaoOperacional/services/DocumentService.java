@@ -17,17 +17,23 @@ import br.ind.powerx.gestaoOperacional.model.Sale;
 import br.ind.powerx.gestaoOperacional.model.User;
 import br.ind.powerx.gestaoOperacional.model.dtos.IncentiveDTO;
 import br.ind.powerx.gestaoOperacional.model.dtos.SaleDTO;
+import br.ind.powerx.gestaoOperacional.repositories.CustomerRepository;
 import br.ind.powerx.gestaoOperacional.repositories.IncentiveRepository;
 import br.ind.powerx.gestaoOperacional.repositories.SaleRepository;
 
 @Service
 public class DocumentService {
 
-	@Autowired
-	private SaleRepository saleRepository;
+	private final SaleRepository saleRepository;
+	
+	private final IncentiveRepository incentiveRepository;
+	
 	
 	@Autowired
-	private IncentiveRepository incentiveRepository;
+	public DocumentService(SaleRepository saleRepository, IncentiveRepository incentiveRepository) {
+		this.saleRepository = saleRepository;
+		this.incentiveRepository = incentiveRepository;
+	}
 	
 	public List<Integer> findAllDocumentNumbers(){
 		List<Integer> salesDocumentNumbers = saleRepository.findDistinctDocumentNumbers();
@@ -79,6 +85,7 @@ public class DocumentService {
 		details.put("cnpj", customer.getCnpj());
 		details.put("method", dtoList.get(0).getPaymentMethod());
 		details.put("date", dtoList.get(0).getReferenceDate());
+		details.put("state", dtoList.get(0).getState());
 		
 		
 		return details;
@@ -90,6 +97,22 @@ public class DocumentService {
 		return incentivesDocumentNumbers.stream()
 				.sorted(Comparator.reverseOrder())
 				.collect(Collectors.toList());
+	}
+
+	public Map<Integer, String> getCustomersByDocument(List<Integer> documentNumbers) {
+		Map<Integer, String> documentCustomer = new HashMap<>();
+		for(Integer documentNumber : documentNumbers) {
+			String customerName = incentiveRepository.findBySaleDocumentNumber(documentNumber).get(0).getCustomer().getFantasyName();
+			documentCustomer.put(documentNumber, customerName);
+		}
+		return documentCustomer;
+	}
+	
+	public Map<Integer, String> getCustomersByDocument(Integer documentNumber) {
+		Map<Integer, String> documentCustomer = new HashMap<>();
+		String customerName = incentiveRepository.findBySaleDocumentNumber(documentNumber).get(0).getCustomer().getFantasyName();
+		documentCustomer.put(documentNumber, customerName);
+		return documentCustomer;
 	}
 }
 
