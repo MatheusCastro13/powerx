@@ -27,7 +27,6 @@ public interface IncentiveRepository extends JpaRepository<Incentive, Long> {
 	List<Incentive> findByReferenceDateBetweenAndCustomerAndApurationType(
             LocalDate dataInicial, LocalDate dataFinal, Customer customer, ApurationType apurationType);
 
-
 	List<Incentive> findByReferenceDateBetweenAndApurationTypeAndState(LocalDate dataInicial, LocalDate dataFinal,
 			ApurationType apurationType, State state);
 

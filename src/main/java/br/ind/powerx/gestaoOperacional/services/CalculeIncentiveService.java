@@ -139,7 +139,7 @@ public class CalculeIncentiveService {
 	    Employee employee = sale.getEmployee();
 	    Product product = sale.getProduct();
 	    int quantity = sale.getQuantity();
-	    
+	    System.out.println("Numero de documento a ser passado para os incentivos: " + sale.getDocumentNumber());
 	    System.out.println("Cliente - " + customer.getFantasyName());
 	    System.out.println("Premiado - " + employee.getName());
 	    System.out.println("Produto vendido - " + product.getProductCode() + " " + product.getProductName());
@@ -177,6 +177,7 @@ public class CalculeIncentiveService {
 		
 		
 		Integer documentNumber = sales.get(0).getDocumentNumber(); 
+		System.out.println("Numero de documento a ser passado para os incentivos: " + documentNumber);
 		
 	    List<Incentive> incentives = new ArrayList<>();
 	    

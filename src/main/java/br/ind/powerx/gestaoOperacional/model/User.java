@@ -90,6 +90,9 @@ public class User{
     
     @Column(name = "start_of_activities", updatable = false)
     private LocalDate startOfActivities;
+    
+    @Column(name = "state_id", nullable = true)
+    private long stateId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();

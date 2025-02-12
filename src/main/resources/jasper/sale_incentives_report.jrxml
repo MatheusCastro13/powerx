@@ -79,17 +79,19 @@
 	<parameter name="method" class="java.lang.String"/>
 	<parameter name="documentNumber" class="java.lang.Integer"/>
 	<parameter name="incentives" class="java.util.List"/>
+	<parameter name="totalSale" class="java.lang.Integer"/>
 	<query language="sql"><![CDATA[]]></query>
 	<field name="employeeName" class="java.lang.String"/>
 	<field name="products" class="java.util.List"/>
+	<field name="total" class="java.lang.Integer"/>
 	<group name="EmployeeGroup">
 		<expression><![CDATA[$F{employeeName}]]></expression>
 		<groupHeader>
-			<band height="142" splitType="Stretch">
+			<band height="127" splitType="Stretch">
 				<element kind="textField" uuid="a0a0cdeb-9815-4522-93a2-cd6b34a10065" x="2" y="20" width="278" height="30" fontSize="11.0" bold="true" vTextAlign="Middle">
 					<expression><![CDATA[$F{employeeName}]]></expression>
 				</element>
-				<element kind="component" uuid="5ec233dc-cf1f-445f-b581-4e73f04cb7fd" x="1" y="60" width="349" height="63" removeLineWhenBlank="true" printWhenDetailOverflows="true">
+				<element kind="component" uuid="5ec233dc-cf1f-445f-b581-4e73f04cb7fd" x="1" y="60" width="349" height="63" printRepeatedValues="false" removeLineWhenBlank="true" printWhenDetailOverflows="true">
 					<component kind="table">
 						<datasetRun uuid="8524cb88-f7b8-4edc-95c9-7bc72924bf56" subDataset="ProductDataset">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{products})
@@ -102,8 +104,8 @@
 								</element>
 							</columnHeader>
 							<detailCell height="30" style="Table_TD">
-								<element kind="textField" uuid="23835d08-2dca-4f32-a080-31d13e5123d2" x="0" y="0" width="80" height="30" fontSize="9.0" evaluationTime="Page" hTextAlign="Left" vTextAlign="Middle" style="padding-left">
-									<paragraph spacingAfter="0" style="padding-left"/>
+								<element kind="textField" uuid="23835d08-2dca-4f32-a080-31d13e5123d2" x="0" y="0" width="80" height="30" fontSize="9.0" hTextAlign="Left" vTextAlign="Middle" style="padding-left">
+									<paragraph spacingAfter="0"/>
 									<expression><![CDATA[$F{productCode}]]></expression>
 									<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								</element>
@@ -141,6 +143,16 @@
 				</element>
 			</band>
 		</groupHeader>
+		<groupFooter>
+			<band height="33">
+				<element kind="staticText" uuid="af92e416-cc3a-4943-958f-542cf8ad5a28" x="5" y="6" width="70" height="17" bold="true">
+					<text><![CDATA[Total vendido: ]]></text>
+				</element>
+				<element kind="textField" uuid="a5a86e93-7d1a-4fb9-af9e-63b3d74fe9ac" x="81" y="7" width="100" height="15">
+					<expression><![CDATA[$F{total}]]></expression>
+				</element>
+			</band>
+		</groupFooter>
 	</group>
 	<background splitType="Stretch"/>
 	<title height="195" splitType="Stretch">
@@ -164,6 +176,9 @@
 		</element>
 		<element kind="staticText" uuid="e676c5fd-8913-4742-bf1b-15572fb12602" x="179" y="6" width="202" height="93" fontSize="18.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Registro de Vendas e Incentivos]]></text>
+		</element>
+		<element kind="textField" uuid="d70fc38b-e21e-4b91-9938-168ba190fc85" x="360" y="151" width="190" height="30" fontSize="11.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA["Total Vendido: " + $P{totalSale}]]></expression>
 		</element>
 	</title>
 	<summary height="125" splitType="Stretch">

@@ -38,7 +38,7 @@ public class Group {
 	@Column(name = "name", length = 255, nullable = false, unique = true)
 	private String name;
 	
-	@OneToMany(mappedBy = "group", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Customer> customers = new ArrayList<>();
 	
 	@ManyToMany

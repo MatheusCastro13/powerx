@@ -41,9 +41,12 @@ public class SaleService {
 	private CalculeIncentiveService calculeIncentiveService;
 	
 	public List<Incentive> saveSales(List<SalesDTO> salesDTO) {
+		
 		Integer maxDocumentNumeber = saleRepository.findMaxDocumentNumber();
-
+		System.out.println("n° maximo de documento de venda: "+maxDocumentNumeber);
+		
         int newDocumentNumeber = (maxDocumentNumeber != null ? maxDocumentNumeber : 0) + 1;
+        System.out.println("novo n° documento de venda: "+newDocumentNumeber);
         
 		List<Sale> sales = new ArrayList<>();
 		for(SalesDTO sale : salesDTO) {			

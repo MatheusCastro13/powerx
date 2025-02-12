@@ -120,7 +120,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="newGroup" class="form-label"><strong>Selecione
-														o Grupo</Strong></label> <select class="form-select" name="groupId"
+															o Grupo</Strong></label> <select class="form-select" name="groupId"
 														required>
 														<option th:each="group : ${groups}" th:value="${group.id}"
 															th:text="${group.name}"></option>
@@ -128,33 +128,33 @@
 												</div>
 												<div class="mb-3">
 													<label for="newUnySoftCode" class="form-label"><strong>Código
-														Unysoft</Strong></label> <input type="text" class="form-control"
+															Unysoft</Strong></label> <input type="text" class="form-control"
 														name="unysoftCode">
 												</div>
 												<div class="mb-3">
-													<label for="newCnpj" class="form-label"><strong>CNPJ</Strong></label> <input
-														type="text" class="form-control" name="cnpj">
+													<label for="newCnpj" class="form-label"><strong>CNPJ</Strong></label>
+													<input type="text" class="form-control" name="cnpj">
 												</div>
 												<div class="mb-3">
 													<label for="newRegisteredName" class="form-label"><strong>Razão
-														Social</Strong></label> <input type="text" class="form-control"
+															Social</Strong></label> <input type="text" class="form-control"
 														name="registeredName" required>
 												</div>
 												<div class="mb-3">
 													<label for="newFantasyName" class="form-label"><strong>Nome
-														Fantasia</Strong></label> <input type="text" class="form-control"
+															Fantasia</Strong></label> <input type="text" class="form-control"
 														name="fantasyName" required>
 												</div>
 											</div>
 
 											<div class="col-md-6">
 												<div class="mb-3">
-													<label for="newAddress" class="form-label"><strong>Endereço</label>
+													<label for="newAddress" class="form-label"><strong>Endereço</strong></label>
 													<input type="text" class="form-control" name="address">
 												</div>
 												<div class="mb-3">
-													<label for="newUser" class="form-label"><strong>Selecione o
-														Representante</Strong></label> <select class="form-select" name="userId"
+													<label for="newUser" class="form-label"><strong>Selecione
+															o Representante</Strong></label> <select class="form-select" name="userId"
 														required>
 														<option th:each="user : ${users}" th:value="${user.id}"
 															th:text="${user.name}"></option>
@@ -162,14 +162,15 @@
 												</div>
 												<div class="mb-3">
 													<label for="newIndustry" class="form-label"><strong>Selecione
-														o Segmento</Strong></label> <select class="form-select" name="industryId">
+															o Segmento</Strong></label> <select class="form-select" name="industryId">
 														<option th:each="industry : ${industries}"
 															th:value="${industry.id}" th:text="${industry.name}"></option>
 													</select>
 												</div>
 												<div class="mb-3">
-													<label for="newFlag" class="form-label"><strong>Selecione a
-														Marca/Bandeira</Strong></label> <select class="form-select" name="flagId">
+													<label for="newFlag" class="form-label"><strong>Selecione
+															a Marca/Bandeira</Strong></label> <select class="form-select"
+														name="flagId">
 														<option th:each="flag : ${flags}" th:value="${flag.id}"
 															th:text="${flag.name}"></option>
 													</select>
@@ -181,7 +182,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="newMechanicApuration" class="form-label"><strong>Apuração
-														dos Mecânicos</Strong></label> <select class="form-select"
+															dos Mecânicos</Strong></label> <select class="form-select"
 														name="mechanicApurationId" required>
 														<option
 															th:each="mechanicApuration : ${mechanicApurations}"
@@ -194,7 +195,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="newCustomers" class="form-label"><strong>Selecione
-														os Premiados</Strong></label> <select id="multiSelectNew"
+															os Premiados</Strong></label> <select id="multiSelectNew"
 														class="form-select" name="employees" multiple>
 														<option th:each="employee : ${employees}"
 															th:value="${employee.id}" th:text="${employee.name}">
@@ -244,7 +245,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="editGroup" class="form-label"><strong>Selecione
-														o Grupo</Strong></label> <select class="form-select" name="groupId"
+															o Grupo</Strong></label> <select class="form-select" name="groupId"
 														required>
 														<option th:each="group : ${groups}" th:value="${group.id}"
 															th:text="${group.name}"
@@ -253,23 +254,23 @@
 												</div>
 												<div class="mb-3">
 													<label for="editUnySoftCode" class="form-label"><strong>Código
-														Unysoft</Strong></label> <input type="text" class="form-control"
+															Unysoft</Strong></label> <input type="text" class="form-control"
 														th:value="${customer.unysoftCode}" name="unysoftCode">
 												</div>
 												<div class="mb-3">
-													<label for="editCnpj" class="form-label"><strong>CNPJ</Strong></label> <input
-														type="text" class="form-control"
+													<label for="editCnpj" class="form-label"><strong>CNPJ</Strong></label>
+													<input type="text" class="form-control"
 														th:value="${customer.cnpj}" name="cnpj" required>
 												</div>
 												<div class="mb-3">
 													<label for="editRegisteredName" class="form-label"><strong>Razão
-														Social</Strong></label> <input type="text" class="form-control"
+															Social</Strong></label> <input type="text" class="form-control"
 														th:value="${customer.registeredName}"
 														name="registeredName" required>
 												</div>
 												<div class="mb-3">
 													<label for="editFantasyName" class="form-label"><strong>Nome
-														Fantasia</Strong></label> <input type="text" class="form-control"
+															Fantasia</Strong></label> <input type="text" class="form-control"
 														th:value="${customer.fantasyName}" name="fantasyName"
 														required>
 												</div>
@@ -283,7 +284,7 @@
 												</div>
 												<div class="mb-3">
 													<label for="editUser" class="form-label"><strong>Selecione
-														o Representante</Strong></label> <select class="form-select" name="userId"
+															o Representante</Strong></label> <select class="form-select" name="userId"
 														required>
 														<option th:each="user : ${users}" th:value="${user.id}"
 															th:text="${user.name}"
@@ -292,7 +293,7 @@
 												</div>
 												<div class="mb-3">
 													<label for="editIndustry" class="form-label"><strong>Selecione
-														o Segmento</Strong></label> <select class="form-select" name="industryId">
+															o Segmento</Strong></label> <select class="form-select" name="industryId">
 														<option th:each="industry : ${industries}"
 															th:value="${industry.id}" th:text="${industry.name}"
 															th:selected="${customer.industry != null and customer.industry.id == industry.id}"></option>
@@ -300,7 +301,7 @@
 												</div>
 												<div class="mb-3">
 													<label for="editFlag" class="form-label"><strong>Selecione
-														a Bandeira</Strong></label> <select class="form-select" name="flagId">
+															a Bandeira</Strong></label> <select class="form-select" name="flagId">
 														<option th:each="flag : ${flags}" th:value="${flag.id}"
 															th:text="${flag.name}"
 															th:selected="${customer.flag != null and customer.flag.id == flag.id}"></option>
@@ -313,7 +314,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="editMechanicApuration" class="form-label"><strong>Apuração
-														dos Mecânicos</Strong></label> <select class="form-select"
+															dos Mecânicos</Strong></label> <select class="form-select"
 														name="mechanicApurationId" required>
 														<option
 															th:each="mechanicApuration : ${mechanicApurations}"
@@ -327,7 +328,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="editEmployees" class="form-label"><strong>Selecione
-														os Premiados</Strong></label> <select id="multiSelectEdit"
+															os Premiados</Strong></label> <select id="multiSelectEdit"
 														class="form-select" name="employees" multiple>
 														<option th:each="employee : ${employees}"
 															th:value="${employee.id}" th:text="${employee.name}"
@@ -424,6 +425,9 @@
 											<button class="btn btn-primary"
 												th:data-bs-target="'#showTablePriceModal' + ${customer.id}"
 												data-bs-toggle="modal">Tabela de Preço</button>
+											<button class="btn btn-primary"
+												th:data-bs-target="'#showIncentiveValuesModal' + ${customer.id}"
+												data-bs-toggle="modal">Distribuição de incentivos</button>
 										</div>
 									</div>
 									<div class="modal-footer">
@@ -462,7 +466,8 @@
 												<tr th:each="employee : ${customer.employees}">
 													<td th:text="${employee.cpf}"></td>
 													<td th:text="${employee.name}"></td>
-													<td><span th:each="func, iterStat : ${employee.functions}"
+													<td><span
+														th:each="func, iterStat : ${employee.functions}"
 														th:text="${func.name + (iterStat.last ? '' : ', ')}"></span></td>
 												</tr>
 											</tbody>
@@ -517,6 +522,49 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="modal fade"
+							th:id="'showIncentiveValuesModal' + ${customer.id}"
+							aria-hidden="true"
+							th:aria-labelledby="'showIncentiveValuesModalLabel' + ${customer.id}"
+							tabindex="-1">
+							<div
+								class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5"
+											id="'showIncentiveValuesModalLabel' + ${customer.id}">Valores
+											de Incentivo</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<div class="my-2">
+											<label th:for="'apurationTypeSelect-' + ${customer.id}"><strong>Selecione
+													o Tipo de Apuração</strong></label> <select class="form-select"
+												name="apurationtype"
+												th:id="'apurationTypeSelect-' + ${customer.id}">
+												<option selected disabled>Apurações</option>
+												<option value="Conta Corrente">Conta Corrente</option>
+												<option value="NF Serviço">NF Serviço</option>
+												<option value="Over">Over</option>
+											</select>
+
+											<button class="btn btn-primary mt-3" type="button"
+												th:onclick="'findIncentiveValueByCustomerIdAndApurationType(' + ${customer.id} + ', document.getElementById(\'apurationTypeSelect-' + ${customer.id} + '\').value)'">Buscar</button>
+										</div>
+
+										<div th:id="'IncentiveValueArea-' + ${customer.id}"></div>
+
+									</div>
+									<div class="modal-footer">
+										<button class="btn btn-primary"
+											th:data-bs-target="'#showCustomersModal' + ${user.id}"
+											data-bs-toggle="modal">Voltar</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 
 
@@ -541,7 +589,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="filterUser" class="form-label"><Strong>Filtrar
-														por Usuário</Strong></label> <select class="form-select" id="filterUser"
+															por Usuário</Strong></label> <select class="form-select" id="filterUser"
 														name="users" multiple>
 														<option th:each="user : ${users}" th:value="${user.id}"
 															th:text="${user.name}"></option>
@@ -550,7 +598,7 @@
 
 												<div class="mb-3">
 													<label for="filterGroup" class="form-label"><Strong>Filtrar
-														por Grupo</Strong></label> <select class="form-select" id="filterGroup"
+															por Grupo</Strong></label> <select class="form-select" id="filterGroup"
 														name="groups" multiple>
 														<option th:each="group : ${groups}" th:value="${group.id}"
 															th:text="${group.name}"></option>
@@ -561,7 +609,7 @@
 											<div class="col-md-6">
 												<div class="mb-3">
 													<label for="filterIndustry" class="form-label"><Strong>Filtrar
-														por Seguimento</Strong></label> <select class="form-select"
+															por Seguimento</Strong></label> <select class="form-select"
 														id="filterIndustry" name="industries" multiple>
 														<option th:each="industry : ${industries}"
 															th:value="${industry.id}" th:text="${industry.name}"></option>
@@ -570,7 +618,7 @@
 
 												<div class="mb-3">
 													<label for="filterFlag" class="form-label"><Strong>Filtrar
-														por Marca/Bandeira</Strong></label> <select class="form-select"
+															por Marca/Bandeira</Strong></label> <select class="form-select"
 														id="filterFlag" name="flags" multiple>
 														<option th:each="flag : ${flags}" th:value="${flag.id}"
 															th:text="${flag.name}"></option>
@@ -614,6 +662,7 @@
 	<script th:src="@{/js/applyCustomerFilters.js}"></script>
 	<script th:src="@{/js/resetCustomerFilter.js}"></script>
 	<script th:src="@{/js/multipleSelectCustomerPage.js}"></script>
+	<script th:src="@{/js/incentiveValue.js}"></script>
 </body>
 </html>
 

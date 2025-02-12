@@ -131,7 +131,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	        const quantityInput = row.querySelector('input');
 	        const quantity = parseInt(quantityInput.value) || 0;
 
-	        if (quantity > 0) {
+	        if (quantity >= 0) {
 	            saleDetails.products.push({
 	                productId: productId,
 	                productName: products.find(p => p.id == productId).productName,
@@ -295,12 +295,12 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
         .catch(error => {
             console.error("Erro ao enviar vendas:", error);
         });
-
-
-        
-        
+		
         const incentivesCalculatedModal = new bootstrap.Modal(document.getElementById('incentivesCalculatedModal'));
         incentivesCalculatedModal.show();
+		
+		const resumeModal = bootstrap.Modal.getInstance(document.getElementById('resumePane'));
+		resumeModal.hide();
     }
 
     function populateIncentivesTable(dtoList) {
@@ -552,6 +552,9 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 
 	            a.remove();
 	            window.URL.revokeObjectURL(url);
+				window.location.href = "/incentives";
+
+
 	        })
 	        .catch(error => {
 	            console.error('Erro ao baixar o relatório:', error);

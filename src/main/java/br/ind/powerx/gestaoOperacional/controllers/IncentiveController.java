@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,16 +50,21 @@ public class IncentiveController {
 	    User user = authenticationService.getUserAuthenticated();
 	    
 	    if (user.getRole().equalsIgnoreCase("role_admin")) {
-	        Page<Incentive> incentivesPage = incentiveService.findAll(PageRequest.of(page, size));
+	        List<Incentive> incentivesPage = incentiveService.findAll();
 	        List<Customer> customers = customerRepository.findAll();
 	        List<Integer> documentNumbers = documentService.findAllDocumentNumbers();
+	        Page<Integer> docNumPages = new PageImpl<>(
+	                documentNumbers.subList(page * size, Math.min((page + 1) * size, documentNumbers.size())),
+	                PageRequest.of(page, size),
+	                documentNumbers.size()
+	            );
 	        
 	        Map<Integer, String> documentCustomer = documentService.getCustomersByDocument(documentNumbers);
 	        
 	        model.addAttribute("user", user);
-	        model.addAttribute("incentives", incentivesPage.getContent());
+	        model.addAttribute("incentives", docNumPages.getContent());
 	        model.addAttribute("currentPage", page);
-		    model.addAttribute("totalPages", incentivesPage.getTotalPages());
+		    model.addAttribute("totalPages", docNumPages.getTotalPages());
 	        model.addAttribute("customers", customers);
 	        model.addAttribute("documentNumbers", documentCustomer);
 	        

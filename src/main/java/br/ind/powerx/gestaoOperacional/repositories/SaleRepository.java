@@ -1,3 +1,4 @@
+
 package br.ind.powerx.gestaoOperacional.repositories;
 
 import java.util.List;

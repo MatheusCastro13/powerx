@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,8 @@ public class ReportService {
                                incentive.getIncentiveValue(),
                                incentive.getEmployeeFunction().getName())
     ).collect(Collectors.toList());
+        
+        Integer totalSales = getTotalSale(salesDto, sales);
 
         JRBeanCollectionDataSource salesDataSource = new JRBeanCollectionDataSource(salesDto);
 
@@ -83,6 +86,7 @@ public class ReportService {
         params.put("referenceDate", utilDate);        
         params.put("method", method);    
         params.put("incentives", incentivesDto);
+        params.put("totalSale", totalSales);
 
         InputStream reportStream = getClass().getResourceAsStream("/jasper/sale_incentives_report.jasper");
         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
@@ -136,6 +140,8 @@ public class ReportService {
                                incentive.getIncentiveValue(),
                                incentive.getEmployeeFunction().getName())
     ).collect(Collectors.toList());
+        
+        Integer totalSales = getTotalSale(salesDto, sales);
 
         JRBeanCollectionDataSource salesDataSource = new JRBeanCollectionDataSource(salesDto);
 
@@ -146,6 +152,7 @@ public class ReportService {
         params.put("referenceDate", utilDate);        
         params.put("method", method);    
         params.put("incentives", incentivesDto);
+        params.put("totalSale", totalSales);
 
         InputStream reportStream = getClass().getResourceAsStream("/jasper/sale_incentives_report.jasper");
         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
@@ -160,7 +167,25 @@ public class ReportService {
         }
 	}
 
+	private Integer getTotalSale(List<SaleReportDTO> salesDTO, List<Sale> sales) {
+		return salesDTO.stream()
+				.filter(saleDTO -> sales.stream()
+										.filter(sale -> sale.getEmployee().getFunctions().stream()
+												.anyMatch(f -> f.getName().equalsIgnoreCase("Consultor Técnico")))
+										.anyMatch(sale -> sale.getEmployee().getName().equals(saleDTO.getEmployeeName())))
+				.map(SaleReportDTO::getTotal)
+				.filter(Objects::nonNull)
+				.reduce(0, Integer::sum);
+	}
 }
+
+
+
+
+
+
+
+
 
 
 
