@@ -97,9 +97,7 @@ public class UserService {
 
 		updateUserDetails(existingUser, userUpdateDTO);
 
-		if (customerIds != null) {
-			updateUserCustomers(existingUser, customerIds);
-		}
+		updateUserCustomers(existingUser, customerIds);
 
 		userRepository.save(existingUser);
 	}
@@ -137,7 +135,14 @@ public class UserService {
 	}
 	
 	private void updateUserCustomers(User user, List<Long> customerIds) {
-	    List<Customer> updatedCustomers = customerService.findAllById(customerIds);
+	    List<Customer> updatedCustomers;
+	    
+	    if(customerIds != null) {
+	    	updatedCustomers = customerService.findAllById(customerIds);
+	    }
+	    else {
+	    	updatedCustomers = new ArrayList<>();;
+	    }
 
 	    for (Customer customer : new ArrayList<>(user.getCustomers())) {
 	        user.removeCustomer(customer);
