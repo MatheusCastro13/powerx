@@ -13,4 +13,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
 	List<Employee> findAllByActiveTrue();
 
+	Employee findByCpf(String cpf);
+
 }

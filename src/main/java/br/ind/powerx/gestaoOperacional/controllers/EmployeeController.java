@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.ind.powerx.gestaoOperacional.model.ApurationType;
 import br.ind.powerx.gestaoOperacional.model.Customer;
@@ -119,5 +120,47 @@ public class EmployeeController {
 
 		return "fragments/filteredEmployees :: filtered-employees";
 	}
+	
+	@PostMapping("/save/spreadsheet")
+	public String saveBySpredSheet(@RequestParam(name = "file") MultipartFile file, Model model) {
+		try {
+			employeeService.saveBySpreadsheet(file);
+			return "redirect:/employees";
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			e.printStackTrace();
+			model.addAttribute("error", e);
+			return "error";
+		}
+		
+	}
+	
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

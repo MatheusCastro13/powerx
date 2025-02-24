@@ -17,5 +17,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
 
 	List<Customer> findAllByGroupIdNullOrderByFantasyNameAsc();
 
+	Customer findByCnpj(String customerCnpj);
+
 
 }

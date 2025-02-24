@@ -8,4 +8,6 @@ import br.ind.powerx.gestaoOperacional.model.Function;
 @Repository
 public interface FunctionRepository extends JpaRepository<Function, Long> {
 
+	Function findByName(String functionName);
+
 }

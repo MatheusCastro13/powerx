@@ -35,7 +35,7 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "unydoft_code", unique = true, length = 10, nullable = true)
+	@Column(name = "unydoft_code", length = 10, nullable = true)
 	private String unysoftCode;
 
 	@Column(name = "cnpj", unique = true, nullable = false, length = 18)

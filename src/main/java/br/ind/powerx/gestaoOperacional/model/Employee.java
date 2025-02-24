@@ -80,7 +80,7 @@ public class Employee {
 	private List<Sale> sales = new ArrayList<>();
 	
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "employees")
+	@ManyToMany(mappedBy = "employees", cascade = { CascadeType.MERGE, CascadeType.PERSIST })
 	private List<Customer> customers = new ArrayList<>();
 	
 	@ToString.Exclude
