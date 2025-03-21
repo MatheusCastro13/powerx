@@ -15,6 +15,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -83,8 +84,17 @@ public class Customer {
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Sale> sales = new ArrayList<>();
 
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<TablePrice> tables = new ArrayList<>();
+	
+	@OneToOne(mappedBy = "customer")
+	private CommercialMonitoring commercialMonitoring;
+	
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<MonitoringSale> monitoringSales = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<ProductStock> productStocks = new ArrayList<>();
 
 	public void addSale(Sale sale) {
 		if (sale != null && !sales.contains(sale)) {
@@ -167,4 +177,72 @@ public class Customer {
 			}
 		}
 	}
+	
+	public void addMonitoringSale(MonitoringSale sale) {
+		if(sale != null && !monitoringSales.contains(sale)) {
+			monitoringSales.add(sale);
+			if(sale.getCustomer() != this)
+				sale.setCustomer(this);
+		}
+	}
+	
+	public void removeMonitoringSale(MonitoringSale sale) {
+		if(monitoringSales.remove(sale)) {
+			if(sale.getCustomer() == this) {
+				sale.setCustomer(null);
+			}
+		}
+	}
+	
+	public void addProductStock(ProductStock stock) {
+		if(stock != null && !productStocks.contains(stock)) {
+			productStocks.add(stock);
+			if(stock.getCustomer() != this) {
+				stock.setCustomer(this);
+			}
+		}
+	}
+	
+	public void removeProductStock(ProductStock stock) {
+		if(productStocks.remove(stock)) {
+			if(stock.getCustomer() == this) {
+				stock.setCustomer(null);
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

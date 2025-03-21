@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import br.ind.powerx.gestaoOperacional.model.Customer;
+import br.ind.powerx.gestaoOperacional.model.Function;
 import br.ind.powerx.gestaoOperacional.model.IncentiveValue;
 import br.ind.powerx.gestaoOperacional.model.Product;
 import br.ind.powerx.gestaoOperacional.repositories.CustomerRepository;
@@ -64,6 +65,11 @@ public class IncentiveValueService {
 				.orElseThrow(() -> new EntityNotFoundException("Cleinte não encontrado"));
 		
 		return valueRepository.findAllByCustomer(customer);
+	}
+
+	public List<IncentiveValue> findAllByProductAndCustomerAndFunction(Product product, Customer customer,
+			Function function) {
+		return valueRepository.findAllByCustomerAndProductAndFunction(customer, product, function);
 	}
 }
 

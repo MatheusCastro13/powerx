@@ -56,7 +56,7 @@ public class CalculeIncentiveService {
 
 	public List<Incentive> calculateIncentives(List<Sale> sales) {
 	    validateSales(sales);
-	    
+	    sales = sales.stream().filter(sale -> !(sale.getQuantity() <= 0) ).toList();
 	    sales.stream().forEach(s-> System.out.println(s));
 
 	    User user = authenticationService.getUserAuthenticated();
@@ -101,7 +101,7 @@ public class CalculeIncentiveService {
 	    
 	    for(Sale sale : sales) {
 	    	if(sale.getProduct().equals(product) && !(mechanicApurationName.equalsIgnoreCase("Somente Mecânicos"))) {
-	    		if(sale.getEmployee().getFunctions().stream().anyMatch(f -> f.getName().equalsIgnoreCase("Consultor Técnico"))) {
+	    		if(sale.getEmployee().getFunctions().stream().anyMatch(f -> f.getName().equalsIgnoreCase("Consultor Técnico")) && sale.getFunction().equals("Consultores")) {
 	    			totalQuantity += sale.getQuantity();
 	    		}
 	    	}
@@ -117,7 +117,7 @@ public class CalculeIncentiveService {
 	    
 	    for(Sale sale : sales) {
 	    	if(sale.getProduct().equals(product) && (mechanicApurationName.equalsIgnoreCase("Somente Mecânicos"))) {
-	    		if(sale.getEmployee().getFunctions().stream().anyMatch(f -> f.getName().equalsIgnoreCase("Mecânico"))) {
+	    		if(sale.getEmployee().getFunctions().stream().anyMatch(f -> f.getName().equalsIgnoreCase("Mecânico")) && sale.getFunction().equals("Mecânicos")) {
 	    			totalQuantity += sale.getQuantity();
 	    		}
 	    	}
@@ -147,22 +147,25 @@ public class CalculeIncentiveService {
 
 	    for (Function function : employee.getFunctions()) {
 	        if (isRelevantFunction(function)) {
-	        	System.out.println("Funcão - " + function.getName());
-	        	
-	            IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
-	            
-	            System.out.println("Valor do incentivo: \n");
+	        	if((function.getName().equals("Consultor Técnico") && sale.getFunction().equals("Consultores")) || 
+	        			(function.getName().equals("Mecânico") && sale.getFunction().equals("Mecânicos"))) {
+	        		System.out.println("Funcão - " + function.getName());
+		        	
+		            IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
+		            
+		            System.out.println("Valor do incentivo: \n");
 
-	            BigDecimal ccValue = BigDecimal.ZERO;
-	            BigDecimal nfsValue = BigDecimal.ZERO;
-	            
-	            if(value != null) {
-                	System.out.println(value);
-	            	ccValue = value.getCcValue().multiply(BigDecimal.valueOf(quantity));
-		            nfsValue = value.getNfsValue().multiply(BigDecimal.valueOf(quantity));
-	                System.out.println("\ncc - " + ccValue + " nfs - " + nfsValue + "\n");
-		            incentives.addAll(createIncentives(ccValue, nfsValue, employee, function, sale.getCustomer(), sale.getDocumentNumber(), user, apurationTypes));
-	            }
+		            BigDecimal ccValue = BigDecimal.ZERO;
+		            BigDecimal nfsValue = BigDecimal.ZERO;
+		            
+		            if(value != null) {
+	                	System.out.println(value);
+		            	ccValue = value.getCcValue().multiply(BigDecimal.valueOf(quantity));
+			            nfsValue = value.getNfsValue().multiply(BigDecimal.valueOf(quantity));
+		                System.out.println("\ncc - " + ccValue + " nfs - " + nfsValue + "\n");
+			            incentives.addAll(createIncentives(ccValue, nfsValue, employee, function, sale.getCustomer(), sale.getDocumentNumber(), user, apurationTypes));
+		            }
+	        	}
 	            
 	        }
 	    }
@@ -187,7 +190,7 @@ public class CalculeIncentiveService {
 	    		.collect(Collectors.toList());
 	    
 	    List<Employee> relevantEmployees = customer.getEmployees().stream()
-	            .filter(emp -> emp.getFunctions().stream().anyMatch(func -> roles.contains(func.getName())))
+	            .filter(emp -> emp.getFunctions().stream().anyMatch(func -> roles.contains(func.getName())) && emp.isActive())
 	            .collect(Collectors.toList());
 	    
 	    System.out.println("\nCalculando incentivos por funções fora ct e m\n");
@@ -315,7 +318,7 @@ public class CalculeIncentiveService {
 	                )
 	            )
 	        ));
-
+	   
 	    List<Incentive> compactedList = new ArrayList<>();
 
 	    for (Map.Entry<String, Map<String, BigDecimal>> employeeEntry : groupedIncentives.entrySet()) {

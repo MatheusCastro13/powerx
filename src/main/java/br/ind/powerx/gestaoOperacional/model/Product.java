@@ -51,8 +51,11 @@ public class Product {
 	private List<Group> groups = new ArrayList<>();
 	
 	@ToString.Exclude
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<TablePrice> tables = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<ProductStock> productStock = new ArrayList<>();
 	
 	public void addIncentiveValue(IncentiveValue incentiveValue) {
 		if(incentiveValue != null && !incentiveValues.contains(incentiveValue)) {
@@ -91,6 +94,23 @@ public class Product {
 		if(tables.remove(table)) {
 			if(table.getProduct() == this) {
 				table.setProduct(null);
+			}
+		}
+	}
+	
+	public void addProductStock(ProductStock stock) {
+		if(stock != null && !productStock.contains(stock)) {
+			productStock.add(stock);
+			if(stock.getProduct() != this) {
+				stock.setProduct(this);
+			}
+		}
+	}
+	
+	public void removeProductStock(ProductStock stock) {
+		if(productStock.remove(stock)) {
+			if(stock.getProduct() == this) {
+				stock.setProduct(null);
 			}
 		}
 	}

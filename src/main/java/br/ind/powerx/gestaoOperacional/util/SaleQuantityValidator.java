@@ -43,8 +43,8 @@ public class SaleQuantityValidator {
             sales.stream().map(SalesDTO::employeeId).collect(Collectors.toSet())
         ).stream().collect(Collectors.toMap(Employee::getId, e -> e));
 
-        Map<Long, Integer> consultantTotals = calculateTotals(sales, employees, "Consultor Técnico");
-        Map<Long, Integer> mechanicTotals = calculateTotals(sales, employees, "Mecânico");
+        Map<Long, Integer> consultantTotals = calculateTotals(sales, employees, "Consultor Técnico", "Consultores");
+        Map<Long, Integer> mechanicTotals = calculateTotals(sales, employees, "Mecânico", "Mecânicos");
 
         for (Map.Entry<Long, Integer> entry : mechanicTotals.entrySet()) {
             Long productId = entry.getKey();
@@ -59,18 +59,18 @@ public class SaleQuantityValidator {
         return true;
     }
 
-    private Map<Long, Integer> calculateTotals(List<SalesDTO> sales, Map<Long, Employee> employees, String functionName) {
+    private Map<Long, Integer> calculateTotals(List<SalesDTO> sales, Map<Long, Employee> employees, String functionName, String title) {
         Map<Long, Integer> totalPerProduct = new HashMap<>();
 
         sales.stream()
             .filter(sale -> employees.get(sale.employeeId())
                                      .getFunctions().stream()
-                                     .anyMatch(f -> f.getName().equalsIgnoreCase(functionName)))
+                                     .anyMatch(f -> f.getName().equalsIgnoreCase(functionName)) && sale.function().equals(title))
             .flatMap(sale -> sale.products().stream())
             .forEach(product -> totalPerProduct.merge(product.productId(), product.quantity(), Integer::sum));
         
         for (Map.Entry<Long, Integer> entry : totalPerProduct.entrySet()) {
-        	System.out.println("\n \n \n \n \n \n \n \n \n \n \n AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        	System.out.println("\n \n");
         	System.out.println("Total do produto: " + entry.getKey() + " para " + functionName + ": "  + entry.getValue());
         }
 

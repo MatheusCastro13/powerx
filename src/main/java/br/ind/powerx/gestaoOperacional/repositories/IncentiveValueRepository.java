@@ -13,8 +13,10 @@ import br.ind.powerx.gestaoOperacional.model.Product;
 @Repository
 public interface IncentiveValueRepository extends JpaRepository<IncentiveValue, Long>{
 	List<IncentiveValue> findAllByProductId(Long id);
-
+	
 	IncentiveValue findByCustomerAndProductAndFunction(Customer customer, Product product, Function function);
+
+	List<IncentiveValue> findAllByCustomerAndProductAndFunction(Customer customer, Product product, Function function);
 
 	List<IncentiveValue> findByCustomer(Customer customer);
 

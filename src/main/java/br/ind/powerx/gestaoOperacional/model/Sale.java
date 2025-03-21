@@ -54,12 +54,14 @@ public class Sale {
 	@Column(name = "document_number", nullable = false)
     private Integer documentNumber;
 	
-	public Sale(Customer customer, Employee employee, Product product, Integer quantity) {
+	private String function;
+	
+	public Sale(Customer customer, Employee employee, Product product, Integer quantity, String function) {
 		this.customer = customer;
 		this.employee = employee;
 		this.product = product;
 		this.quantity = quantity;
-		
+		this.function = function;
 	}
 	
 	public void setCustomer(Customer customer) {

@@ -123,6 +123,7 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
 	        customerId: selectedCustomerId,
 	        employeeId: selectedEmployee.id,
 	        employee: selectedEmployee.name,
+			function: title,
 	        products: []
 	    };
 

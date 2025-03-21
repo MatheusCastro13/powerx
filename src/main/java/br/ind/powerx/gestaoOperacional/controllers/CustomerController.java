@@ -149,15 +149,32 @@ public class CustomerController {
             @RequestParam(defaultValue = "50") int size, 
             @RequestBody CustomerFilterDTO filters, 
 			Model model) {
+		User user = authenticationService.getUserAuthenticated();
 		Page<Customer> customers = customerService.filterCustomers(filters.users(), 
 				filters.groups(), 
 				filters.industries(), 
 				filters.flags(),
 				PageRequest.of(page, size));
+		List<Employee> employees = employeeService.findAllByActiveTrue();
+		List<Group> groups = groupService.findAll();
+		List<MechanicApuration> mechanicApurations = mechanicApurationService.findAll();
+		List<Industry> industries = industryService.findAll();
+		List<Flag> flags = flagService.findAll();
+		List<User> users = userService.findAllByActiveTrue();
+		List<TablePrice> tablePrices = tableService.findAll();
 
 		model.addAttribute("customers", customers.getContent());
 	    model.addAttribute("currentPage", page);
 	    model.addAttribute("totalPages", customers.getTotalPages());
+	    model.addAttribute("user", user);
+		model.addAttribute("employees", employees);
+		model.addAttribute("groups", groups);
+		model.addAttribute("industries", industries);
+		model.addAttribute("flags", flags);
+		model.addAttribute("mechanicApurations", mechanicApurations);
+		model.addAttribute("users", users);
+		model.addAttribute("tablePrices", tablePrices);
+
 
 		return "fragments/filteredCustomers :: filtered-customers";
 	}

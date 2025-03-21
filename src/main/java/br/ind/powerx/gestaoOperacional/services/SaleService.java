@@ -81,7 +81,7 @@ public class SaleService {
 				
 				productAndQuantity.put(productFinded, product.quantity());
 				
-				Sale saleToSave = new Sale(customer, emp, productFinded, product.quantity());
+				Sale saleToSave = new Sale(customer, emp, productFinded, product.quantity(), sale.function());
 				
 				saleToSave.setReferenceDate(LocalDate.now().minusMonths(1));
 		        saleToSave.setDocumentNumber(newDocumentNumeber);

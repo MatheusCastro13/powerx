@@ -42,7 +42,7 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name = "unydoft_code", unique = true, length = 10)
+	@Column(name = "unydoft_code", length = 10)
     private String unysoftCode;
 
     @Column(nullable = false, length = 100)
@@ -97,11 +97,14 @@ public class User{
     @OneToMany(mappedBy = "user", cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Prevision> previsions = new ArrayList<>();
     
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Incentive> incentives = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CommercialMonitoring> commercialMonitoring = new ArrayList<>();
 
     public User(String email, String passwordHash, String role) {
 		this.email = email;
@@ -186,6 +189,23 @@ public class User{
         if (previsions.remove(prevision)) {
             prevision.setUser(null);
         }
+    }
+    
+    public void addCommercialMonitoring(CommercialMonitoring monitoring) {
+    	if(monitoring != null && !commercialMonitoring.contains(monitoring)) {
+    		commercialMonitoring.add(monitoring);
+    		if(monitoring.getUser() != this) {
+    			monitoring.setUser(this);
+    		}
+    	}
+    }
+    
+    public void removeCommercialMonitoring(CommercialMonitoring monitoring) {
+    	if(commercialMonitoring.remove(monitoring)) {
+    		if(monitoring.getUser() == this) {
+    			monitoring.setUser(null);
+    		}
+    	}
     }
     
     @Override

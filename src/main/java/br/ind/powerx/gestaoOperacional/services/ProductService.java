@@ -211,7 +211,10 @@ public class ProductService {
 							productCode, cc, nfs, over);
 
 					IncentiveValue value = valueFromDto(valueSpreadsheet);
-					valueService.save(value);
+					
+					if(validateIncentiveValue(value)) {
+						valueService.save(value);
+					}
 
 				} catch (Exception e) {
 					System.err.println("Erro crítico na linha " + row.getRowNum() + ": " + e.getMessage());
@@ -238,6 +241,21 @@ public class ProductService {
 		value.setOverValue(over);
 		
 		return value;
+	}
+	
+	private boolean validateIncentiveValue(IncentiveValue value) {
+		
+		if(value.getProduct() == null || value.getFunction() == null || value.getCustomer() == null) {
+			return false;
+		}
+		
+		List<IncentiveValue> values = valueService.findAllByProductAndCustomerAndFunction(value.getProduct(), value.getCustomer(), value.getFunction());
+	
+		if(values.size() == 0 || values == null) {
+			return true;
+		}
+		return false;
+	
 	}
 
 }

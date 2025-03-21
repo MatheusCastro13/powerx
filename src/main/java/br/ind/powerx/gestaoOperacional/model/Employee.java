@@ -98,6 +98,9 @@ public class Employee {
 	@JoinColumn(name = "payment_method_id")
 	private PaymentMethod paymentMethod;
 	
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+	private List<MonitoringSale> monitoringSales = new ArrayList<>();
+	
 	
 	public void addSale(Sale sale) {
 		if(sale != null && !sales.contains(sale)) {
@@ -162,6 +165,23 @@ public class Employee {
 	public void removeApurationType(ApurationType apurationType) {
 		if(apurationTypes.remove(apurationType)) {
 			apurationType.removeEmployee(this);
+		}
+	}
+	
+	public void addMonitoringSale(MonitoringSale sale) {
+		if(sale != null && !monitoringSales.contains(sale)) {
+			sale.setEmployee(this);
+			if(sale.getEmployee() != this) {
+				sale.setEmployee(this);
+			}
+		}
+	}
+	
+	public void removeMonitoringSale(MonitoringSale sale) {
+		if(monitoringSales.remove(sale)) {
+			if(sale.getEmployee() == this) {
+				sale.setEmployee(null);
+			}
 		}
 	}
 }

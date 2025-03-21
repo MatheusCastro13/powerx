@@ -186,7 +186,7 @@ public class EmployeeService {
 		}
 
 		if (filter.functions() != null && !filter.functions().isEmpty()) {
-			spec = spec.and(EmployeeSpecifications.functionsIn(filter.customers()));
+			spec = spec.and(EmployeeSpecifications.functionsIn(filter.functions()));
 		}
 
 		return employeeRepository.findAll(spec, pageable);
@@ -198,6 +198,7 @@ public class EmployeeService {
 	}
 
 	public void saveBySpreadsheet(MultipartFile file) throws IOException {
+		System.out.println("---------INICIO DE SALVANDO PREMIADO POR PLANILHA-------------");
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
@@ -226,9 +227,16 @@ public class EmployeeService {
 
 				try {
 					String cpf = getStringCellValue(row.getCell(0));
+					System.out.println("CPF planilhado - " + cpf);
+					
 					String name = getStringCellValue(row.getCell(1));
+					System.out.println("Nome planilhado - " + name);
+					
 					String email = getStringCellValue(row.getCell(2));
+					System.out.println("Email planilhado - " + email);
+					
 					String phone = getStringCellValue(row.getCell(3));
+					System.out.println("Phone planilhado - " + phone);
 
 					LocalDate dateOfBirth = null;
 					Cell dobCell = row.getCell(4);
@@ -246,23 +254,39 @@ public class EmployeeService {
 							}
 						}
 					}
+					System.out.println("Data planilhado - " + dateOfBirth);
 					
 					EmployeeBasicInfosDTO empBasicDto = new EmployeeBasicInfosDTO(cpf, name, email, phone, dateOfBirth);
 					Employee empBasic = basicEmpFromDto(empBasicDto);
-					employeeRepository.save(empBasic);
+					
+					if(empBasic != null) {
+						employeeRepository.save(empBasic);
+					}
 
 					Long func_id1 = parseLongFromCell(row.getCell(5));
+					System.out.println("ID FUNÇÃO 1 - " + func_id1);
 					Long func_id2 = parseLongFromCell(row.getCell(6));
+					System.out.println("ID FUNÇÃO 2 - " + func_id2);
 					Long cust_id1 = parseLongFromCell(row.getCell(7));
+					System.out.println("ID CLIENTE 1 - " + cust_id1);
 					Long cust_id2 = parseLongFromCell(row.getCell(8));
+					System.out.println("ID CLIENTE 2 - " + cust_id2);
 					Long cust_id3 = parseLongFromCell(row.getCell(9));
+					System.out.println("ID CLIENTE 3 - " + cust_id3);
 					Long cust_id4 = parseLongFromCell(row.getCell(10));
+					System.out.println("ID CLIENTE 4 - " + cust_id4);
 					Long cust_id5 = parseLongFromCell(row.getCell(11));
+					System.out.println("ID CLIENTE 5 - " + cust_id5);
 					Long cust_id6 = parseLongFromCell(row.getCell(12));
+					System.out.println("ID CLIENTE 6 - " + cust_id6);
 					Long cust_id7 = parseLongFromCell(row.getCell(13));
+					System.out.println("ID CLIENTE 7 - " + cust_id7);
 					Long apur_id1 = parseLongFromCell(row.getCell(14));
+					System.out.println("ID APURAÇÃO 1 - " + apur_id1);
 					Long apur_id2 = parseLongFromCell(row.getCell(15));
+					System.out.println("ID APURAÇÃO 2 - " + apur_id2);
 					Long pay_id = parseLongFromCell(row.getCell(16));
+					System.out.println("ID METODO  - " + pay_id);
 
 					if (cpf == null || cpf.isBlank()) {
 						System.err.println("CPF inválido na linha " + row.getRowNum());
@@ -284,11 +308,12 @@ public class EmployeeService {
 				}
 			}
 		}
+		System.out.println("---------FIM DE SALVANDO PREMIADO POR PLANILHA-------------");
 	}
 
 	private void relEmpFromDto(Employee emp, EmployeeRelationshipDTO empRelDto) {
+		System.out.println("-------------Inicio dos relacionamentos------------");
 		if (emp != null && empRelDto != null) {
-			System.out.println("date DTO: " + emp.getBirthDate());
 			emp.setActive(true);
 
 			if (empRelDto.func_id1() != null) {
@@ -373,13 +398,14 @@ public class EmployeeService {
 				emp.setPaymentMethod(payment);
 				System.out.println("Metodo 1 encontrada: " + payment.getName());
 			}
-			
+			System.out.println("-------------Fim dos relacionamentos------------");
 			employeeRepository.save(emp);
 		}
 
 	}
 
 	private Employee basicEmpFromDto(EmployeeBasicInfosDTO empBasicDto) {
+		System.out.println("-------------Inicio DO METODO DO FROM DTO------------");
 		Employee emp = new Employee();
 		Employee empSearched = findByCpf(empBasicDto.cpf());
 		if (empSearched == null) {
@@ -394,10 +420,13 @@ public class EmployeeService {
 			emp.setBirthDate(empBasicDto.dateOfBirth());
 			System.out.println("date DTO: " + emp.getBirthDate());
 			emp.setActive(true);
+			System.out.println("-------------FIM DO METODO DO FROM DTO------------");
 			return emp;
+		}else {
+			System.out.println("CPF '" + empBasicDto.cpf()+ "' já encontrado");
 		}
-
-		System.out.println("-------------fFIM DO METODO DO FROM DTO------------");
+		
+		System.out.println("-------------FIM DO METODO DO FROM DTO------------");
 		return null;
 	}
 

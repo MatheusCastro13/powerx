@@ -23,7 +23,7 @@ public class Spreadsheets {
 		if (cell == null) {
 			return null;
 		}
-		
+
 		DataFormatter formatter = new DataFormatter();
 
 		String cellValue = formatter.formatCellValue(cell);
@@ -91,7 +91,7 @@ public class Spreadsheets {
 			String value = cell.getStringCellValue().trim();
 			return value.isEmpty();
 		}
-
+		
 		return false;
 	}
 }

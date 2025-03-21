@@ -40,7 +40,7 @@ public class ApurationType {
 	@OneToMany(mappedBy = "apurationType", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Incentive> incentives = new ArrayList<>();
 	
-	@ManyToMany(mappedBy = "apurationTypes")
+	@ManyToMany(mappedBy = "apurationTypes", cascade = CascadeType.ALL)
     private List<Employee> employees = new ArrayList<>();
 	
 	public void addIncentive(Incentive incentive) {
