@@ -76,7 +76,7 @@ public class SecurityConfigurations {
 
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/auth/login?logout=true")
 						.invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll())
-
+				
 				.exceptionHandling(exception -> exception.accessDeniedPage("/access-denied")).build();
 	}
 

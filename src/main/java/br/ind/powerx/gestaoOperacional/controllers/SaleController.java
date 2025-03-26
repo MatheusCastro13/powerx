@@ -3,6 +3,8 @@
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ public class SaleController {
 	
 	private final SaleService saleService;
     private final SaleQuantityValidator saleQuantityValidator;
+    private static final Logger logger = LoggerFactory.getLogger(SaleController.class);
+
 
     @Autowired
     public SaleController(SaleService saleService, SaleQuantityValidator saleQuantityValidator) {
@@ -64,14 +68,18 @@ public class SaleController {
             return ResponseEntity.ok(dtoList);
 
         } catch (IllegalArgumentException e) {
+            logger.error("IllegalArgumentException ao processar as vendas: {}", e.getMessage(), e);
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (EntityNotFoundException e) {
+        	logger.error("EntityNotFoundException: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-        	e.printStackTrace();
-        	System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao processar as vendas. Tente novamente." + e.getMessage() + e.getStackTrace());
+        	
+        	logger.error("Erro inesperado ao processar as vendas: {}", e.getMessage(), e);
+            String msg = "Erro ao processar as vendas. Tente novamente.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(msg);
+            		
         }
     }
 

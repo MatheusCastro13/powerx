@@ -202,8 +202,8 @@ function loadEmployeeData(title, customerId, dynamicSectionId) {
         sale.products.forEach(product => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${product.productId}</td>
                 <td>${product.productCode}</td>
+                <td>${product.productName}</td>
                 <td><input type="number" class="form-control" value="${product.quantity}" min="0" data-product-id="${product.productId}"></td>
             `;
             tableBody.appendChild(row);

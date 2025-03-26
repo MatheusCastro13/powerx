@@ -1,12 +1,15 @@
 package br.ind.powerx.gestaoOperacional.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,8 @@ public class CalculeIncentiveService {
     private final AuthenticationService authenticationService;
 	
 	private final FunctionRepository functionRepository;
+	
+	private static final Logger logger = LoggerFactory.getLogger(CalculeIncentiveService.class);
 
 	@Autowired
 	public CalculeIncentiveService(SaleRepository saleRepository, IncentiveRepository incentiveRepository, 
@@ -252,21 +257,22 @@ public class CalculeIncentiveService {
 	    	            for (Function function : emp.getFunctions()) {
 	    	            	int totalQuantity =  calculateConsultantTotalQuantity(sales, product, customer);
 		            		BigDecimal mechanicQuantity = new BigDecimal(mechanics.size());
-	    	            	
+		            		
 	    	            	System.out.println("Premiado - " + emp.getName());
 			            	System.out.println("Função - " + function.getName());
 			            	System.out.println("produto vendido - " + product.getProductCode() + " " + product.getProductName());
 			            	System.out.println("Quantidade de produtos - " + totalQuantity);
 	    	            	
 	    	                IncentiveValue value = incentiveValueRepository.findByCustomerAndProductAndFunction(customer, product, function);
+	    	                logger.info("valor do incentivo encontrado: " + value);
 	    	                
 	    	                BigDecimal ccValue = BigDecimal.ZERO;
 	    	                BigDecimal nfsValue = BigDecimal.ZERO;
 	    	                
 	    	                if(value != null) {
 	    	                	System.out.println(value);
-	    	                	ccValue = value.getCcValue().divide(mechanicQuantity).multiply(BigDecimal.valueOf(totalQuantity));
-	    		                nfsValue = value.getNfsValue().divide(mechanicQuantity).multiply(BigDecimal.valueOf(totalQuantity));
+	    	                	ccValue = value.getCcValue().divide(mechanicQuantity, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(totalQuantity));
+	    		                nfsValue = value.getNfsValue().divide(mechanicQuantity, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(totalQuantity));
 				                System.out.println("\ncc - " + ccValue + " nfs - " + nfsValue + "\n");
 	    		                incentives.addAll(createIncentives(ccValue, nfsValue, emp, function, customer, documentNumber, user, apurationTypes));
 	    	                }
